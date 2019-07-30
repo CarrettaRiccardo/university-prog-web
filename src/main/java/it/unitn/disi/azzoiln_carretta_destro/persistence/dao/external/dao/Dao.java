@@ -1,0 +1,17 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao;
+
+/**
+ * The basic DAO interface that all DAOs must implement.
+ * @author Steve
+ */
+public interface Dao<ENTITY_CLASS, PRIMARY_KEY_CLASS> {
+    
+    public ENTITY_CLASS getByPrimaryKey(PRIMARY_KEY_CLASS primaryKey) throws DaoException;
+    
+    public <DAO_CLASS extends Dao> DAO_CLASS getDAO(Class<DAO_CLASS> daoClass) throws DaoFactoryException;
+}
