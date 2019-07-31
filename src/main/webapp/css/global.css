@@ -1,0 +1,39 @@
+.btn-gradient {
+    color: white;
+    background: linear-gradient(45deg, #007BFF, #001F87);
+}
+
+.btn-gradient:hover, .btn-gradient:not(:disabled):not(.disabled).active, .btn-gradient:not(:disabled):not(.disabled):active, .show > .btn-gradient.dropdown-toggle {
+    color: white;
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, .2);
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, #007BFF, #001F87);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient {
+    background: linear-gradient(45deg, #007BFF, #001F87);
+}
+
+.bg-gradient-1 {
+    background: linear-gradient(45deg, #2096ff, #05ffa3);
+}
+
+.bg-gradient-2 {
+    background: linear-gradient(45deg, #ffd86f, #fc6262);
+}
+
+.bg-gradient-3 {
+    background: linear-gradient(45deg, #e96443, #904e95);
+}
+
+.bg-gradient-4 {
+    background: linear-gradient(45deg, #30cfd0, #330867);
+}
+
+.bg-gradient-5 {
+    background: linear-gradient(45deg, #2196f3, #f44336);
+}
