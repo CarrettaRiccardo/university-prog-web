@@ -1,0 +1,197 @@
+create table nazioni(
+    nome char(4) not null,
+    PRIMARY KEY(nome)
+)engine=InnoDB;
+
+create table regioni(
+    id int not null AUTO_INCREMENT,
+    nome varchar(50) not null,
+    id_nazione char(4) not null,
+    PRIMARY KEY(id),
+    FOREIGN KEY fk_regioni_to_nazioni(id_nazione) REFERENCES nazioni(nome)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+create table province(
+    id int not null AUTO_INCREMENT,
+    id_regione int not null,
+    nome varchar(50) not null,
+    PRIMARY KEY(id),
+    FOREIGN KEY fk_province_to_regioni(id_regione) REFERENCES regioni(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+create table comuni(
+    id int not null AUTO_INCREMENT,
+    nome varchar(50) not null,
+    id_provincia int not null,
+    PRIMARY KEY(id),
+    FOREIGN KEY fk_comuni_to_province(id_provincia) REFERENCES province(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+create table utenti(
+    id int not null AUTO_INCREMENT,
+    nome varchar(100) not null,
+    cognome varchar(100) not null,
+    s_nome char(5) not null COMMENT 'Per confronti soundex',
+    s_cognome char(5) not null COMMENT 'Per confronti soundex',
+    data_nascita date not null,
+    username varchar(255) not null,
+    password varchar(255) not null,
+    cf varchar(20) not null,
+    ruolo char(10) not null DEFAULT 'paziente',
+    provincia int not null,
+    comune int not null,
+    paziente_attivo boolean DEFAULT TRUE COMMENT 'Per indicare account paziente bloccato o meno',
+    medico_attivo boolean DEFAULT FALSE COMMENT 'Per indicare medico in attività oppure in pensione',
+    specialita text DEFAULT NULL,
+    laurea text DEFAULT NULL,
+    inizio_carriera date DEFAULT NULL,
+    PRIMARY KEY(id),
+    UNIQUE(username),
+    UNIQUE(cf),
+    INDEX(s_nome) using BTREE,
+    INDEX(s_cognome) using BTREE,
+    FOREIGN KEY fk_utenti_to_comuni(comune) REFERENCES comuni(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT,
+    FOREIGN KEY fk_utenti_to_province(provincia) REFERENCES province(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+
+create table foto(
+    id int not null,
+    id_utente int not null,
+    path text not null,
+    time timestamp not null DEFAULT NOW(),
+    PRIMARY KEY(id_utente,id),
+    FOREIGN KEY fk_foto_to_utenti(id_utente) REFERENCES utenti(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+create table cambio_password(
+    id_utente int not null,
+    hash text not null,
+    time timestamp not null DEFAULT NOW(),
+    PRIMARY KEY(id_utente),
+    FOREIGN KEY fk_cambio_password_to_utenti(id_utente) REFERENCES utenti(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+
+create table prescrizione(
+    id int not null AUTO_INCREMENT,
+    id_paziente int not null,
+    id_medico int not null,
+    time timestamp not null DEFAULT NOW(),
+    PRIMARY KEY(id),
+    FOREIGN KEY fk_prescrizione_to_paziente(id_paziente) REFERENCES utenti(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT,
+    FOREIGN KEY fk_prescrizione_to_medico(id_medico) REFERENCES utenti(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+
+create table farmaci(
+    id int not null AUTO_INCREMENT,
+    nome varchar(255) not null,
+    costo float not null,
+    s_nome char(5) not null COMMENT 'Per confronto soundex',
+    PRIMARY KEY(id),
+    INDEX(s_nome) using BTREE
+)engine=InnoDB;
+
+
+
+create table farmaco(
+    id_prescrizione int not null,
+    id_farmaco int not null,
+    costo float not null,
+    quantita smallint not null,
+    time_vendita timestamp not null DEFAULT NOW(),
+    PRIMARY KEY(id_prescrizione),
+    FOREIGN KEY fk_farmaco_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT,
+    FOREIGN KEY fk_farmaco_to_farmaci(id_farmaco) REFERENCES prescrizione(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+
+
+create table esami_prescrivibili(
+    id int not null AUTO_INCREMENT,
+    nome varchar(255) not null,
+    PRIMARY KEY(id)
+)engine=InnoDB;
+
+create table ssp(
+    id int not null AUTO_INCREMENT,
+    nome varchar(255) not null,
+    id_provincia int not null,
+    PRIMARY KEY(id),
+    FOREIGN KEY fk_ssp_to_province(id_provincia) REFERENCES province(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+
+
+create table esame(
+    id_prescrizione int not null,
+    id_esame int not null,
+    ticket float not null,
+    risultato text not null,
+    time_esame timestamp not null DEFAULT NOW(),
+    PRIMARY KEY(id_prescrizione),
+    FOREIGN KEY fk_esame_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT,
+    FOREIGN KEY fk_esame_to_esami_prescrivibili(id_esame) REFERENCES esami_prescrivibili(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+
+create table visita_specialistica(
+    id_prescrizione int not null,
+    id_medico_specialista int not null,
+    ticket float not null,
+    anamnesi text not null,
+    time_visita timestamp not null DEFAULT NOW(),
+    PRIMARY KEY(id_prescrizione),
+    FOREIGN KEY fk_visita_specialistica_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT,
+    FOREIGN KEY fk_visita_specialistica_to_utenti(id_medico_specialista) REFERENCES utenti(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT
+)engine=InnoDB;
+
+
+
+
+
+/*
+Query per ricerce di testo approssimate (necessaria la funzione di Levenshtein):
+Probabilmente useremo ricerche FullText.
+
+SELECT nome
+from test
+WHERE levenshtein( soundex('steveq') ,soundex(nome))  <= 2
+
+
+SELECT nome, levenshtein( soundex('steveq') ,soundex(nome)) 
+from test
+*/
