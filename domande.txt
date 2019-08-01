@@ -1,4 +1,0 @@
-Login unico per tutti i tipi di utenti ?
-Un medico può essere paziente ? Se si, usa un account diverso ?
-Un paziente deve prenotare per recarsi dal medico oppure no ? Il medico deve approvare queste prenotazioni ?
-E' solo il medico che prenota esami giusto ?

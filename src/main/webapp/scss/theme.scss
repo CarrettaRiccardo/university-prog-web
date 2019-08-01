@@ -1,0 +1,39 @@
+$enable-gradients: true;
+
+@import "../bootstrap/scss/bootstrap";
+
+$gradients: #007BFF #001F87,
+#2096ff #05ffa3,
+#ffd86f #fc6262,
+#e96443 #904e95,
+#30cfd0 #330867,
+#2196f3 #f44336;
+
+
+@for $i from 1 through length($gradients) {
+  $name: if($i == 1, '', '-'+($i - 1));
+  $gradient: linear-gradient(90deg, nth(nth($gradients, $i), 1), nth(nth($gradients, $i), 2));
+
+  .btn-gradient#{$name} {
+    color: white;
+    border: 0;
+    background: $gradient;
+    &:hover, &:not(:disabled):not(.disabled).active, &:not(:disabled):not(.disabled):active{
+      color: white;
+      box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, .2);
+    }
+  }
+
+  .bg-gradient#{$name} {
+    background: $gradient;
+  }
+
+  .text-gradient#{$name} {
+    background: $gradient;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+
+
