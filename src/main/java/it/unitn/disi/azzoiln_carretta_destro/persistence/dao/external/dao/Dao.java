@@ -5,6 +5,9 @@
  */
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao;
 
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
+
 /**
  * The basic DAO interface that all DAOs must implement.
  * @author Steve
