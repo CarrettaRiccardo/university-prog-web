@@ -24,7 +24,7 @@
         <div class="col col-12 col-md">
             <form>
 
-                <h5 class="text-gradient">Dati personali</h5>
+                <h5 class="text-primary">Dati personali</h5>
                 <div class="row">
                     <div class="col col-12 col-lg-6 py-1">
                         <input type="text" class="form-control" placeholder="Nome">
@@ -42,8 +42,7 @@
                     </div>
                 </div>
 
-                <h5 class="text-gradient mt-3">Altro</h5>
-
+                <h5 class="text-primary mt-3">Altro</h5>
                 <div class="row">
                     <div class="col col-12 col-lg-6 py-1">
                         <input type="text" class="form-control" placeholder="boh">
