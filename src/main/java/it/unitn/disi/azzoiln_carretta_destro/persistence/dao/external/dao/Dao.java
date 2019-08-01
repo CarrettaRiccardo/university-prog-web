@@ -15,6 +15,4 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 public interface Dao<ENTITY_CLASS, PRIMARY_KEY_CLASS> {
     
     public ENTITY_CLASS getByPrimaryKey(PRIMARY_KEY_CLASS primaryKey) throws DaoException;
-    
-    public <DAO_CLASS extends Dao> DAO_CLASS getDAO(Class<DAO_CLASS> daoClass) throws DaoFactoryException;
 }

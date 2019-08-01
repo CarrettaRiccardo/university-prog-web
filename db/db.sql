@@ -1,3 +1,7 @@
+CREATE DATABASE 'prog_web';
+CREATE USER 'user_prog_web'@'localhost' IDENTIFIED BY 'sampirisi';
+GRANT INSERT,UPDATE,DELETE,SELECT  ON prog_web.* TO 'user_prog_web'@'localhost';
+
 create table ticket(
     id int not null AUTO_INCREMENT,
     costo float not null,
@@ -8,7 +12,6 @@ create table ticket(
 
 create table province(
     id int not null AUTO_INCREMENT,
-    id_regione int not null,
     nome varchar(50) not null,
     PRIMARY KEY(id)
 )engine=InnoDB;
@@ -29,9 +32,10 @@ create table utenti(
     cognome varchar(100) not null,
     data_nascita date not null,
     username varchar(255) not null,
+    salt varchar(255) not null,
     password varchar(255) not null,
     cf varchar(20) not null,
-    ruolo char(10) not null DEFAULT 'paziente' COMMENT 'paziente | medico | medico_spec',
+    ruolo char(10) not null DEFAULT 'paziente' COMMENT 'paziente | medico | medico_spec | ssp',
     id_medico int DEFAULT NULL,
     provincia int not null,
     comune int not null,
@@ -126,6 +130,8 @@ create table esami_prescrivibili(
     PRIMARY KEY(id)
 )engine=InnoDB;
 
+/*
+Aggiunto come opzione tra i vari utenti
 create table ssp(
     id int not null AUTO_INCREMENT,
     nome varchar(255) not null,
@@ -136,7 +142,7 @@ create table ssp(
     FOREIGN KEY fk_ssp_to_province(id_provincia) REFERENCES province(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
-)engine=InnoDB;
+)engine=InnoDB;*/
 
 
 
@@ -157,7 +163,7 @@ create table esame(
     FOREIGN KEY fk_esame_to_ticket(id_ticket) REFERENCES ticket(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,
-    FOREIGN KEY fk_esame_to_ssp(id_ssp) REFERENCES ssp(id)
+    FOREIGN KEY fk_esame_to_ssp(id_ssp) REFERENCES utenti(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
 )engine=InnoDB;
@@ -177,10 +183,19 @@ create table visita(
         ON DELETE RESTRICT
 )engine=InnoDB;
 
+create table visite_specialistiche(
+    id int not null,
+    nome int not null,
+    PRIMARY KEY(id)
+)engine=InnoDB;
+
+
+
 create table visita_specialistica(
     id_prescrizione int not null,
     id_medico_specialista int not null,
     id_ticket int not null,
+    id_visita_spec int not null,
     anamnesi text not null,
     time_visita timestamp not null DEFAULT NOW(),
     PRIMARY KEY(id_prescrizione),
@@ -191,6 +206,9 @@ create table visita_specialistica(
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,
     FOREIGN KEY fk_esame_to_ticket(id_ticket) REFERENCES ticket(id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT,
+    FOREIGN KEY fk_visita_specialistica_to_utenti_to_visite(id_visita_spec) REFERENCES visite_specialistiche(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
 )engine=InnoDB;
@@ -213,4 +231,35 @@ WHERE levenshtein( soundex('steveq') ,soundex(nome))  <= 2
 
 SELECT nome, levenshtein( soundex('steveq') ,soundex(nome)) 
 from test
+*/
+
+
+/*
+DATI DI TEST
+INSERT INTO `prog_web`.`utenti`
+(`id`,
+`nome`,
+`cognome`,
+`data_nascita`,
+`username`,
+`password`,
+`cf`,
+`ruolo`,
+`id_medico`,
+`provincia`,
+`comune`,
+`paziente_attivo`)
+VALUES
+(1,
+'Steve',
+'Azzolin',
+'1998-06-23',
+'steve.azzolin1@gmail.com',
+'1000:5b4240333032306164:f38d165fce8ce42f59d366139ef5d9e1ca1247f0e06e503ee1a611dd9ec40876bb5edb8409f5abe5504aab6628e70cfb3d3a18e99d70357d295002c3d0a308a0',
+'ABCDEFGHIL',
+'paziente',
+NULL,
+15,
+15,
+1);
 */

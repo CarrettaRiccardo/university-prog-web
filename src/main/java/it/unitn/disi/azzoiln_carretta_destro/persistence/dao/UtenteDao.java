@@ -6,7 +6,9 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import java.util.List;
@@ -26,14 +28,14 @@ public interface UtenteDao<Utente> extends Dao<Utente, Integer>{
      * (scelta tra utente e paziente), 2 successo (SSR)
      *
     */
-    public int login(String username, String password);
+    public int login(String username, String password) throws DaoException;
     
     /**
      * 
      * @param user Nuovi dati da inserire
      * @return T on success
      */
-    public boolean update(Utente user);
+    public boolean update(Utente user) throws DaoException;
     
     
     /**
@@ -41,21 +43,21 @@ public interface UtenteDao<Utente> extends Dao<Utente, Integer>{
      * @param id_paziente
      * @return Elenco delle visite del paziente ordinate in ordine cronologico inverso
      */
-    public List<Visita> getVisite(Integer id_paziente);
+    public List<Visita> getVisite(Integer id_paziente) throws DaoException;
     
     /**
      * Ottiene l' elenco delle visite specialistiche del paziente ordinate in ordine cronologico inverso
      * @param id_paziente
      * @return Elenco delle visite specialistiche del paziente ordinate in ordine cronologico inverso
      */
-    public List<Visita> getVisiteSpecialistiche(Integer id_paziente);
+    public List<Visita> getVisiteSpecialistiche(Integer id_paziente) throws DaoException;
     
     /**
      * Ottiene l' elenco delle ricette ordinate in ordine cronologico inverso
      * @param id_paziente
      * @return Elenco delle ricette ordinate in ordine cronologico inverso
      */
-    public List<Visita> getRicette(Integer id_paziente);
+    public List<Ricetta> getRicette(Integer id_paziente) throws DaoException;
     
     
     /**
@@ -63,5 +65,5 @@ public interface UtenteDao<Utente> extends Dao<Utente, Integer>{
      * @param id_paziente
      * @return Elenco degli esami del paziente ordinati in ordine cronologico inverso
      */
-    public List<Esame> getEsami(Integer id_paziente);
+    public List<Esame> getEsami(Integer id_paziente) throws DaoException ;
 }

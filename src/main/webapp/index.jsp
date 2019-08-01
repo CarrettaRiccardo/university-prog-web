@@ -9,7 +9,7 @@
 
 <body>
 <h1>Hello World!</h1>
-<a href="login.jsp">Login</a>
+<a href="app/login.handler">Login</a>
 </body>
 
 </html>

@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<form method="GET" action="home.jsp" class="form-login text-center ">
+<form method="GET" action="login.handler" class="form-login text-center ">
     <img src="assets/logo.svg" width="100" height="100">
     <h1 class="mb-4 pb-1 text-gradient display-4 font-weight-normal">SanityManager</h1>
     <input type="email" class="form-control" id="username" name="username" placeholder="Username" required autofocus>
@@ -21,7 +21,5 @@
     <button type="submit" class="btn btn-gradient btn-block rounded-pill mb-2">Login</button>
     <a href="password_recovery">Password dimenticata?</a>
 </form>
-
 </body>
-
 </html>
