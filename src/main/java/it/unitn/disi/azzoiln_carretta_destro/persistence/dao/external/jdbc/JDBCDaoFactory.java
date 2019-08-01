@@ -30,7 +30,7 @@ public class JDBCDaoFactory implements DaoFactory {
      * The private constructor used to create the singleton instance of this
      * {@code DAOFactory}.
      * @param dbUrl the url to access the database.
-     * @throws DAOFactoryException if an error occurred during {@code DAOFactory}
+     * @throws DaoFactoryException if an error occurred during {@code DAOFactory}
      * creation.
      */
     private JDBCDaoFactory(String dbUrl,String user,String password) throws DaoFactoryException {
@@ -57,7 +57,7 @@ public class JDBCDaoFactory implements DaoFactory {
      * @param dbUrl the url to access to the database.
      * @param user the url to access to the database.
      * @param password the url to access to the database.
-     * @throws DAOFactoryException if an error occurred during dao factory
+     * @throws DaoFactoryException if an error occurred during dao factory
      * configuration.
      */
     public static void init(String dbUrl,String user,String password) throws DaoFactoryException {
@@ -69,9 +69,9 @@ public class JDBCDaoFactory implements DaoFactory {
     }
     
     /**
-     * Returns the singleton instance of this {@link DAOFactory}.
+     * Returns the singleton instance of this {@link DaoFactory}.
      * @return the singleton instance of this {@code DAOFactory}.
-     * @throws DAOFactoryException if an error occurred if this dao factory is
+     * @throws DaoFactoryException if an error occurred if this dao factory is
      * not yet configured.
      */
     public static JDBCDaoFactory getInstance() throws DaoFactoryException {
@@ -96,14 +96,14 @@ public class JDBCDaoFactory implements DaoFactory {
     }
 
     /**
-     * Returns the concrete {@link DAO dao} which type is the class passed as
+     * Returns the concrete {@link Dao dao} which type is the class passed as
      * parameter.
      *
      * @param <DAO_CLASS> the class name of the {@code dao} to get.
      * @param daoInterface the class instance of the {@code dao} to get.
      * @return the concrete {@code dao} which type is the class passed as
      * parameter.
-     * @throws DAOFactoryException if an error occurred during the operation.
+     * @throws DaoFactoryException if an error occurred during the operation.
      */
     @Override
     public <DAO_CLASS extends Dao> DAO_CLASS getDAO(Class<DAO_CLASS> daoInterface) throws DaoFactoryException {

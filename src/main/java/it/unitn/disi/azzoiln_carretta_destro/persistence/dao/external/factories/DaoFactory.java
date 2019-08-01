@@ -21,14 +21,14 @@ public interface DaoFactory {
     
     
     /**
-     * Returns the concrete {@link DAO dao} which type is the class passed as
+     * Returns the concrete {@link Dao dao} which type is the class passed as
      * parameter.
      * 
      * @param <DAO_CLASS> the class name of the {@code dao} to get.
      * @param daoInterface the class instance of the {@code dao} to get.
      * @return the concrete {@code dao} which type is the class passed as
      * parameter.
-     * @throws DAOFactoryException if an error occurred during the operation.
+     * @throws DaoFactoryException if an error occurred during the operation.
      */
     public <DAO_CLASS extends Dao> DAO_CLASS getDAO(Class<DAO_CLASS> daoInterface) throws DaoFactoryException;
 }
