@@ -18,6 +18,11 @@
         </session-timeout>
     </session-config>
     
+    <!-- LISTENER -->
+    <listener>
+        <listener-class>it.unitn.disi.azzoiln_carretta_destro.listeners.AppListener</listener-class>
+    </listener>
+    
     
     
     <!-- PARAMETRI -->
@@ -27,11 +32,11 @@
     </context-param>
     <context-param>
         <param-name>username</param-name>
-        <param-value>sprayerm_admin</param-value>
+        <param-value>user_prog_web</param-value>
     </context-param>
     <context-param>
         <param-name>password</param-name>
-        <param-value>zxc345ER$</param-value>
+        <param-value>sampirisi</param-value>
     </context-param>
     
     

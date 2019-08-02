@@ -36,11 +36,11 @@ public class JDBCDaoFactory implements DaoFactory {
     private JDBCDaoFactory(String dbUrl,String user,String password) throws DaoFactoryException {
         super();
 
-        /*try {
+        try {
             Class.forName("com.mysql.jdbc.Driver");  
         } catch (ClassNotFoundException cnfe) {
             throw new RuntimeException(cnfe.getMessage(), cnfe.getCause());
-        }*/
+        }
 
         try {
             CON = DriverManager.getConnection(dbUrl,user,password);
