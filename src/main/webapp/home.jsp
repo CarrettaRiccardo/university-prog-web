@@ -50,7 +50,7 @@
             <h2 class="mt-2 mb-4">Visite specialistiche</h2>
 
             <table id="table" class="table table-striped table-borderless table-hover">
-                <thead class="bg-gradient-2 shadow-sm text-white">
+                <thead class="bg-gradient shadow-sm text-white">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">First</th>
@@ -76,16 +76,6 @@
                 </tbody>
             </table>
         </div>
-
-        <%--
-        <c:forTokens items="Visite,Visite specialistiche,Esami,Ricette" var="cat" varStatus="s" delims=",">
-            <div class="col-lg-6 p-1">
-                <a class="btn btn-block btn-lg btn-gradient text-light bg-gradient-<c:out value="${s.index + 1}"/>">
-                    <span class="h5 font-weight-normal"><c:out value="${cat}"/></span>
-                </a>
-            </div>
-        </c:forTokens>
-        --%>
     </div>
 </div>
 </body>

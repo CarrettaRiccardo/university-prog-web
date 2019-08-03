@@ -1,5 +1,9 @@
 $enable-gradients: true;
 
+$theme-colors: (
+  'primary': #0055CD
+);
+
 @import "../bootstrap/scss/bootstrap";
 
 $gradients: #007BFF #001F87,
@@ -12,7 +16,7 @@ $gradients: #007BFF #001F87,
 
 @for $i from 1 through length($gradients) {
   $name: if($i == 1, '', '-'+($i - 1));
-  $gradient: linear-gradient(90deg, nth(nth($gradients, $i), 1), nth(nth($gradients, $i), 2));
+  $gradient: linear-gradient(45deg, nth(nth($gradients, $i), 1), nth(nth($gradients, $i), 2));
 
   .btn-gradient#{$name} {
     color: white;
