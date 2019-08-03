@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<form method="GET" action="home.jsp" class="form-login text-center ">
+<form method="GET" action="login.handler" class="form-login text-center ">
     <img src="assets/logo.svg" width="100" height="100">
     <div class="display-4 mb-4 pb-1 font-weight-normal">
         <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
@@ -23,7 +23,5 @@
     <button type="submit" class="btn btn-gradient btn-block rounded-pill mb-2">Accedi</button>
     <a href="password_recovery">Password dimenticata?</a>
 </form>
-
 </body>
-
 </html>

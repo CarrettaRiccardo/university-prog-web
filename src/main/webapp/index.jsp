@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Start Page</title>
+    <title>SanityManager</title>
 
     <%@include file="global/head.jsp" %>
     <link rel="stylesheet" href="css/index.css">

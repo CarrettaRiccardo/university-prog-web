@@ -37,7 +37,7 @@ public class JDBCDaoFactory implements DaoFactory {
         super();
 
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName("com.mysql.jdbc.Driver");  
         } catch (ClassNotFoundException cnfe) {
             throw new RuntimeException(cnfe.getMessage(), cnfe.getCause());
         }
