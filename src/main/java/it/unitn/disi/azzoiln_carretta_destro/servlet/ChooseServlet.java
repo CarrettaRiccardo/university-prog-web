@@ -55,17 +55,18 @@ public class ChooseServlet extends HttpServlet {
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/")) 
             contextPath += "/";
-        System.out.println(contextPath);
         HttpSession session = request.getSession(false);
         
         Utente u = (Utente) session.getAttribute("utente");
         
         if(u instanceof Medico || u instanceof MedicoSpecialista || u instanceof Ssp || u instanceof Paziente){
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+            return;
         }
         
         if(mod == null || u == null || (!mod.equals("m") && !mod.equals("p")) ){  //mostro un errore anche se l' utente loggato è già stato riconosciuto come paziente o come ssp
             response.sendRedirect(response.encodeRedirectURL(contextPath + "login?login_error=service"));
+            return;
         }
         else{
             try{
@@ -74,7 +75,7 @@ public class ChooseServlet extends HttpServlet {
                     switch(p.getRuolo()){
                         case "medico": session.setAttribute("utente", getMedico(p));  break;//creo un oggetto Medico(leggendo i dati che mancano  usando getByPrimaryKey) e lo salvo nella sessione al posto di utente 
                         case "medico_spec": session.setAttribute("utente", getMedicoSpecialista(p)); break;
-                        default: session.invalidate(); response.sendRedirect(response.encodeRedirectURL(contextPath + "login?login_error=service")); //errore, operazione non consentita
+                        default: session.invalidate(); response.sendRedirect(response.encodeRedirectURL(contextPath + "login?login_error=service")); System.out.println(p.getRuolo()); return; //errore, operazione non consentita
                     }
                 }
                 else{ //creo un oggetto Paziente e lo salvo nella sessione al posto di utente
