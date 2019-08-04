@@ -23,6 +23,13 @@ public class Medico extends Persona{
         this.attivo = attivo;
     }
 
+    public Medico(Persona p,String laurea, Date inizioCarriera, boolean attivo) {
+        super(p.getId(), p.getUsername(), p.getNome(), p.getCognome(), p.getCf(), p.getData_nascita(), p.getProvincia(), p.getComune(),"medico");
+        this.laurea = laurea;
+        this.inizioCarriera = inizioCarriera;
+        this.attivo = attivo;
+    }
+
     public String getLaurea() {
         return laurea;
     }

@@ -17,6 +17,7 @@
             <c:choose>
                 <c:when test="${param.login_error == 'pwd'}"> <fmt:message key="login_error_password"/>  </c:when>
                 <c:when test="${param.login_error == 'user'}"> <fmt:message key="login_error_username"/>  </c:when>
+                <c:when test="${param.login_error == 'auth'}"> <fmt:message key="login_error_auth"/>  </c:when>
                 <c:otherwise> <fmt:message key="login_error_service"/>  </c:otherwise>
             </c:choose>                  
         </div>

@@ -14,5 +14,12 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
  */
 public interface Dao<ENTITY_CLASS, PRIMARY_KEY_CLASS> {
     
-    public ENTITY_CLASS getByPrimaryKey(PRIMARY_KEY_CLASS primaryKey) throws DaoException;
+    /**
+     * 
+     * @param primaryKey
+     * @param modalita "Forza" il tipo di ritorno. Ovvero se un utente è un medico e modalità = 'paziente', allora ottengo come risultato un oggetto di tipo Paziente
+     * @return Oggetto che rappresenta l'ogetto che vogliamo ottenere
+     * @throws DaoException 
+     */
+    public ENTITY_CLASS getByPrimaryKey(PRIMARY_KEY_CLASS primaryKey, String modalita) throws DaoException;
 }

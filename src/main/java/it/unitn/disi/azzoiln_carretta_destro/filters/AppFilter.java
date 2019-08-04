@@ -60,7 +60,7 @@ public class AppFilter implements Filter {
                 contextPath += "/";  
             
             if (user == null) {
-                ((HttpServletResponse) response).sendRedirect(((HttpServletResponse) response).encodeRedirectURL(contextPath + "login"));
+                ((HttpServletResponse) response).sendRedirect(((HttpServletResponse) response).encodeRedirectURL(contextPath + "login?login_error=auth"));
                 return false;
             }
             else if(((HttpServletRequest) request).getRequestURI().indexOf("choose") > 0)  //se sono nella pagina choose e continuo i controlli sotto stanti, entro in un loop. Quindi i blocco

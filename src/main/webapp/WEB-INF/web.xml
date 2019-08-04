@@ -40,7 +40,7 @@
     <!-- SESSIONE -->
     <servlet-mapping>
         <servlet-name>ChooseServlet</servlet-name>
-        <url-pattern>/choose.handler</url-pattern>
+        <url-pattern>/app/choose.handler</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
