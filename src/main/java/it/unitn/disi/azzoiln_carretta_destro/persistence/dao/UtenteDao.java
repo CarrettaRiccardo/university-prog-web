@@ -24,8 +24,11 @@ public interface UtenteDao<Utente> extends Dao<Utente, Integer>{
     /**
      * Verifica se username e password sono corretti. 
      * 
-     * @return -1 per fallimento, 0 successo (utente paziente), 1 successo 
-     * (scelta tra utente e paziente), 2 successo (SSR)
+     * @param username
+     * @param password
+     * @return -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
+     * (scelta tra medico e paziente), 2 successo (SSR)
+     * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      *
     */
     public int login(String username, String password) throws DaoException;

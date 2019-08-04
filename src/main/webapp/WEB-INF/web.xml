@@ -11,6 +11,16 @@
         <url-pattern>/app/login.handler</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <jsp-file>/login.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/app/login</url-pattern>
+
+    </servlet-mapping>
+    
     <!-- SESSIONE -->
     <session-config>
         <session-timeout>
@@ -28,7 +38,7 @@
     <!-- PARAMETRI -->
     <context-param>
         <param-name>dburl</param-name>
-        <param-value>jdbc:mysql://localhost:3306/prog_web</param-value>
+        <param-value>jdbc:mysql://localhost:3306/prog_web?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</param-value>
     </context-param>
     <context-param>
         <param-name>username</param-name>
@@ -38,6 +48,7 @@
         <param-name>password</param-name>
         <param-value>sampirisi</param-value>
     </context-param>
+    
     
     
 </web-app>

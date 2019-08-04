@@ -10,7 +10,7 @@
     <script>
         $(document).ready(function () {
             $('#btnLogin').click(function () {
-                window.location.href = "login.jsp"
+                window.location.href = "app/login"
             })
         })
     </script>

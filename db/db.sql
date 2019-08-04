@@ -1,4 +1,4 @@
-CREATE DATABASE 'prog_web';
+CREATE SCHEMA 'prog_web';
 CREATE USER 'user_prog_web'@'localhost' IDENTIFIED BY 'sampirisi';
 GRANT INSERT,UPDATE,DELETE,SELECT  ON prog_web.* TO 'user_prog_web'@'localhost';
 
@@ -32,7 +32,6 @@ create table utenti(
     cognome varchar(100) not null,
     data_nascita date not null,
     username varchar(255) not null,
-    salt varchar(255) not null,
     password varchar(255) not null,
     cf varchar(20) not null,
     ruolo char(10) not null DEFAULT 'paziente' COMMENT 'paziente | medico | medico_spec | ssp',

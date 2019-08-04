@@ -1,6 +1,7 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import java.io.IOException;
@@ -44,7 +45,29 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String email = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        String contextPath = getServletContext().getContextPath();
+        if (!contextPath.endsWith("/")) {
+            contextPath += "/";
+        }
         
+        if(email == null || password == null){
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/login?login_error=user"));
+        }
+
+        try {
+            int res = userDao.login(email, password);
+            switch(res){
+                case -3: response.sendRedirect(response.encodeRedirectURL(contextPath + "app/login?login_error=service")); break;
+                case -2: response.sendRedirect(response.encodeRedirectURL(contextPath + "app/login?login_error=pwd")); break;
+                case -1: response.sendRedirect(response.encodeRedirectURL(contextPath + "app/login?login_error=user")); break;
+                case 0: response.sendRedirect(response.encodeRedirectURL(contextPath + "home.jsp")); break;
+            }
+        } catch (DaoException ex) {
+            request.getServletContext().log("Impossible to retrieve the user", ex);
+        }
     }
 
     /**

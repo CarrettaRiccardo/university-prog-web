@@ -78,24 +78,12 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
     @Override
     public int login(String username, String password) throws DaoException {
         int ret = -3;
-        String to_check = null;
-        
-        try {
-            to_check = Common.getPasswordHash(password);
-        } catch (NoSuchAlgorithmException ex) {
-            throw new DaoException("Error retriving password hash NoSuchAlgorithmException UtenteDao", ex);
-        } catch (InvalidKeySpecException ex) {
-            throw new DaoException("Error retriving password hash InvalidKeySpecException UtenteDao", ex);
-        }
-        
-        if(to_check == null || to_check.equals(""))//getPasswordHash ha ritornato un valore non valido
-            return ret;
         
         try (PreparedStatement stm = CON.prepareStatement("SELECT password, ruolo FROM utenti WHERE username = ?")) {
             stm.setString(1, username);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
-                     if(rs.getString("password").equals(to_check)){
+                     if(Common.validatePassword(password, rs.getString("password"))){
                          switch(rs.getString("ruolo")){
                              case "paziente": ret = 0; break;
                              case "medico": 
@@ -110,6 +98,10 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
                 else{
                     ret = -1;
                 }
+            } catch (NoSuchAlgorithmException ex) {
+                throw new DaoException("NoSuchAlgorithmException UtenteDao", ex);
+            } catch (InvalidKeySpecException ex) {
+                throw new DaoException("InvalidKeySpecException UtenteDao", ex);
             }
         } catch (SQLException ex) {
             throw new DaoException("Error retriving salt UtenteDao", ex);
