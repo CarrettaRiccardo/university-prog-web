@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav class="navbar navbar-light bg-white shadow-sm">
 
-    <a class="navbar-brand" href="home.jsp">
-        <img src="assets/logo.svg" width="36" height="36" class="d-inline-block align-top mr-2" alt="logo">
+    <a class="navbar-brand" href="home">
+        <img src="/project/assets/logo.svg" width="36" height="36" class="d-inline-block align-top mr-2" alt="logo">
         <span class="h4 font-weight-normal d-none d-sm-inline">
             <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
         </span>
@@ -19,7 +19,7 @@
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdownMenu">
                 <a class="dropdown-item" href="settings.jsp">Impostazioni</a>
-                <a class="dropdown-item" href="login.jsp">Logout</a>
+                <a class="dropdown-item" href="login">Logout</a>
             </div>
         </div>
 

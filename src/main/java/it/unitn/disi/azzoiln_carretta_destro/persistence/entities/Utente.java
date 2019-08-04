@@ -1,68 +1,56 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.entities;
 
-import java.util.Date;
-
 /**
  *
  * @author Steve
  */
 public class Utente {
+    private int res; //risultato login. Vedi @return di getRes()
     private int id;
     private String username;
-    private String nome,cognome, cf;
-    private Date data_nascita;
-    private boolean attivo;
-    private int provincia, comune;
-
-    public Utente(int id, String username, String nome, String cognome, String cf, Date data_nascita, boolean attivo, int provincia, int comune) {
+    private int provincia;
+    
+    /**
+     * Usato per ritornare semplicemente errore nel login
+     * @param res 
+     */
+    public Utente(int res){
+        this.res = res;
+    }
+    
+    public Utente(int id, String username, int provincia){
         this.id = id;
         this.username = username;
-        this.nome = nome;
-        this.cognome = cognome;
-        this.cf = cf;
-        this.attivo = attivo;
-        this.data_nascita = data_nascita;
+        this.provincia = provincia;
+        res = -99; //valore non inizializzato
     }
-
-    public int getProvincia() {
-        return provincia;
+    
+    public Utente(int id, String username,int provincia, int res){
+        this.id = id;
+        this.username = username;
+        this.provincia = provincia;
+        this.res = res;
     }
-
-    public int getComune() {
-        return comune;
+    
+    
+    /**
+     * 
+     * @return -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
+     * (scelta tra medico e paziente), 2 successo (SSR)
+     */
+    public int getRes() {
+        return res;
+    }
+    
+    public String getUsername() {
+        return username;
     }
 
     public int getId() {
         return id;
     }
     
-    public boolean isAttivo() {
-        return attivo;
+    public int getProvincia() {
+        return provincia;
     }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public String getCf() {
-        return cf;
-    }
-
-    public Date getData_nascita() {
-        return data_nascita;
-    }
-
-   
-
-   
-    
-    
 }

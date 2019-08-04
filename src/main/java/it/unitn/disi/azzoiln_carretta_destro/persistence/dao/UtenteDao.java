@@ -26,12 +26,12 @@ public interface UtenteDao<Utente> extends Dao<Utente, Integer>{
      * 
      * @param username
      * @param password
-     * @return -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
-     * (scelta tra medico e paziente), 2 successo (SSR)
+     * @return Un Utente con res = -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
+ (scelta tra medico e paziente), 2 successo (SSR)
      * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      *
     */
-    public int login(String username, String password) throws DaoException;
+    public Utente login(String username, String password) throws DaoException;
     
     /**
      * 

@@ -11,12 +11,12 @@ import java.util.Date;
  *
  * @author Steve
  */
-public class Medico extends Utente{
+public class Medico extends Persona{
     private String laurea;
     private Date inizioCarriera;
-
-    public Medico(String laurea, Date inizioCarriera, int id, String username, String nome, String cognome, String cf, Date data_nascita, boolean attivo, int provincia, int comune) {
-        super(id, username, nome, cognome, cf, data_nascita,attivo, provincia, comune);
+                  
+    public Medico(int id, String username, String nome, String cognome, String cf, Date data_nascita, boolean attivo, int provincia, int comune, String laurea, Date inizioCarriera ) {
+        super(id, username, nome, cognome, cf, data_nascita,attivo,provincia, comune);
         this.laurea = laurea;
         this.inizioCarriera = inizioCarriera;
     }

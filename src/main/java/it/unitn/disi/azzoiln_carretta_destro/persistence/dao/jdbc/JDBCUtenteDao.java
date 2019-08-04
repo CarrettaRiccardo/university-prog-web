@@ -1,5 +1,6 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao.jdbc;
 
+
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
@@ -9,6 +10,8 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
@@ -51,11 +54,23 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
                                            rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
                                            rs.getBoolean("paziente_attivo"));
                     }
-                    else{
-                        ret = new Medico(rs.getString("laurea"), rs.getDate("inizio_carriera"),rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                    else if(rs.getString("ruolo").equals("medico")){
+                        ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
-                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"));
+                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
                     }
+                    /*
+                    DA COMPLETARE
+                    else if(rs.getString("ruolo").equals("medico_spec")){
+                        ret = new MedicoSpecialista(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                           rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
+                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
+                    }
+                    else if(rs.getString("ruolo").equals("ssp")){
+                        ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                           rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
+                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
+                    }*/
                 }
             }
         } catch (SQLException ex) {
@@ -76,27 +91,28 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
      *
     */
     @Override
-    public int login(String username, String password) throws DaoException {
-        int ret = -3;
+    public Utente login(String username, String password) throws DaoException {
+        Utente ret = null;
+        int res = -3;
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT password, ruolo FROM utenti WHERE username = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM utenti WHERE username = ?")) {
             stm.setString(1, username);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
                      if(Common.validatePassword(password, rs.getString("password"))){
                          switch(rs.getString("ruolo")){
-                             case "paziente": ret = 0; break;
+                             case "paziente": ret = getPaziente(rs, 0); break;
                              case "medico": 
-                             case "medico_spec": ret = 1; break;
-                             case "ssp": ret = 2; break;
+                             case "medico_spec": ret = getPersona(rs, 1); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
+                             case "ssp": ret = getSSP(rs, 2); break;
                          }
                      }
                      else{
-                         ret = -2; //username trovato, password non uguale
+                         ret = new Utente(-2); //username trovato, password non uguale
                      }
                 }
                 else{
-                    ret = -1;
+                    ret = new Utente(-1); //username non trovato
                 }
             } catch (NoSuchAlgorithmException ex) {
                 throw new DaoException("NoSuchAlgorithmException UtenteDao", ex);
@@ -108,6 +124,23 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
         }
         
         return ret;
+    }
+    
+    private Ssp getSSP(ResultSet rs, int res) throws SQLException{
+        return new Ssp(rs.getInt("id"),rs.getString("username"), rs.getInt("provincia"),res);        
+    }
+    
+    private Persona getPersona(ResultSet rs, int res) throws SQLException{
+        return new Persona(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                           rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
+                                           rs.getBoolean("paziente_attivo"), rs.getInt("provincia"), rs.getInt("comune"), res);        
+    }
+    
+    private Paziente getPaziente(ResultSet rs, int res) throws SQLException{
+        return new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                           rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
+                                           rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
+                                           rs.getBoolean("paziente_attivo"), res);        
     }
     
     /**

@@ -4,6 +4,8 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -58,13 +60,19 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
-            int res = userDao.login(email, password);
-            switch(res){
-                case -3: response.sendRedirect(response.encodeRedirectURL(contextPath + "app/login?login_error=service")); break;
-                case -2: response.sendRedirect(response.encodeRedirectURL(contextPath + "app/login?login_error=pwd")); break;
-                case -1: response.sendRedirect(response.encodeRedirectURL(contextPath + "app/login?login_error=user")); break;
-                case 0: response.sendRedirect(response.encodeRedirectURL(contextPath + "home.jsp")); break;
+            Utente u =  (Utente) userDao.login(email, password);  //Non capisco perchè sia necessario il cast, se qualcuno lo sa lo dica a Steve :)
+            String where = "";
+            switch(u.getRes()){
+                case -2: where = "app/login?login_error=pwd"; break;
+                case -1: where = "app/login?login_error=user"; break;
+                case 0:  where = "app/home"; request.getSession(true).setAttribute("utente", u); break;
+                case 2:  where = "app/home"; request.getSession(true).setAttribute("utente", u); break;
+                case 1:  where = "app/home"; request.getSession(true).setAttribute("utente", u); break;
+                case -3: 
+                default: where = "app/login?login_error=service"; break;
             }
+            
+            response.sendRedirect(response.encodeRedirectURL(contextPath + where));
         } catch (DaoException ex) {
             request.getServletContext().log("Impossible to retrieve the user", ex);
         }

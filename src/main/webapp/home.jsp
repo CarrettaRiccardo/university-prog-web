@@ -1,5 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ include file="global/common.jsp" %> 
 <html>
 
 <head>
@@ -30,7 +29,7 @@
 
 <body>
 
-<jsp:include page="global/navbar.jsp">
+<jsp:include page="../global/navbar.jsp">
     <jsp:param name="showMenu" value="true"/>
 </jsp:include>
 
