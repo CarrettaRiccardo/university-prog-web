@@ -102,8 +102,8 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
                      if(Common.validatePassword(password, rs.getString("password"))){
                          switch(rs.getString("ruolo")){
                              case "paziente": ret = getPaziente(rs, 0); break;
-                             case "medico": 
-                             case "medico_spec": ret = getPersona(rs, 1); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
+                             case "medico": ret = getPersona(rs, 1, "medico"); break;
+                             case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
                              case "ssp": ret = getSSP(rs, 2); break;
                          }
                      }
@@ -130,10 +130,17 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
         return new Ssp(rs.getInt("id"),rs.getString("username"), rs.getInt("provincia"),res);        
     }
     
-    private Persona getPersona(ResultSet rs, int res) throws SQLException{
+    /**
+     * 
+     * @param rs
+     * @param res
+     * @return Oggetto Persona con i dati conuni a tutte le persone. In aggiunta il campo ruolo per distinguere tra medico, medico_spec
+     * @throws SQLException 
+     */
+    private Persona getPersona(ResultSet rs, int res,String ruolo) throws SQLException{
         return new Persona(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
-                                           rs.getBoolean("paziente_attivo"), rs.getInt("provincia"), rs.getInt("comune"), res);        
+                                           rs.getInt("provincia"), rs.getInt("comune"), res,ruolo);        
     }
     
     private Paziente getPaziente(ResultSet rs, int res) throws SQLException{

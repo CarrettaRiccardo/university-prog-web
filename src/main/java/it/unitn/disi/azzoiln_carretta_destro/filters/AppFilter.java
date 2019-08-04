@@ -1,5 +1,6 @@
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -32,13 +33,22 @@ public class AppFilter implements Filter {
     public AppFilter() {
     }    
     
-    private void doBeforeProcessing(ServletRequest request, ServletResponse response)
+    
+    /**
+     * 
+     * @param request
+     * @param response
+     * @return F <-> E' stato fatto un redirect
+     * @throws IOException
+     * @throws ServletException 
+     */
+    private boolean doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
             log("AppFilter:DoBeforeProcessing");
         }
 
-        if (request instanceof HttpServletRequest) {
+        if (request instanceof HttpServletRequest) {            
             ServletContext servletContext = ((HttpServletRequest) request).getServletContext();
             HttpSession session = ((HttpServletRequest) request).getSession(false);
             Utente user = null;
@@ -48,17 +58,23 @@ public class AppFilter implements Filter {
             String contextPath = servletContext.getContextPath();
             if (!contextPath.endsWith("/")) 
                 contextPath += "/";  
-                
-                
+            
             if (user == null) {
-                              
                 ((HttpServletResponse) response).sendRedirect(((HttpServletResponse) response).encodeRedirectURL(contextPath + "login"));
+                return false;
             }
-            else if()
+            else if(((HttpServletRequest) request).getRequestURI().indexOf("choose") > 0)  //se sono nella pagina choose e continuo i controlli sotto stanti, entro in un loop. Quindi i blocco
+                return true;
+            else if(user.getClass() == Persona.class){ //non è ancora stata fatta la scelta del tipo di utente da usare
+                ((HttpServletResponse) response).sendRedirect(contextPath + "app/choose");
+                return false;
+            }
         }
         else{
             throw new ServletException("Richiesta non riconusciuta valida");
         }
+        
+        return true;
     }    
     
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
@@ -103,7 +119,8 @@ public class AppFilter implements Filter {
             log("AppFilter:doFilter()");
         }
         
-        doBeforeProcessing(request, response);
+        if(!doBeforeProcessing(request, response))  //Se il BeforeProcessing ha fatto un redirect allora non ha senso fare il chain.doFilter e tutto quello che viene dopo
+            return;
         
         Throwable problem = null;
         try {

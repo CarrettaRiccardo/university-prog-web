@@ -10,7 +10,7 @@
     <script>
         $(document).ready(function () {
             $('#btnLogin').click(function () {
-                window.location.href = "app/login"
+                window.location.href = "login"
             })
         })
     </script>

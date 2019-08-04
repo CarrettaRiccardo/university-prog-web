@@ -56,20 +56,20 @@ public class LoginServlet extends HttpServlet {
         }
         
         if(email == null || password == null){
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/login?login_error=user"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "login?login_error=user"));
         }
 
         try {
             Utente u =  (Utente) userDao.login(email, password);  //Non capisco perchè sia necessario il cast, se qualcuno lo sa lo dica a Steve :)
             String where = "";
             switch(u.getRes()){
-                case -2: where = "app/login?login_error=pwd"; break;
-                case -1: where = "app/login?login_error=user"; break;
+                case -2: where = "login?login_error=pwd"; break;
+                case -1: where = "login?login_error=user"; break;
                 case 0:  where = "app/home"; request.getSession(true).setAttribute("utente", u); break;
                 case 2:  where = "app/home"; request.getSession(true).setAttribute("utente", u); break;
                 case 1:  where = "app/home"; request.getSession(true).setAttribute("utente", u); break;
                 case -3: 
-                default: where = "app/login?login_error=service"; break;
+                default: where = "login?login_error=service"; break;
             }
             
             response.sendRedirect(response.encodeRedirectURL(contextPath + where));

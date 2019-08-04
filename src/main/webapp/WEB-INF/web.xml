@@ -7,7 +7,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/app/login.handler</url-pattern>
+        <url-pattern>/login.handler</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>Login</servlet-name>
@@ -15,17 +15,33 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
-        <url-pattern>/app/login</url-pattern>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>Home</servlet-name>
         <jsp-file>/home.jsp</jsp-file>
     </servlet>
+    <servlet>
+        <servlet-name>ChooseServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.ChooseServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/app/home</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Choose</servlet-name>
+        <jsp-file>/choose.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Choose</servlet-name>
+        <url-pattern>/app/choose</url-pattern>
+    </servlet-mapping>
     <!-- SESSIONE -->
+    <servlet-mapping>
+        <servlet-name>ChooseServlet</servlet-name>
+        <url-pattern>/choose.handler</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
