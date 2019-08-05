@@ -19,7 +19,7 @@
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdownMenu">
                 <a class="dropdown-item" href="settings.jsp">Impostazioni</a>
-                <a class="dropdown-item" href="logout">Logout</a>
+                <a class="dropdown-item" href="logout.handler">Logout</a>
             </div>
         </div>
 
