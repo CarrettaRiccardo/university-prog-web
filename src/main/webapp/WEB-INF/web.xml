@@ -46,6 +46,10 @@
         <url-pattern>/include/ricette.jsp</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>ChooseServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.ChooseServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Choose</servlet-name>
         <jsp-file>/choose.jsp</jsp-file>
     </servlet>
@@ -53,6 +57,16 @@
         <servlet-name>Choose</servlet-name>
         <url-pattern>/app/choose</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Settings</servlet-name>
+        <jsp-file>/settings.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Settings</servlet-name>
+        <url-pattern>/app/settings</url-pattern>
+    </servlet-mapping>
+
     <!-- SESSIONE -->
     <servlet-mapping>
         <servlet-name>ChooseServlet</servlet-name>
