@@ -30,20 +30,12 @@
         <jsp-file>/home.jsp</jsp-file>
     </servlet>
     <servlet>
-        <servlet-name>Ricette</servlet-name>
-        <jsp-file>/ricette.jsp</jsp-file>
-    </servlet>
-    <servlet>
         <servlet-name>ChooseServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.ChooseServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/app/home</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Ricette</servlet-name>
-        <url-pattern>/include/ricette.jsp</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>ChooseServlet</servlet-name>
@@ -122,17 +114,4 @@
         <param-name>password</param-name>
         <param-value>sampirisi</param-value>
     </context-param>
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Include files</web-resource-name>
-            <description>No direct access to include files.</description>
-            <url-pattern>/include/ricette.jsp</url-pattern>
-            <http-method>POST</http-method>
-            <http-method>GET</http-method>
-        </web-resource-collection>
-        <auth-constraint>
-            <description>No direct browser access to include files.</description>
-            <role-name>NobodyHasThisRole</role-name>
-        </auth-constraint>
-    </security-constraint>
 </web-app>
