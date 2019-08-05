@@ -19,8 +19,9 @@ public class RicetteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher rd = request.getRequestDispatcher("ricette.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/include/ricette.jsp");
         String mio = "ciao";
+        request.setAttribute("mio", mio);
         rd.include(request, response);
     }
 

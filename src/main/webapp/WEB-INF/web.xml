@@ -30,12 +30,20 @@
         <jsp-file>/home.jsp</jsp-file>
     </servlet>
     <servlet>
+        <servlet-name>Ricette</servlet-name>
+        <jsp-file>/ricette.jsp</jsp-file>
+    </servlet>
+    <servlet>
         <servlet-name>ChooseServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.ChooseServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/app/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Ricette</servlet-name>
+        <url-pattern>/include/ricette.jsp</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>Choose</servlet-name>
@@ -68,6 +76,15 @@
         <filter-name>AppFilter</filter-name>
         <filter-class>it.unitn.disi.azzoiln_carretta_destro.filters.AppFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>NoJspFilter</filter-name>
+        <filter-class>it.unitn.disi.azzoiln_carretta_destro.filters.NoJspFilter</filter-class>
+    </filter>
+    <!-- LISTENERS -->
+    <filter-mapping>
+        <filter-name>NoJspFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>AppFilter</filter-name>
         <url-pattern>/app/*</url-pattern>
@@ -75,7 +92,6 @@
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
     </filter-mapping>
-    <!-- LISTENERS -->
     <listener>
         <listener-class>it.unitn.disi.azzoiln_carretta_destro.listeners.AppListener</listener-class>
     </listener>
@@ -96,7 +112,7 @@
         <web-resource-collection>
             <web-resource-name>Include files</web-resource-name>
             <description>No direct access to include files.</description>
-            <url-pattern>*/settings.jsp</url-pattern>
+            <url-pattern>/include/ricette.jsp</url-pattern>
             <http-method>POST</http-method>
             <http-method>GET</http-method>
         </web-resource-collection>
