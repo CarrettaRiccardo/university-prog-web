@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<jsp:include page="global/navbar.jsp"/>
+<jsp:include page="../global/navbar.jsp"/>
 
 <div class="container pt-3">
     <h2 class="mb-4">Impostazioni account</h2>

@@ -1,15 +1,14 @@
 <%@ include file="global/common.jsp" %> 
 <html>
     <head>
-        <%@include file="global/head.jsp" %>  <%-- Questo path rimane uguale perchè valutato a compile time--%>
+        <%@include file="global/head.jsp" %>  <%-- Questo path rimane uguale perchÃ¨ valutato a compile time--%>
         <title>Choose</title>
         
     </head>
     <body class="bg-light">
         <div class="text-center">
             <h1> <fmt:message key="choose_title"/> </h1>
-            
-           
+
             <div class="container pt-5">
                 <div class="row text-center">
                     <a href="choose.handler?m=m">
@@ -30,8 +29,6 @@
                     </a>
                 </div>
             </div>
-            
-            
         </div>
     </body>
 </html>

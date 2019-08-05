@@ -1,5 +1,7 @@
-CREATE SCHEMA 'prog_web';
+/*
+CREATE SCHEMA prog_web;
 CREATE USER 'user_prog_web'@'localhost' IDENTIFIED BY 'sampirisi';
+  */
 GRANT INSERT,UPDATE,DELETE,SELECT  ON prog_web.* TO 'user_prog_web'@'localhost';
 
 create table ticket(
@@ -46,13 +48,13 @@ create table utenti(
     PRIMARY KEY(id),
     UNIQUE(username),
     UNIQUE(cf),
-    FOREIGN KEY fk_utenti_to_comuni(comune) REFERENCES comuni(id)
+    FOREIGN KEY fk_utente_to_comuni(comune) REFERENCES comuni(id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT,
     FOREIGN KEY fk_utenti_to_province(provincia) REFERENCES province(id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT,
-    FOREIGN KEY fk_pazietne_to_medico(id_medico) REFERENCES utenti(id)
+    FOREIGN KEY fk_paziente_to_medico(id_medico) REFERENCES utenti(id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT
     /*CHECK( id <> id_medico ),
@@ -151,7 +153,7 @@ create table esame(
     id_ticket int DEFAULT NULL,
     id_ssp int DEFAULT NULL COMMENT 'NULL se non ancora fatto',
     risultato text DEFAULT NULL,
-    time_esame timestamp DEFAULT NULL,
+    time_esame timestamp,
     PRIMARY KEY(id_prescrizione),
     FOREIGN KEY fk_esame_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
         ON UPDATE RESTRICT
@@ -174,10 +176,10 @@ create table visita(
     anamnesi text not null,
     time_visita timestamp not null DEFAULT NOW(),
     PRIMARY KEY(id_prescrizione),
-    FOREIGN KEY fk_visita_specialistica_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
+    FOREIGN KEY fk_visita_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,
-    FOREIGN KEY fk_esame_to_ticket(id_ticket) REFERENCES ticket(id)
+    FOREIGN KEY fk_visita_to_ticket(id_ticket) REFERENCES ticket(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
 )engine=InnoDB;
@@ -204,7 +206,7 @@ create table visita_specialistica(
     FOREIGN KEY fk_visita_specialistica_to_utenti(id_medico_specialista) REFERENCES utenti(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,
-    FOREIGN KEY fk_esame_to_ticket(id_ticket) REFERENCES ticket(id)
+    FOREIGN KEY fk_visita_specialistica_to_ticket(id_ticket) REFERENCES ticket(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,
     FOREIGN KEY fk_visita_specialistica_to_utenti_to_visite(id_visita_spec) REFERENCES visite_specialistiche(id)
