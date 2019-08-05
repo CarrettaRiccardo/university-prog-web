@@ -5,6 +5,14 @@
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.LoginServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RicetteServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.RicetteServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login.handler</url-pattern>
@@ -52,6 +60,14 @@
         <servlet-name>ChooseServlet</servlet-name>
         <url-pattern>/app/choose.handler</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/app/logout.handler</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RicetteServlet</servlet-name>
+        <url-pattern>/app/ricette</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -86,4 +102,17 @@
         <param-name>password</param-name>
         <param-value>sampirisi</param-value>
     </context-param>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Include files</web-resource-name>
+            <description>No direct access to include files.</description>
+            <url-pattern>*/settings.jsp</url-pattern>
+            <http-method>POST</http-method>
+            <http-method>GET</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>No direct browser access to include files.</description>
+            <role-name>NobodyHasThisRole</role-name>
+        </auth-constraint>
+    </security-constraint>
 </web-app>
