@@ -43,7 +43,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
     public Utente getByPrimaryKey(Integer id, String s) throws DaoException {
         Utente ret = null;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM utenti WHERE id = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE u.id = ?")) {
             stm.setInt(1, id);
             
             try (ResultSet rs = stm.executeQuery()) {
@@ -96,7 +96,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
         Utente ret = null;
         int res = -3;
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.id_provincia WHERE username = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE username = ?")) {
             stm.setString(1, username);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
