@@ -111,7 +111,7 @@ create table farmaci(
 create table farmaco(
     id_prescrizione int not null,
     id_farmaco int not null,
-    costo float not null,
+    costo float DEFAULT null, /*NULL <-> non ancora comprata*/
     quantita smallint not null,
     time_vendita timestamp not null DEFAULT NOW(),
     PRIMARY KEY(id_prescrizione),

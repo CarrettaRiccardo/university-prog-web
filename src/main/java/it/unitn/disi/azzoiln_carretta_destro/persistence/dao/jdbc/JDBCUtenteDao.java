@@ -238,6 +238,11 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
         return ret;
     }
 
+    @Override
+    public Utente getByPrimaryKey(Integer arg0) throws DaoException {
+        throw new UnsupportedOperationException("Not supported here."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
     
 }
