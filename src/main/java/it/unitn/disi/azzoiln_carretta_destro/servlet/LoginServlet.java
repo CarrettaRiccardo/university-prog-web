@@ -1,5 +1,6 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.MedicoDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;

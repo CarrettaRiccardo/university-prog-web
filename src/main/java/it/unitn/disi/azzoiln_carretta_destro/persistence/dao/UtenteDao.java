@@ -17,7 +17,7 @@ import java.util.List;
  * Interfaccia della classe UtenteDaoJDBC contenente i metodi che l' implementazione dovrà implementare
  * @author Steve
  */
-public interface UtenteDao<Utente> extends Dao<Utente, Integer>{
+public interface UtenteDao extends Dao<Utente, Integer>{
 
     
     

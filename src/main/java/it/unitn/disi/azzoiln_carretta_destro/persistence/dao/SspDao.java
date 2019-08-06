@@ -6,7 +6,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
  * Servizio snitario provinciale
  * @author Steve
  */
-public interface SspDao extends UtenteDao<Ssp>{
+public interface SspDao{
     
     
     /**

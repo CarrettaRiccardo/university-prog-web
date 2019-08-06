@@ -1,6 +1,5 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.RicettaDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
@@ -24,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RicetteServlet extends HttpServlet {
 
-    private RicettaDao ricettaDao;
+    private UtenteDao userDao;
     
     @Override
     public void init() throws ServletException {
@@ -33,7 +32,7 @@ public class RicetteServlet extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for user storage system");
         }
         try {
-            ricettaDao = daoFactory.getDAO(RicettaDao.class);
+            userDao = daoFactory.getDAO(UtenteDao.class);
         } catch (DaoFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
@@ -53,8 +52,7 @@ public class RicetteServlet extends HttpServlet {
             /*Ricetta r = new Ricetta(1,2,1,(short)3);
             System.out.println(ricettaDao.addRicetta(r));*/
             
-            List<Ricetta> elenco = ricettaDao.getRicette(1);
-            elenco.add(0, ricettaDao.getByPrimaryKey(1));
+            List<Ricetta> elenco = userDao.getRicette(1);
             System.out.println(elenco.get(0).getNomeFarmaco() + "-" + elenco.get(0).getCosto());
         } catch (DaoException ex) {
             Logger.getLogger(RicetteServlet.class.getName()).log(Level.SEVERE, null, ex);

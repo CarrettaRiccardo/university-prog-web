@@ -29,10 +29,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Implementazione UtenteDao con driver JDBC
  * @author Steve
  */
-public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<Utente>{
+public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
 
     public JDBCUtenteDao(Connection con){
         super(con);
@@ -222,8 +222,19 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
      * @return Elenco delle ricette ordinate in ordine cronologico inverso
      */
     @Override
-    public List<Ricetta> getRicette(Integer id_paziente){
-        LinkedList<Ricetta> ret = new LinkedList<>();
+    public List<Ricetta> getRicette(Integer id_paziente) throws DaoException {
+        List<Ricetta> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione WHERE id_prescrizione = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 Ricetta r = new Ricetta(rs.getInt("id_prescrizione"),rs.getInt("id_paziente"),rs.getInt("id_medico"),rs.getInt("id_farmaco"),rs.getString("nome"), rs.getFloat("costo"),rs.getShort("quantita"), rs.getDate("time_vendita"), rs.getDate("time"));
+                 ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("Error retriving List<Ricetta>", ex);
+        }        
         return ret;
     }
     
