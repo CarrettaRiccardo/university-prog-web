@@ -8,6 +8,7 @@ package it.unitn.disi.azzoiln_carretta_destro.listeners;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDaoFactory;
+import java.util.HashMap;
 import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -32,6 +33,11 @@ public class AppListener implements ServletContextListener{
             JDBCDaoFactory.init(dburl,user,password);
             DaoFactory daoFactory = JDBCDaoFactory.getInstance();
             sce.getServletContext().setAttribute("daoFactory", daoFactory);
+            
+            // Ricky hash per remember_me
+            HashMap<String, Integer> mapRememberMe = new HashMap<>();// TOKEN -> ID UTENTE
+            sce.getServletContext().setAttribute("hashRememberMe", mapRememberMe);
+            
         } catch (DaoFactoryException ex) {
             Logger.getLogger(getClass().getName()).severe(ex.toString());
             throw new RuntimeException(ex);

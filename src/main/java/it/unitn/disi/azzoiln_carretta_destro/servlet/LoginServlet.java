@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.stream.Stream;
 import javax.servlet.http.Cookie;
 
@@ -20,10 +21,15 @@ import javax.servlet.http.Cookie;
 public class LoginServlet extends HttpServlet {
 
     private UtenteDao userDao;
+    private HashMap<String, Integer> hashRememberMe;
 
     @Override
     public void init() throws ServletException {
         DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory"); //Steve ho tolto super.
+        hashRememberMe = (HashMap<String, Integer>) getServletContext().getAttribute("hashRememberMe"); //Ricky
+        if (hashRememberMe == null){
+            hashRememberMe = new HashMap<String, Integer>();
+        }
         if (daoFactory == null) {
             throw new ServletException("Impossible to get dao factory for user storage system");
         }
@@ -46,6 +52,8 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Integer id = null;
+        String token = null;
         String email = null;
         String password = null;
         
@@ -54,12 +62,21 @@ public class LoginServlet extends HttpServlet {
  
                                                      
         // cerca i cookie di "ricordami"
-        for(int i = 0; i < cookies.length && (email == null || password == null); i++){ 
+        for(int i = 0; i < cookies.length && token == null; i++){ 
             Cookie c = cookies[i];
-            if (c.getName().equals("user_mail"))
-                email = c.getValue();            
-            else if (c.getName().equals("user_pass"))   
-                   password = c.getValue();
+            if (c.getName().equals("user_token")){
+                token = c.getValue();
+                // cerco l'id corrispondente
+                id = hashRememberMe.get(token);
+                if (id != null){// c'è nell'Hash; altrimenti probabilmente il server è stato riavviato
+                    try{
+                        Utente u = (Utente) userDao.getByPrimaryKey(id);
+                    }
+                    catch(DaoException ex){
+                        throw new ServletException("Impossible to get dao factory for user storage system", ex);
+                    }
+                }
+            }
         }  
         
         String contextPath = getServletContext().getContextPath();
@@ -67,8 +84,8 @@ public class LoginServlet extends HttpServlet {
             contextPath += "/";
         }
         
-        // se non ci sono Cookie, prende i parametri
-        if (email == null || password == null){
+        // se non ci sono Cookie o non trova l'utente, prende i parametri
+        if (token == null || id == null){
             email = request.getParameter("username");
             password = request.getParameter("password");
         }
