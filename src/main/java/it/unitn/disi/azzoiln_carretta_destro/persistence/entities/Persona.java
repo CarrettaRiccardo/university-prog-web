@@ -10,8 +10,8 @@ public class Persona extends Utente {
     private Date data_nascita;
     private int comune;
 
-    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, String ruolo) {
-        super(id, username, provincia);
+    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, String ruolo, String nome_provincia) {
+        super(id, username, provincia, nome_provincia);
         this.nome = nome;
         this.cognome = cognome;
         this.cf = cf;
@@ -19,8 +19,8 @@ public class Persona extends Utente {
         this.ruolo = ruolo;
     }
 
-    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, int res, String ruolo) {
-        super(id, username, provincia, res);
+    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, int res, String ruolo, String nome_provincia) {
+        super(id, username, provincia,nome_provincia, res);
         this.nome = nome;
         this.cognome = cognome;
         this.cf = cf;

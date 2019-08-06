@@ -6,7 +6,7 @@ package it.unitn.disi.azzoiln_carretta_destro.persistence.entities;
 public class Utente {
     private int res; //risultato login. Vedi @return di getRes()
     private int id;
-    private String username;
+    private String username, nome_provincia;
     private int provincia;
 
     public Utente() {
@@ -21,17 +21,19 @@ public class Utente {
         this.res = res;
     }
 
-    public Utente(int id, String username, int provincia) {
+    public Utente(int id, String username, int provincia, String nome_provincia) {
         this.id = id;
         this.username = username;
         this.provincia = provincia;
+        this.nome_provincia = nome_provincia;
         res = -99; //valore non inizializzato
     }
 
-    public Utente(int id, String username, int provincia, int res) {
+    public Utente(int id, String username, int provincia,String nome_provincia, int res) {
         this.id = id;
         this.username = username;
         this.provincia = provincia;
+        this.nome_provincia = nome_provincia;
         this.res = res;
     }
 
