@@ -1,16 +1,18 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import java.util.List;
 
 /**
- *
+ * Definisco i metodi che le implementazioni devono implementare
  * @author Steve
  */
-public interface MedicoDao extends UtenteDao<Medico>{
+public interface MedicoDao{
     
     /**
      * 
@@ -37,14 +39,12 @@ public interface MedicoDao extends UtenteDao<Medico>{
     public boolean addVisita(Visita visita);
     
     /**
-     * Aggiunta prescrizione per un farmaco
-     * @param id_medico Id del medico che crea la visita
-     * @param id_paziente
-     * @param id_farmaco 
-     * @param qta Quantità del farmaco
-     * @return T on success
+     * Aggiunta di una ricetta per un singolo farmaco
+     * @param r Ricetta da aggiungere
+     * @return
+     * @throws DaoException 
      */
-    public boolean addRicetta(Integer id_medico,Integer id_paziente,Integer id_farmaco, Integer qta);
+    public boolean addRicetta(Ricetta r) throws DaoException;
     
     
     /**

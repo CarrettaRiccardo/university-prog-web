@@ -29,10 +29,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Implementazione UtenteDao con driver JDBC
  * @author Steve
  */
-public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<Utente>{
+public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
 
     public JDBCUtenteDao(Connection con){
         super(con);
@@ -83,11 +83,13 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
 
     /**
      * Verifica se username e password sono corretti. 
-     * 
+     * Se ritorna un SSP la modalità di visualizzazione è SSP
+     * Se ritorna Paziente | Medico | Medico.spec. la modalità sarà rispettivamente Paziente | Medico | Medico_spec
+     * Se ritorna un oggetto Persona la modalità non è decisa, bisogna farla scegliere (ChooseSevlet)
      * @param username
      * @param password
-     * @return -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
-     * (scelta tra medico e paziente), 2 successo (SSR)
+     * @return Un Utente con res = -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
+ (scelta tra medico e paziente), 2 successo (SSR)
      * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      *
     */
@@ -222,8 +224,19 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
      * @return Elenco delle ricette ordinate in ordine cronologico inverso
      */
     @Override
-    public List<Ricetta> getRicette(Integer id_paziente){
-        LinkedList<Ricetta> ret = new LinkedList<>();
+    public List<Ricetta> getRicette(Integer id_paziente) throws DaoException {
+        List<Ricetta> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione WHERE id_prescrizione = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 Ricetta r = new Ricetta(rs.getInt("id_prescrizione"),rs.getInt("id_paziente"),rs.getInt("id_medico"),rs.getInt("id_farmaco"),rs.getString("nome"), rs.getFloat("costo"),rs.getShort("quantita"), rs.getDate("time_vendita"), rs.getDate("time"));
+                 ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("Error retriving List<Ricetta>", ex);
+        }        
         return ret;
     }
     
@@ -239,9 +252,40 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
         return ret;
     }
 
+    /**
+     * Il valore di ritorno -2 non è qui usato
+     * Il valore di ritorno -4 indica 'id non trovato'
+     * @param id
+     * @return
+     * @throws DaoException 
+     */
     @Override
-    public Utente getByPrimaryKey(Integer arg0) throws DaoException {
-        throw new UnsupportedOperationException("Not supported here."); //To change body of generated methods, choose Tools | Templates.
+    public Utente getByPrimaryKey(Integer id) throws DaoException {
+        Utente ret = null;
+        int res = -3;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE id = ?")) {
+            stm.setInt(1, id);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    switch(rs.getString("ruolo")){
+                        case "paziente": ret = getPaziente(rs, 0); break;
+                        case "medico": ret = getPersona(rs, 1, "medico"); break;
+                        case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
+                        case "ssp": ret = getSSP(rs, 2); break;
+                    }                     
+                }
+                else{
+                    ret = new Utente(-4); //id non trovato
+                }
+            } catch (SQLException ex) {
+                throw new DaoException("Error retriving ResultSet JDBCUtenteDao", ex);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("Error preparing Statement JDBCtenteDao", ex);
+        }
+        
+        return ret;
     }
 
     

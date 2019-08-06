@@ -5,10 +5,10 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
 
 /**
- *
+ * Definisco i metodi che le implementazioni devono implementare
  * @author Steve
  */
-public interface MedicoSpecDao extends UtenteDao<MedicoSpecialista>{
+public interface MedicoSpecDao {
     
     
     /**
