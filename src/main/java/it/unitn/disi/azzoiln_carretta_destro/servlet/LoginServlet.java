@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Stream;
+import javax.servlet.http.Cookie;
 
 /**
  * @author Steve
@@ -44,12 +46,31 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String email = request.getParameter("username");
-        String password = request.getParameter("password");
-
+        String email = null;
+        String password = null;
+        
+        Cookie[] cookies = request.getCookies();     // request is an instance of type 
+                                                     //HttpServletRequest
+ 
+                                                     
+        // cerca i cookie di "ricordami"
+        for(int i = 0; i < cookies.length && (email == null || password == null); i++){ 
+            Cookie c = cookies[i];
+            if (c.getName().equals("user_mail"))
+                email = c.getValue();            
+            else if (c.getName().equals("user_pass"))   
+                   password = c.getValue();
+        }  
+        
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/")) {
             contextPath += "/";
+        }
+        
+        // se non ci sono Cookie, prende i parametri
+        if (email == null || password == null){
+            email = request.getParameter("username");
+            password = request.getParameter("password");
         }
 
         if (email == null || password == null) {
@@ -60,28 +81,23 @@ public class LoginServlet extends HttpServlet {
             Utente u = (Utente) userDao.login(email, password);  //Non capisco perchè sia necessario il cast, se qualcuno lo sa lo dica a Steve :)
             String where = "";
             switch (u.getRes()) {
-                case -2:
-                    where = "login?login_error=pwd";
-                    break;
-                case -1:
-                    where = "login?login_error=user";
-                    break;
-                case 0:
-                    where = "app/home";
-                    request.getSession(true).setAttribute("utente", u);
-                    break;
-                case 2:
-                    where = "app/home";
-                    request.getSession(true).setAttribute("utente", u);
-                    break;
-                case 1:
-                    where = "app/home";
-                    request.getSession(true).setAttribute("utente", u);
-                    break;
+                case -2:  where = "login?login_error=pwd"; break;
+                case -1:  where = "login?login_error=user"; break;
+                case 0:   where = "app/home"; request.getSession(true).setAttribute("utente", u); break;
+                case 2: where = "app/home"; request.getSession(true).setAttribute("utente", u); break;
+                case 1: where = "app/home";  request.getSession(true).setAttribute("utente", u); break;
                 case -3:
-                default:
-                    where = "login?login_error=service";
-                    break;
+                default: where = "login?login_error=service"; break;
+            }
+            
+            if(u.getRes() >= 0 && request.getParameter("remember_me") != null)
+            {
+                Cookie cM = new Cookie("user_mail", email);
+                Cookie cP = new Cookie("user_pass", password);
+                cM.setMaxAge(30*24*60*60);// 30 giorni
+                cP.setMaxAge(30*24*60*60);// 30 giorni
+                response.addCookie(cM);
+                response.addCookie(cP);
             }
 
             response.sendRedirect(response.encodeRedirectURL(contextPath + where));
