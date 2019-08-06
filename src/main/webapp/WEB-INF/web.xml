@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!-- SERVLET -->
-    <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.LoginServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.LogoutServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>RicetteServlet</servlet-name>
-        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.RicetteServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/login.handler</url-pattern>
-    </servlet-mapping>
     <servlet>
         <servlet-name>Login</servlet-name>
         <jsp-file>/login.jsp</jsp-file>
@@ -25,30 +10,38 @@
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login.handler</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/app/logout.handler</url-pattern>
+    </servlet-mapping>
+
+
     <servlet>
         <servlet-name>Home</servlet-name>
-        <jsp-file>/home.jsp</jsp-file>
-    </servlet>
-    <servlet>
-        <servlet-name>Ricette</servlet-name>
-        <jsp-file>/ricette.jsp</jsp-file>
-    </servlet>
-    <servlet>
-        <servlet-name>ChooseServlet</servlet-name>
-        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.ChooseServlet</servlet-class>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.HomeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/app/home</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Ricette</servlet-name>
-        <url-pattern>/include/ricette.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>ChooseServlet</servlet-name>
-        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.ChooseServlet</servlet-class>
-    </servlet>
+
+
     <servlet>
         <servlet-name>Choose</servlet-name>
         <jsp-file>/choose.jsp</jsp-file>
@@ -57,6 +50,17 @@
         <servlet-name>Choose</servlet-name>
         <url-pattern>/app/choose</url-pattern>
     </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>ChooseServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.ChooseServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChooseServlet</servlet-name>
+        <url-pattern>/app/choose.handler</url-pattern>
+    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>Settings</servlet-name>
@@ -67,19 +71,65 @@
         <url-pattern>/app/settings</url-pattern>
     </servlet-mapping>
 
-    <!-- SESSIONE -->
+
+    <servlet>
+        <servlet-name>Visite</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.VisiteServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VisiteSpecialisticheServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.VisiteSpecialisticheServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PrenotazioniServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.PrenotazioniServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EsamiServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.EsamiServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RicetteServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.RicetteServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PazientiServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.PazientiServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MediciServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.MediciServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>ChooseServlet</servlet-name>
-        <url-pattern>/app/choose.handler</url-pattern>
+        <servlet-name>MediciServlet</servlet-name>
+        <url-pattern>/app/medici</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/app/logout.handler</url-pattern>
+        <servlet-name>PazientiServlet</servlet-name>
+        <url-pattern>/app/pazienti</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>
         <url-pattern>/app/ricette</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EsamiServlet</servlet-name>
+        <url-pattern>/app/esami</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrenotazioniServlet</servlet-name>
+        <url-pattern>/app/prenotazioni</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VisiteSpecialisticheServlet</servlet-name>
+        <url-pattern>/app/visite_specialistiche</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Visite</servlet-name>
+        <url-pattern>/app/visite</url-pattern>
+    </servlet-mapping>
+
+    <!-- SESSIONE -->
     <session-config>
         <session-timeout>
             30
@@ -94,7 +144,7 @@
         <filter-name>NoJspFilter</filter-name>
         <filter-class>it.unitn.disi.azzoiln_carretta_destro.filters.NoJspFilter</filter-class>
     </filter>
-    <!-- LISTENERS -->
+
     <filter-mapping>
         <filter-name>NoJspFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -106,6 +156,7 @@
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
     </filter-mapping>
+    <!-- LISTENERS -->
     <listener>
         <listener-class>it.unitn.disi.azzoiln_carretta_destro.listeners.AppListener</listener-class>
     </listener>
@@ -122,17 +173,4 @@
         <param-name>password</param-name>
         <param-value>sampirisi</param-value>
     </context-param>
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Include files</web-resource-name>
-            <description>No direct access to include files.</description>
-            <url-pattern>/include/ricette.jsp</url-pattern>
-            <http-method>POST</http-method>
-            <http-method>GET</http-method>
-        </web-resource-collection>
-        <auth-constraint>
-            <description>No direct browser access to include files.</description>
-            <role-name>NobodyHasThisRole</role-name>
-        </auth-constraint>
-    </security-constraint>
 </web-app>

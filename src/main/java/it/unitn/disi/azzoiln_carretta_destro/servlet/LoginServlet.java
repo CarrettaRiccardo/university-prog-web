@@ -48,9 +48,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         String contextPath = getServletContext().getContextPath();
-        if (!contextPath.endsWith("/")) {
-            contextPath += "/";
-        }
+        if (!contextPath.endsWith("/")) contextPath += "/";
 
         if (email == null || password == null) {
             response.sendRedirect(response.encodeRedirectURL(contextPath + "login?login_error=user"));

@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class RicetteServlet extends HttpServlet {
+public class PrenotazioniServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("title", "Ricette");
-        request.setAttribute("page", "ricette");
+        request.setAttribute("title", "Prenotazioni");
+        request.setAttribute("page", "prenotazioni");
 
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
         rd.include(request, response);

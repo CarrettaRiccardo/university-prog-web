@@ -7,10 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class RicetteServlet extends HttpServlet {
+public class VisiteServlet extends HttpServlet {
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("title", "Ricette");
-        request.setAttribute("page", "ricette");
+        request.setAttribute("title", "Visite");
+        request.setAttribute("page", "visite");
 
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
         rd.include(request, response);
@@ -19,4 +20,5 @@ public class RicetteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
+
 }

@@ -35,7 +35,6 @@ public class Utente {
         this.res = res;
     }
 
-
     /**
      * @return -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo
      * (scelta tra medico e paziente), 2 successo (SSR)
@@ -54,5 +53,13 @@ public class Utente {
 
     public int getProvincia() {
         return provincia;
+    }
+
+    public UtenteType getType() {
+        if (this instanceof Paziente) return UtenteType.PAZIENTE;
+        if (this instanceof Medico) return UtenteType.MEDICO;
+        if (this instanceof MedicoSpecialista) return UtenteType.MEDICO_SPEC;
+        if (this instanceof Ssp) return UtenteType.SSP;
+        return UtenteType.UNKNOWN;
     }
 }

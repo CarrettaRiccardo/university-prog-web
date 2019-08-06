@@ -4,11 +4,11 @@
     <title>Login</title>
 
     <%@include file="global/head.jsp" %>  <%-- Questo path rimane uguale perchè valutato a compile time--%>
-    <link rel="stylesheet" href="/project/scss/login.scss">  <%-- La pagina di login è mappata su /app/login. Quindi mettere solo scc/login dà not found perchè cerca in /app/scss e non trova nulla--%>
+    <link rel="stylesheet" href="css/login.css">  <%-- La pagina di login è mappata su /app/login. Quindi mettere solo scc/login dà not found perchè cerca in /app/scss e non trova nulla--%>
 </head>
 <body>
 <form method="GET" action="login.handler" class="form-login text-center ">
-    <img src="/project/assets/logo.svg" width="100" height="100">
+    <img src="assets/logo.svg" width="100" height="100">
     <div class="display-4 mb-4 pb-1 font-weight-normal">
         <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
     </div>
