@@ -85,7 +85,7 @@ public class ChooseServlet extends HttpServlet {
                 throw  new ServerException("Errore il doGet ChooseServlet", ex);
             }
         }
-        response.sendRedirect(response.encodeRedirectURL(contextPath + "/app/home"));
+        response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
     }
 
     
