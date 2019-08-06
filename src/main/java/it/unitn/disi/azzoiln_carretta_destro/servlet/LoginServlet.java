@@ -23,6 +23,7 @@ public class LoginServlet extends HttpServlet {
 
     private UtenteDao userDao;
     private HashMap<String, Integer> hashRememberMe;
+    
 
     @Override
     public void init() throws ServletException {
@@ -57,10 +58,15 @@ public class LoginServlet extends HttpServlet {
         String token = null;
         String email = null;
         String password = null;
+        Utente u = null;
         
+        String contextPath = getServletContext().getContextPath();
+        if (!contextPath.endsWith("/")) {
+            contextPath += "/";
+        }
         Cookie[] cookies = request.getCookies();     // request is an instance of type 
                                                      //HttpServletRequest
- 
+        
                                                      
         // cerca i cookie di "ricordami"
         for(int i = 0; i < cookies.length && token == null; i++){ 
@@ -69,34 +75,43 @@ public class LoginServlet extends HttpServlet {
                 token = c.getValue();
                 // cerco l'id corrispondente
                 id = hashRememberMe.get(token);
-                if (id != null){// c'è nell'Hash; altrimenti probabilmente il server è stato riavviato
+                if (id != null){// c'è nell'Hash; altrimenti se è null probabilmente il server è stato riavviato
                     try{
-                        Utente u = (Utente) userDao.getByPrimaryKey(id);
+                        u = (Utente) userDao.getByPrimaryKey(id);
+                        if (u.getRes() < 0){// qualsiasi errore -> redirect login e cancella cookie
+                            Cookie ck = new Cookie("user_token", "");
+                            ck.setMaxAge(0);// cancella
+                            response.addCookie(ck);
+                            response.sendRedirect(response.encodeRedirectURL(contextPath + "login"));
+                        }
                     }
                     catch(DaoException ex){
                         throw new ServletException("Impossible to get dao factory for user storage system", ex);
                     }
                 }
+                else{
+                    Cookie ck = new Cookie("user_token", "");
+                    ck.setMaxAge(0);// cancella
+                    response.addCookie(ck);
+                }
             }
         }  
         
-        String contextPath = getServletContext().getContextPath();
-        if (!contextPath.endsWith("/")) {
-            contextPath += "/";
-        }
         
         // se non ci sono Cookie o non trova l'utente, prende i parametri
         if (token == null || id == null){
             email = request.getParameter("username");
             password = request.getParameter("password");
+            if (email == null || password == null) {
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "login?login_error=user"));
+            }
         }
 
-        if (email == null || password == null) {
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "login?login_error=user"));
-        }
+        
 
         try {
-            Utente u = (Utente) userDao.login(email, password);  //Non capisco perchè sia necessario il cast, se qualcuno lo sa lo dica a Steve :)
+            if (u == null)// Ricky; se non c'era il cookie/token/valido cerca l'utente tramite mail/pass
+                u = (Utente) userDao.login(email, password);  //Non capisco perchè sia necessario il cast, se qualcuno lo sa lo dica a Steve :)
             String where = "";
             switch (u.getRes()) {
                 case -2:  where = "login?login_error=pwd"; break;
@@ -110,12 +125,14 @@ public class LoginServlet extends HttpServlet {
             
             if(u.getRes() >= 0 && request.getParameter("remember_me") != null)
             {
-                Cookie cM = new Cookie("user_mail", email);
-                Cookie cP = new Cookie("user_pass", password);
-                cM.setMaxAge(30*24*60*60);// 30 giorni
-                cP.setMaxAge(30*24*60*60);// 30 giorni
-                response.addCookie(cM);
-                response.addCookie(cP);
+                String hash = "";
+                do{
+                    hash = it.unitn.disi.azzoiln_carretta_destro.utility.Common.randomAlphaNumeric(16);
+                } while(hashRememberMe.containsKey(hash) || hash.compareTo("") == 0);// controllo di sicurezza
+                hashRememberMe.put(hash, u.getId());
+                Cookie c = new Cookie("user_token", hash);
+                c.setMaxAge(30*24*60*60);// 30 giorni
+                response.addCookie(c);
             }
 
             response.sendRedirect(response.encodeRedirectURL(contextPath + where));
@@ -123,6 +140,8 @@ public class LoginServlet extends HttpServlet {
             request.getServletContext().log("Impossible to retrieve the user", ex);
         }
     }
+    
+    
 
     /**
      * Handles the HTTP <code>POST</code> method.

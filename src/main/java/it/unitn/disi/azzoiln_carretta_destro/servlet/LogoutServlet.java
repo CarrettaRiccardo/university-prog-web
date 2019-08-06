@@ -1,11 +1,13 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,13 +38,20 @@ public class LogoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        session.invalidate();
 
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/")) {
             contextPath += "/";
         }
+        
+        // da mettere a posto che non slogga (cookie e anche 
+        Cookie ck = new Cookie("user_token", "");
+        ck.setMaxAge(0);// cancella il ricordami
+        response.addCookie(ck);
+        
+        
+        HttpSession session = request.getSession(false);
+        session.invalidate();
 
         if (!response.isCommitted()) {
             response.sendRedirect(response.encodeRedirectURL(contextPath + "login"));

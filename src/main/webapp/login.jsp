@@ -25,9 +25,8 @@
         }
 
         $(document).ready(function() {
-            var mailCookie = getCookie("user_mail");
-            var passCookie = getCookie("user_pass");
-            if (mailCookie && passCookie) {
+            var tokenCookie = getCookie("user_token");
+            if (tokenCookie) {
                 window.location.href = "login.handler"
             }
         });
