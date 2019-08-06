@@ -19,11 +19,20 @@ import java.util.List;
  */
 public interface UtenteDao extends Dao<Utente, Integer>{
 
-    
+    /**
+     * Da usare se si sa già la modalità con cui si vuole leggere l'utente dal DB
+     * @param primaryKey
+     * @param modalita "Forza" il tipo di ritorno. Ovvero se un utente è un medico e modalità = 'paziente', allora ottengo come risultato un oggetto di tipo Paziente
+     * @return Oggetto che rappresenta l'ogetto che vogliamo ottenere
+     * @throws DaoException 
+     */
+    public Utente getByPrimaryKey(Integer primaryKey, String modalita) throws DaoException;
     
     /**
      * Verifica se username e password sono corretti. 
-     * 
+     * Se ritorna un SSP la modalità di visualizzazione è SSP
+     * Se ritorna Paziente | Medico | Medico.spec. la modalità sarà rispettivamente Paziente | Medico | Medico_spec
+     * Se ritorna un oggetto Persona la modalità non è decisa, bisogna farla scegliere (ChooseSevlet)
      * @param username
      * @param password
      * @return Un Utente con res = -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 

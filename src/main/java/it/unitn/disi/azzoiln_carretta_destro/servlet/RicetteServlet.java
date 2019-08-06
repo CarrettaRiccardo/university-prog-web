@@ -1,5 +1,6 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.MedicoDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
@@ -49,8 +50,8 @@ public class RicetteServlet extends HttpServlet {
         rd.include(request, response);*/
         
         try {
-            /*Ricetta r = new Ricetta(1,2,1,(short)3);
-            System.out.println(ricettaDao.addRicetta(r));*/
+            Ricetta r = new Ricetta(2,2,1,(short)3);
+            System.out.println( ((MedicoDao)userDao).addRicetta(r));  //Steve: Per accedere ai metodi di JDBCMedicoDao faccio un cast, questo perchè userDao
             
             List<Ricetta> elenco = userDao.getRicette(1);
             System.out.println(elenco.get(0).getNomeFarmaco() + "-" + elenco.get(0).getCosto());
