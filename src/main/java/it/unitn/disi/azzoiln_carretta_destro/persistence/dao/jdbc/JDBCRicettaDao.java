@@ -70,7 +70,7 @@ public class JDBCRicettaDao extends JDBCDao<Ricetta,Integer> implements RicettaD
 
     @Override
     public boolean addRicetta(Ricetta r) throws DaoException {
-        if(r == null || r.getId_prescrizione() > 0) return false;  //Se r.getId_prescrizione() > 0 allora non è una ricetta appena creata
+        if(r == null || r.getId() > 0) return false;  //Se r.getId_prescrizione() > 0 allora non è una ricetta appena creata
         
         try {
             PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)");

@@ -52,12 +52,13 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
                         ret = new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                                            rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                           rs.getBoolean("paziente_attivo"));
+                                           rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"));
                     }
                     else if(rs.getString("ruolo").equals("medico")){
                         ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
-                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
+                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), 
+                                           rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"));
                     }
                     /*
                     DA COMPLETARE
@@ -95,7 +96,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
         Utente ret = null;
         int res = -3;
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM utenti WHERE username = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.id_provincia WHERE username = ?")) {
             stm.setString(1, username);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
@@ -127,7 +128,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
     }
     
     private Ssp getSSP(ResultSet rs, int res) throws SQLException{
-        return new Ssp(rs.getInt("id"),rs.getString("username"), rs.getInt("provincia"),res);        
+        return new Ssp(rs.getInt("id"),rs.getString("username"), rs.getInt("provincia"),rs.getString("nome_provincia"),res);           
     }
     
     /**
@@ -140,14 +141,14 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
     private Persona getPersona(ResultSet rs, int res,String ruolo) throws SQLException{
         return new Persona(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
-                                           rs.getInt("provincia"), rs.getInt("comune"), res,ruolo);        
+                                           rs.getInt("provincia"), rs.getInt("comune"), res,ruolo,rs.getString("nome_provincia"));        
     }
     
     private Paziente getPaziente(ResultSet rs, int res) throws SQLException{
         return new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                                            rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                           rs.getBoolean("paziente_attivo"), res);        
+                                           rs.getBoolean("paziente_attivo"), res,rs.getString("nome_provincia"));        
     }
     
     /**
@@ -180,7 +181,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
             ret = CON.prepareStatement("UPDATE utenti SET provincia = ?, comune = ?,"
                     + "id_medico = ? WHERE id = ? AND ruolo = 'paziente' ");
             ret.setInt(1,p.getProvincia());
-            ret.setInt(2,p.getComune());
+            ret.setInt(2,p.getId_Comune());
             ret.setInt(3,p.getId_medico());
             ret.setInt(4,p.getId());
         }

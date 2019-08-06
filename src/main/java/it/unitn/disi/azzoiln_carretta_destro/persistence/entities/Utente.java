@@ -29,6 +29,9 @@ public class Utente {
         res = -99; //valore non inizializzato
     }
 
+    /**
+     * Per oggetto recuperato durante il login. Va aggiunto il campo res per individuare errori al login
+     */
     public Utente(int id, String username, int provincia,String nome_provincia, int res) {
         this.id = id;
         this.username = username;
