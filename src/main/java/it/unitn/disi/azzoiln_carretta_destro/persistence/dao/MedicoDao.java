@@ -9,7 +9,8 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import java.util.List;
 
 /**
- * Definisco i metodi che le implementazioni devono implementare
+ * Definisco i metodi che le implementazioni devono implementare.
+ * Per capire perchè non estende UtenteDao vedi commenti a JDBCMedicoDao
  * @author Steve
  */
 public interface MedicoDao{

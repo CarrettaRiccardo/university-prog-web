@@ -3,6 +3,8 @@ package it.unitn.disi.azzoiln_carretta_destro.persistence.dao.jdbc;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.MedicoDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
@@ -15,22 +17,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Implementazione MedicoDao con driver JDBC.
- * Estende JDBCUtenteDao in quanto un Medico è un Utente. Ereditando l' implementazione 
- * evito di dover ridefinire nuovamente tutti i metodi, perchè già implementati. Se avessi voluto ereditare solo
- * MedicoDao (in tal caso MedicoDao estendeva UtenteDao) avrei dovuto implementare tutti i metodi già implementati
+ * Siccome la classe sarà accessibile solamente tramite JDBCUtenteDao è inutile reimplementare i metodi di UtenteDao anche qui
+ * (cosa che verrebbe resa necessaria se MedicoDao estendesse UtenteDao). Quindi MedicoDao non estende UtenteDao.
  * @author Steve
  */
-public class JDBCMedicoDao extends JDBCUtenteDao implements MedicoDao{
+class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
     
     public JDBCMedicoDao(Connection con) {
         super(con);
-    }
-
-    @Override
-    public List<Paziente> getPazienti(Integer id_medico) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }    
 
     @Override
     public boolean addVisita(Integer id_medico, Integer id_paziente, Visita visita) {
@@ -85,5 +80,11 @@ public class JDBCMedicoDao extends JDBCUtenteDao implements MedicoDao{
     public boolean addEsame(Integer id_medico, Integer id_paziente, Integer id_esame) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Paziente> getPazienti(Integer id_medico) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     
 }

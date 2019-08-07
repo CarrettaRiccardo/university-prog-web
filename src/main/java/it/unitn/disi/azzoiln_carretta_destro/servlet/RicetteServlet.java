@@ -51,12 +51,13 @@ public class RicetteServlet extends HttpServlet {
 
         try {
             Ricetta r = new Ricetta(2,2,1,(short)3);
-            System.out.println( ((MedicoDao)userDao).addRicetta(r));  //Steve: Per accedere ai metodi di JDBCMedicoDao faccio un cast, questo perchè userDao
-
+            System.out.println( userDao.Medico().addRicetta(r) );  //Esempio di come richiamare i metodi specifici di un Medico
+            
             List<Ricetta> elenco = userDao.getRicette(1);
             System.out.println(elenco.get(0).getNomeFarmaco() + "-" + elenco.get(0).getCosto());
         } catch (DaoException ex) {
             Logger.getLogger(RicetteServlet.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Aiai");
         }
 
 
