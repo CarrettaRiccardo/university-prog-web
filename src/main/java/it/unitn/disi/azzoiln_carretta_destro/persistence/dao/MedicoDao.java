@@ -30,7 +30,7 @@ public interface MedicoDao{
      * @param visita I dati della visita da inserire
      * @return T on success
      */
-    public boolean addVisita(Integer id_medico,Integer id_paziente,Visita visita) throws DaoException;
+    /*public boolean addVisita(Integer id_medico,Integer id_paziente,Visita visita) throws DaoException;*/
     
     /**
      * Metodo per registrare la visita di un paziente, assumento i vari ids interni a Visita

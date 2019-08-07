@@ -27,11 +27,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         super(con);
     }    
 
-    @Override
-    public boolean addVisita(Integer id_medico, Integer id_paziente, Visita visita) throws DaoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     @Override
     public boolean addVisita(Visita visita) throws DaoException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
