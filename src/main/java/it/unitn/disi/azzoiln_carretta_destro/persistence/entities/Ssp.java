@@ -6,8 +6,8 @@ package it.unitn.disi.azzoiln_carretta_destro.persistence.entities;
  */
 public class Ssp extends Utente{
     
-    public Ssp(int id, String username, int provincia, int res) {
-        super(id, username, provincia, res);
+    public Ssp(int id, String username, int provincia,String nome_provincia, int res) {
+        super(id, username, provincia, nome_provincia, res);
     }
     
 }

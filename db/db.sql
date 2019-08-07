@@ -111,9 +111,9 @@ create table farmaci(
 create table farmaco(
     id_prescrizione int not null,
     id_farmaco int not null,
-    costo float DEFAULT null, /*NULL <-> non ancora comprata*/
+    costo float , /*NULL <-> non ancora comprata*/
     quantita smallint not null,
-    time_vendita timestamp not null DEFAULT NOW(),
+    time_vendita timestamp DEFAULT NULL,
     PRIMARY KEY(id_prescrizione),
     FOREIGN KEY fk_farmaco_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
         ON UPDATE RESTRICT
@@ -194,10 +194,10 @@ create table visite_specialistiche(
 
 create table visita_specialistica(
     id_prescrizione int not null,
-    id_medico_specialista int not null,
-    id_ticket int not null,
-    id_visita_spec int not null,
-    anamnesi text not null,
+    id_medico_specialista int,  /*NULL <-> visita non ancora fatta*/
+    id_ticket int,
+    id_visita_spec int,
+    anamnesi text,
     time_visita timestamp not null DEFAULT NOW(),
     PRIMARY KEY(id_prescrizione),
     FOREIGN KEY fk_visita_specialistica_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
@@ -296,4 +296,37 @@ NULL,
 1,
 'Medicina generale, Università di Padova',
 '1989-01-01');
+
+INSERT INTO `prog_web`.`prescrizione`
+(`id`,
+`id_paziente`,
+`id_medico`,
+`time`)
+VALUES
+(1,
+1,
+2,
+NOW());
+
+INSERT INTO `prog_web`.`farmaci`
+(`id`,
+`nome`,
+`costo`)
+VALUES
+(1,
+'Aspirina',
+5);
+
+INSERT INTO `prog_web`.`farmaco`
+(`id_prescrizione`,
+`id_farmaco`,
+`costo`,
+`quantita`,
+`time_vendita`)
+VALUES
+(1,
+1,
+NULL,
+2,
+NULL);
 */

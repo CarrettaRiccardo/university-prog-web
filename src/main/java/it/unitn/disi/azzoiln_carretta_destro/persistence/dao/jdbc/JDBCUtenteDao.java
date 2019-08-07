@@ -29,10 +29,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Implementazione UtenteDao con driver JDBC
  * @author Steve
  */
-public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<Utente>{
+public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
 
     public JDBCUtenteDao(Connection con){
         super(con);
@@ -43,7 +43,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
     public Utente getByPrimaryKey(Integer id, String s) throws DaoException {
         Utente ret = null;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM utenti WHERE id = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE u.id = ?")) {
             stm.setInt(1, id);
             
             try (ResultSet rs = stm.executeQuery()) {
@@ -52,12 +52,13 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
                         ret = new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                                            rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                           rs.getBoolean("paziente_attivo"));
+                                           rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"));
                     }
                     else if(rs.getString("ruolo").equals("medico")){
                         ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
-                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
+                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), 
+                                           rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"));
                     }
                     /*
                     DA COMPLETARE
@@ -82,11 +83,13 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
 
     /**
      * Verifica se username e password sono corretti. 
-     * 
+     * Se ritorna un SSP la modalità di visualizzazione è SSP
+     * Se ritorna Paziente | Medico | Medico.spec. la modalità sarà rispettivamente Paziente | Medico | Medico_spec
+     * Se ritorna un oggetto Persona la modalità non è decisa, bisogna farla scegliere (ChooseSevlet)
      * @param username
      * @param password
-     * @return -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
-     * (scelta tra medico e paziente), 2 successo (SSR)
+     * @return Un Utente con res = -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
+ (scelta tra medico e paziente), 2 successo (SSR)
      * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      *
     */
@@ -95,7 +98,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
         Utente ret = null;
         int res = -3;
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM utenti WHERE username = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE username = ?")) {
             stm.setString(1, username);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
@@ -127,7 +130,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
     }
     
     private Ssp getSSP(ResultSet rs, int res) throws SQLException{
-        return new Ssp(rs.getInt("id"),rs.getString("username"), rs.getInt("provincia"),res);        
+        return new Ssp(rs.getInt("id"),rs.getString("username"), rs.getInt("provincia"),rs.getString("nome_provincia"),res);           
     }
     
     /**
@@ -140,14 +143,14 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
     private Persona getPersona(ResultSet rs, int res,String ruolo) throws SQLException{
         return new Persona(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
-                                           rs.getInt("provincia"), rs.getInt("comune"), res,ruolo);        
+                                           rs.getInt("provincia"), rs.getInt("comune"), res,ruolo,rs.getString("nome_provincia"));        
     }
     
     private Paziente getPaziente(ResultSet rs, int res) throws SQLException{
         return new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                                            rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                           rs.getBoolean("paziente_attivo"), res);        
+                                           rs.getBoolean("paziente_attivo"), res,rs.getString("nome_provincia"));        
     }
     
     /**
@@ -180,7 +183,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
             ret = CON.prepareStatement("UPDATE utenti SET provincia = ?, comune = ?,"
                     + "id_medico = ? WHERE id = ? AND ruolo = 'paziente' ");
             ret.setInt(1,p.getProvincia());
-            ret.setInt(2,p.getComune());
+            ret.setInt(2,p.getId_Comune());
             ret.setInt(3,p.getId_medico());
             ret.setInt(4,p.getId());
         }
@@ -221,8 +224,19 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
      * @return Elenco delle ricette ordinate in ordine cronologico inverso
      */
     @Override
-    public List<Ricetta> getRicette(Integer id_paziente){
-        LinkedList<Ricetta> ret = new LinkedList<>();
+    public List<Ricetta> getRicette(Integer id_paziente) throws DaoException {
+        List<Ricetta> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione WHERE id_prescrizione = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 Ricetta r = new Ricetta(rs.getInt("id_prescrizione"),rs.getInt("id_paziente"),rs.getInt("id_medico"),rs.getInt("id_farmaco"),rs.getString("nome"), rs.getFloat("costo"),rs.getShort("quantita"), rs.getDate("time_vendita"), rs.getDate("time"));
+                 ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("Error retriving List<Ricetta>", ex);
+        }        
         return ret;
     }
     
@@ -238,9 +252,40 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao<
         return ret;
     }
 
+    /**
+     * Il valore di ritorno -2 non è qui usato
+     * Il valore di ritorno -4 indica 'id non trovato'
+     * @param id
+     * @return
+     * @throws DaoException 
+     */
     @Override
-    public Utente getByPrimaryKey(Integer arg0) throws DaoException {
-        throw new UnsupportedOperationException("Not supported here."); //To change body of generated methods, choose Tools | Templates.
+    public Utente getByPrimaryKey(Integer id) throws DaoException {
+        Utente ret = null;
+        int res = -3;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE id = ?")) {
+            stm.setInt(1, id);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    switch(rs.getString("ruolo")){
+                        case "paziente": ret = getPaziente(rs, 0); break;
+                        case "medico": ret = getPersona(rs, 1, "medico"); break;
+                        case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
+                        case "ssp": ret = getSSP(rs, 2); break;
+                    }                     
+                }
+                else{
+                    ret = new Utente(-4); //id non trovato
+                }
+            } catch (SQLException ex) {
+                throw new DaoException("Error retriving ResultSet JDBCUtenteDao", ex);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("Error preparing Statement JDBCtenteDao", ex);
+        }
+        
+        return ret;
     }
 
     

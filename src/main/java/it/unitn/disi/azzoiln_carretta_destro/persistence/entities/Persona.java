@@ -6,12 +6,23 @@ import java.util.Date;
  * @author Steve
  */
 public class Persona extends Utente {
-    private String nome, cognome, cf, ruolo;
+    private String nome, cognome, cf, ruolo, nome_comune;
     private Date data_nascita;
-    private int comune;
+    private int id_comune;
 
-    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, String ruolo) {
-        super(id, username, provincia);
+    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, String ruolo, String nome_provincia) {
+        super(id, username, provincia, nome_provincia);
+        this.nome = nome;
+        this.cognome = cognome;
+        this.cf = cf;
+        this.data_nascita = data_nascita;
+        this.ruolo = ruolo;
+        this.nome_comune = nome_comune;
+        this.id_comune = id_comune;
+    }
+
+    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, int res, String ruolo, String nome_provincia) {
+        super(id, username, provincia,nome_provincia, res);
         this.nome = nome;
         this.cognome = cognome;
         this.cf = cf;
@@ -19,18 +30,13 @@ public class Persona extends Utente {
         this.ruolo = ruolo;
     }
 
-    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, int res, String ruolo) {
-        super(id, username, provincia, res);
-        this.nome = nome;
-        this.cognome = cognome;
-        this.cf = cf;
-        this.data_nascita = data_nascita;
-        this.ruolo = ruolo;
+
+    public int getId_Comune() {
+        return id_comune;
     }
 
-
-    public int getComune() {
-        return comune;
+    public String getNome_comune() {
+        return nome_comune;
     }
 
     public String getNome() {
