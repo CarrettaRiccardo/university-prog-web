@@ -59,6 +59,7 @@ public class LoginServlet extends HttpServlet {
         String email = null;
         String password = null;
         Utente u = null;
+        Cookie ck = null;
         
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/")) {
@@ -72,6 +73,7 @@ public class LoginServlet extends HttpServlet {
         for(int i = 0; i < cookies.length && token == null; i++){ 
             Cookie c = cookies[i];
             if (c.getName().equals("user_token")){
+                ck = c;
                 token = c.getValue();
                 // cerco l'id corrispondente
                 id = hashRememberMe.get(token);
@@ -79,7 +81,7 @@ public class LoginServlet extends HttpServlet {
                     try{
                         u = (Utente) userDao.getByPrimaryKey(id);
                         if (u.getRes() < 0){// qualsiasi errore -> redirect login e cancella cookie
-                            Cookie ck = new Cookie("user_token", "");
+                            ck = new Cookie("user_token", "");
                             ck.setMaxAge(0);// cancella
                             response.addCookie(ck);
                             response.sendRedirect(response.encodeRedirectURL(contextPath + "login"));
@@ -90,7 +92,6 @@ public class LoginServlet extends HttpServlet {
                     }
                 }
                 else{
-                    Cookie ck = new Cookie("user_token", "");
                     ck.setMaxAge(0);// cancella
                     response.addCookie(ck);
                 }

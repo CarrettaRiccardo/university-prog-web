@@ -44,10 +44,19 @@ public class LogoutServlet extends HttpServlet {
             contextPath += "/";
         }
         
-        // da mettere a posto che non slogga (cookie e anche 
-        Cookie ck = new Cookie("user_token", "");
-        ck.setMaxAge(0);// cancella il ricordami
-        response.addCookie(ck);
+        Cookie[] cookies = request.getCookies();     // request is an instance of type 
+                                                     //HttpServletRequest
+        Boolean found = false;
+                                                     
+        // cerca i cookie di "ricordami"
+        for(int i = 0; i < cookies.length && found == false; i++){ 
+            Cookie c = cookies[i];
+            if (c.getName().equals("user_token")){
+                found = true;
+                c.setMaxAge(0);// cancella
+                response.addCookie(c);
+            }
+        }
         
         
         HttpSession session = request.getSession(false);
