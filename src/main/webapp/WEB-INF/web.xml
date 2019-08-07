@@ -146,6 +146,9 @@
     </filter>
 
     <filter-mapping>
+        <description>Per evitare che un utente vada su una pagina con l'estensione del file esplicita e per impedire quindi di acccedere direttamente a pagine usate solo per 
+            essere incluse in altre per formare pagine più complesse
+        </description>
         <filter-name>NoJspFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>

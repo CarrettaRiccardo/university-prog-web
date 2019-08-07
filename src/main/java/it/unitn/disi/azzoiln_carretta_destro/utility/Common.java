@@ -19,17 +19,19 @@ public class Common {
     private static final int ITERATIONS = 1000;
     private static final int KEY_LENGTH = 512;
     private static final String ALGORITHM = "PBKDF2WithHmacSHA512";
-    private static final String ALGORITHM_SALT = "SHA1PRNG";
-    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final String ALGORITHM_SALT = "SHA1PRNG";    
     
     
-    public static String randomAlphaNumeric(int count) {
+    public static String randomAlphaNumeric() throws NoSuchAlgorithmException {
+        /*
+        private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder builder = new StringBuilder();
         while (count-- != 0) {
             int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
             builder.append(ALPHA_NUMERIC_STRING.charAt(character));
         }
-        return builder.toString();
+        return builder.toString();*/
+        return toHex(getSalt());  //Steve: Secondo me è più affidabile usare un algoritmo built-in
     }
     
     public static String getPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException{

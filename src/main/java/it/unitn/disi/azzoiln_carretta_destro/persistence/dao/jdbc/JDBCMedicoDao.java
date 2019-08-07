@@ -28,12 +28,12 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
     }    
 
     @Override
-    public boolean addVisita(Integer id_medico, Integer id_paziente, Visita visita) {
+    public boolean addVisita(Integer id_medico, Integer id_paziente, Visita visita) throws DaoException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean addVisita(Visita visita) {
+    public boolean addVisita(Visita visita) throws DaoException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -42,6 +42,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         if(r == null || r.getId() > 0) return false;  //Se r.getId_prescrizione() > 0 allora non è una ricetta appena creata
         
         try {
+            Integer new_id = null;
             PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)");
             ps.setInt(1, r.getId_paziente());
             ps.setInt(2, r.getId_medico());
@@ -49,9 +50,9 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             int count = ps.executeUpdate();
             if(count == 0) return false;
             
-            ps = CON.prepareStatement("SELECT id FROM prescrizione WHERE id_paziente = ? AND id_medico= ? ORDER BY id DESC LIMIT 1");  //questo perchè MYSQL non supporta la sintassi RETURNING
-            ps.setInt(1, r.getId_paziente());
-            ps.setInt(2, r.getId_medico());
+            ResultSet key = ps.getGeneratedKeys();
+            if(key.next()) new_id = key.getInt(0); //prendo l'ID dell'ultima prescrizione fatta
+            else return false;
             
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
@@ -72,17 +73,62 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
     }
 
     @Override
-    public boolean addVisitaSpecialistica(Integer id_medico, Integer id_paziente, Integer id_visita_specialistica) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean addVisitaSpecialistica(Integer id_medico, Integer id_paziente, Integer id_visita_specialistica) throws DaoException {
+        if(id_medico == null || id_medico == null || id_visita_specialistica == null) return false;  
+        
+        try {
+            Integer new_id = null;
+            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)");
+            ps.setInt(1, id_paziente);
+            ps.setInt(2, id_medico);
+            
+            int count = ps.executeUpdate();
+            if(count == 0) return false;
+            ResultSet key = ps.getGeneratedKeys();
+            if(key.next()) new_id = key.getInt(0); //prendo l'ID dell'ultima prescrizione fatta
+            else return false;
+            
+            ps = CON.prepareStatement("insert into visita_specialistica (id_prescrizione) VALUES (?)");
+            ps.setInt(1, new_id);
+            count = ps.executeUpdate();
+            if(count == 0) return false;
+        } catch (SQLException ex) {
+            throw new DaoException("Impossible to create VisitaSpec", ex);
+        }
+        
+        return true;
     }
 
     @Override
-    public boolean addEsame(Integer id_medico, Integer id_paziente, Integer id_esame) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean addEsame(Integer id_medico, Integer id_paziente, Integer id_esame) throws DaoException {
+        if(id_medico == null || id_medico == null || id_esame == null) return false;  
+        
+        try {
+            Integer new_id = null;
+            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)");
+            ps.setInt(1, id_paziente);
+            ps.setInt(2, id_medico);
+            
+            int count = ps.executeUpdate();
+            if(count == 0) return false;
+            ResultSet key = ps.getGeneratedKeys();
+            if(key.next()) new_id = key.getInt(0); //prendo l'ID dell'ultima prescrizione fatta
+            else return false;
+            
+            ps = CON.prepareStatement("insert into esame (id_prescrizione,id_esame) VALUES (?,?)");
+            ps.setInt(1, new_id);
+            ps.setInt(1, id_esame);
+            count = ps.executeUpdate();
+            if(count == 0) return false;
+        } catch (SQLException ex) {
+            throw new DaoException("Impossible to create Esame", ex);
+        }
+        
+        return true;
     }
 
     @Override
-    public List<Paziente> getPazienti(Integer id_medico) {
+    public List<Paziente> getPazienti(Integer id_medico) throws DaoException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

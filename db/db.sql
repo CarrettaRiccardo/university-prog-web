@@ -194,11 +194,11 @@ create table visite_specialistiche(
 
 create table visita_specialistica(
     id_prescrizione int not null,
-    id_medico_specialista int,  /*NULL <-> visita non ancora fatta*/
-    id_ticket int,
-    id_visita_spec int,
-    anamnesi text,
-    time_visita timestamp not null DEFAULT NOW(),
+    id_medico_specialista int DEFAULT NULL,  /*NULL <-> visita non ancora fatta*/
+    id_ticket int DEFAULT NULL,
+    id_visita_spec int DEFAULT NULL,
+    anamnesi text DEFAULT NULL,
+    time_visita timestamp DEFAULT NULL,
     PRIMARY KEY(id_prescrizione),
     FOREIGN KEY fk_visita_specialistica_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
         ON UPDATE RESTRICT
