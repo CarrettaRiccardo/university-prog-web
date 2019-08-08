@@ -5,12 +5,14 @@
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="project" />
+          <element id="module-output" name="Progetto programmazione web" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="project/web/Web" />
+      <element id="javaee-facet-resources" facet="Progetto programmazione web/web/Web" />
     </root>
   </artifact>
 </component>
