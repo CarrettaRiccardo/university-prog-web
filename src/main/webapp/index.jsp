@@ -12,6 +12,12 @@
             $('#btnLogin').click(function () {
                 window.location.href = "login"
             })
+        });
+        
+        $(document).ready(function () {
+            $('#btnError').click(function () {
+                window.location.href = "error?error_code=500"
+            })
         })
     </script>
 </head>

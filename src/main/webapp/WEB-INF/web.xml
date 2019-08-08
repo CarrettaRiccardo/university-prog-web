@@ -11,7 +11,6 @@
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.LoginServlet</servlet-class>
@@ -69,6 +68,15 @@
     <servlet-mapping>
         <servlet-name>Settings</servlet-name>
         <url-pattern>/app/settings</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>Error</servlet-name>
+        <jsp-file>/error.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Error</servlet-name>
+        <url-pattern>/error</url-pattern>
     </servlet-mapping>
 
 
