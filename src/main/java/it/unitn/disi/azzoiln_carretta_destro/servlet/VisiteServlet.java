@@ -36,6 +36,15 @@ public class VisiteServlet extends HttpServlet {
     
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if(request.getRequestURI().indexOf("newvisita") > 0){  //voglio accedere alla pagina per creare una nuova Visita
+            request.setAttribute("title", "Crea visita");
+            request.setAttribute("page", "newVisita");
+            RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+            rd.forward(request, response);
+            System.out.println("Usa il return !!");
+        }
+        
+        
         request.setAttribute("title", "Visite");
         request.setAttribute("page", "visite");
         
@@ -63,9 +72,12 @@ public class VisiteServlet extends HttpServlet {
             rd.include(request, response);
         }
         catch(IdNotFoundException e){
-            throw new ServletException(e.getMessage());  //TODO-> mostrare pagina di errore in base alla stringa per individuare il corretto messaggio
+            throw new ServletException(e.getMessage());  //TODO-> mostrare pagina di errore (NOT FOUND PAZIENTE) in base alla stringa per individuare il corretto messaggio
         }catch(DaoException e){
             throw new ServletException(e);
+        }
+        catch(NumberFormatException e){
+            throw new ServletException(e); //TODO-> mostrare pagina di errore BAD REQUEST
         }
     }
 

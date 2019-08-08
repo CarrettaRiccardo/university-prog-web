@@ -3,6 +3,7 @@ package it.unitn.disi.azzoiln_carretta_destro.persistence.dao.jdbc;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.MedicoDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
@@ -14,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -125,7 +127,22 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
 
     @Override
     public List<Paziente> getPazienti(Integer id_medico) throws DaoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(id_medico == null || id_medico <= 0) throw new IdNotFoundException("id_medico");
+        List<Paziente> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE id_medico = ? ORDER BY cognome,nome")) {
+            stm.setInt(1, id_medico);
+            ResultSet rs = stm.executeQuery();
+            System.out.println("id_medico");
+            while (rs.next()) {
+                System.out.println(rs.getInt("id"));
+                 Paziente r = new Paziente(rs.getInt("id"),rs.getString("nome"), rs.getString("cognome"), rs.getDate("data_nascita"),rs.getString("path"));
+                 ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("Error retriving List<Paziente>", ex);
+        }        
+        return ret;
     }
     
     

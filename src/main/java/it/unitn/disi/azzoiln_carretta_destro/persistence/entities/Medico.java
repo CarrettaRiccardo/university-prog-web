@@ -16,15 +16,15 @@ public class Medico extends Persona{
     private Date inizioCarriera;
     private boolean attivo;
                   
-    public Medico(int id, String username, String nome, String cognome, String cf, Date data_nascita, boolean attivo, int provincia, int comune, String laurea, Date inizioCarriera, String nome_prov) {
-        super(id, username, nome, cognome, cf, data_nascita, provincia, comune,"medico",nome_prov);
+    public Medico(int id, String username, String nome, String cognome, String cf, Date data_nascita, boolean attivo, int provincia, int comune, String laurea, Date inizioCarriera, String nome_prov,String foto) {
+        super(id, username, nome, cognome, cf, data_nascita, provincia, comune,"medico",nome_prov,foto);
         this.laurea = laurea;
         this.inizioCarriera = inizioCarriera;
         this.attivo = attivo;
     }
 
-    public Medico(Persona p,String laurea, Date inizioCarriera, boolean attivo) {
-        super(p.getId(), p.getUsername(), p.getNome(), p.getCognome(), p.getCf(), p.getData_nascita(), p.getProvincia(), p.getId_Comune(),"medico", p.getNome_comune());
+    public Medico(Persona p,String laurea, Date inizioCarriera, boolean attivo,String foto) {
+        super(p.getId(), p.getUsername(), p.getNome(), p.getCognome(), p.getCf(), p.getData_nascita(), p.getProvincia(), p.getId_Comune(),"medico", p.getNome_comune(), foto);
         this.laurea = laurea;
         this.inizioCarriera = inizioCarriera;
         this.attivo = attivo;

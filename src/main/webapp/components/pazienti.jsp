@@ -4,24 +4,20 @@
     <thead class="bg-gradient shadow-sm text-white">
     <tr>
         <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-        <th scope="col">Eafaasf</th>
-        <th scope="col">Adadas</th>
-        <th scope="col">Cfsdfsd</th>
+        <th scope="col">Cognome</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Data Nascita</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach begin="1" end="100" var="i">
+    <c:forEach items="${pazienti}" var="paz">
         <tr>
-            <th scope="row"><c:out value="${i}"/></th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <th scope="row"><c:out value="boh"/></th>
+            <td> <img src=" <c:out value="${paz.getFoto()}"/>  "/> </td>
+            <td><c:out value="${paz.getId()}"/></td>
+            <td><c:out value="${paz.getCognome()}"/></td>
+            <td><c:out value="${paz.getNome()}"/></td>
+            <td><c:out value="${paz.getData_nascita()}"/></td>
         </tr>
     </c:forEach>
     </tbody>

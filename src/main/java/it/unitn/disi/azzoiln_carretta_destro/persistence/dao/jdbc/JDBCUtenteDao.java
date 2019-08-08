@@ -87,7 +87,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     public Utente getByPrimaryKey(Integer id, String s) throws DaoException {
         Utente ret = null;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE u.id = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia,path FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente WHERE u.id = ?")) {
             stm.setInt(1, id);
             
             try (ResultSet rs = stm.executeQuery()) {
@@ -96,13 +96,13 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
                         ret = new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                                            rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                           rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"));
+                                           rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"));
                     }
                     else if(rs.getString("ruolo").equals("medico")){
                         ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
                                            rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), 
-                                           rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"));
+                                           rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"),rs.getString("path"));
                     }
                     /*
                     DA COMPLETARE

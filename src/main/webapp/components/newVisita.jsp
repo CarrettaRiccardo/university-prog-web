@@ -1,6 +1,13 @@
+<%-- 
+    Document   : Pagina con interfaccia per creare una nuova visita
+    Created on : 8 ago 2019, 17:20:32
+    Author     : Steve
+--%>
+
 <%@ include file="../global/common.jsp" %>
 
 <table id="table" class="table table-striped table-borderless table-hover">
+    nuovaVisita
     <thead class="bg-gradient shadow-sm text-white">
     <tr>
         <th scope="col">#</th>
@@ -19,10 +26,3 @@
     </c:forEach>
     </tbody>
 </table>
-
-
-<c:if test="${utente.getType() == MEDICO}">
-    <div class="fixed-bottom">
-        <button>Ciao</button>
-    </div>
-</c:if>
