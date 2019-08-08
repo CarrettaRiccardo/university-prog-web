@@ -1,7 +1,7 @@
 <%@ include file="../global/common.jsp" %>
 
 <table id="table" class="table table-striped table-borderless table-hover">
-    <thead class="bg-gradient shadow-sm text-white">
+    <thead class="bg-gradient-2 shadow-sm text-white">
     <tr>
         <th scope="col">#</th>
         <th scope="col">Anamnesi</th>
