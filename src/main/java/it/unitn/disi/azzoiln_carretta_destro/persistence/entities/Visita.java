@@ -25,6 +25,10 @@ public class Visita extends Prescrizione {
     public String getAnamnesi() {
         return anamnesi;
     }
+    
+    public String getAnamnesiShort() {
+        return anamnesi.substring(0, 10);
+    }
 
     public Date getTime_visita() {
         return time_visita;
