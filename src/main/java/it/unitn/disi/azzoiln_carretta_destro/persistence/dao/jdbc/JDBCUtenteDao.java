@@ -5,6 +5,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
@@ -285,7 +286,8 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
      * @return Elenco delle visite del paziente ordinate in ordine cronologico inverso
      */
     @Override
-    public List<Visita> getVisite(Integer id_paziente){
+    public List<Visita> getVisite(Integer id_paziente) throws DaoException{
+        if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<Visita> ret = new LinkedList<>();
         return ret;
     }
@@ -296,7 +298,8 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
      * @return Elenco delle visite specialistiche del paziente ordinate in ordine cronologico inverso
      */
     @Override
-    public List<Visita> getVisiteSpecialistiche(Integer id_paziente){
+    public List<Visita> getVisiteSpecialistiche(Integer id_paziente) throws DaoException{
+        if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<Visita> ret = new LinkedList<>();
         return ret;
     }
@@ -308,6 +311,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
      */
     @Override
     public List<Ricetta> getRicette(Integer id_paziente) throws DaoException {
+        if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         List<Ricetta> ret = new LinkedList<>();
         
         try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione WHERE id_prescrizione = ? ORDER BY time DESC")) {
@@ -330,7 +334,8 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
      * @return Elenco degli esami del paziente ordinati in ordine cronologico inverso
      */
     @Override
-    public List<Esame> getEsami(Integer id_paziente){
+    public List<Esame> getEsami(Integer id_paziente) throws DaoException{
+        if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<Esame> ret = new LinkedList<>();
         return ret;
     }   

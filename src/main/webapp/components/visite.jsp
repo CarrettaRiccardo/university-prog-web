@@ -4,18 +4,17 @@
     <thead class="bg-gradient-2 shadow-sm text-white">
     <tr>
         <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
+        <th scope="col">Anamnesi</th>
+        <th scope="col">Data Visita</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach begin="1" end="100" var="i">
+    <c:forEach items="${visite}" var="visita">
         <tr>
-            <th scope="row"><c:out value="${i}"/></th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <th scope="row"><c:out value="sa"/></th>
+            <td><c:out value="${visita.getId()}"/></td>
+            <td><c:out value="${visita.getAnamnesiShort()}"/></td>
+            <td><c:out value="${visita.getTime()}"/></td>
         </tr>
     </c:forEach>
     </tbody>
