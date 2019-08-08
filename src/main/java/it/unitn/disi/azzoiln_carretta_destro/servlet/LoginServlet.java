@@ -12,9 +12,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import javax.servlet.http.Cookie;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
@@ -31,7 +34,7 @@ public class LoginServlet extends HttpServlet {
         DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory"); //Steve ho tolto super.
         hashRememberMe = (HashMap<String, Integer>) getServletContext().getAttribute("hashRememberMe"); //Ricky
         if (hashRememberMe == null){
-            hashRememberMe = new HashMap<String, Integer>();
+            throw new ServletException("Impossible to get hashMap for remember_me"); //Steve: se non la trova è un errore, non può essere che sia null
         }
         if (daoFactory == null) {
             throw new ServletException("Impossible to get dao factory for user storage system");
@@ -107,9 +110,7 @@ public class LoginServlet extends HttpServlet {
             if (email == null || password == null) {
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "login?login_error=user"));
             }
-        }
-
-        
+        }        
 
         try {
             if (u == null)// Ricky; se non c'era il cookie/token/valido cerca l'utente tramite mail/pass
@@ -129,7 +130,7 @@ public class LoginServlet extends HttpServlet {
             {
                 String hash = "";
                 do{
-                    hash = it.unitn.disi.azzoiln_carretta_destro.utility.Common.randomAlphaNumeric(16);
+                    hash = it.unitn.disi.azzoiln_carretta_destro.utility.Common.randomAlphaNumeric();
                 } while(hashRememberMe.containsKey(hash) || hash.compareTo("") == 0);// controllo di sicurezza
                 hashRememberMe.put(hash, u.getId());
                 Cookie c = new Cookie("user_token", hash);
@@ -140,6 +141,8 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL(contextPath + where));
         } catch (DaoException ex) {
             request.getServletContext().log("Impossible to retrieve the user", ex);
+        } catch (NoSuchAlgorithmException ex) {
+            request.getServletContext().log("Metodo non trovato Login per RememberMe", ex);
         }
     }
     

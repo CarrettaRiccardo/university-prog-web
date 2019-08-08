@@ -17,7 +17,7 @@ import java.util.HashMap;
  * 
  * @author Steve
  */
-public abstract class JDBCDao<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements Dao<ENTITY_CLASS, PRIMARY_KEY_CLASS> {
+public abstract class JDBCDao <ENTITY_CLASS, PRIMARY_KEY_CLASS> implements Dao<ENTITY_CLASS, PRIMARY_KEY_CLASS> {
     /**
      * The JDBC {@link Connection} used to access the persistence system.
      */

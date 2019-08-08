@@ -9,7 +9,8 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import java.util.List;
 
 /**
- * Definisco i metodi che le implementazioni devono implementare
+ * Definisco i metodi che le implementazioni devono implementare.
+ * Per capire perchè non estende UtenteDao vedi commenti a JDBCMedicoDao
  * @author Steve
  */
 public interface MedicoDao{
@@ -18,7 +19,7 @@ public interface MedicoDao{
      * 
      * @return Elenco di tutti i pazienti del medico
      */
-    public List<Paziente> getPazienti(Integer id_medico);
+    public List<Paziente> getPazienti(Integer id_medico) throws DaoException;
     
     
     
@@ -29,14 +30,14 @@ public interface MedicoDao{
      * @param visita I dati della visita da inserire
      * @return T on success
      */
-    public boolean addVisita(Integer id_medico,Integer id_paziente,Visita visita);
+    /*public boolean addVisita(Integer id_medico,Integer id_paziente,Visita visita) throws DaoException;*/
     
     /**
      * Metodo per registrare la visita di un paziente, assumento i vari ids interni a Visita
      * @param visita I dati della visita da inserire
      * @return T on success
      */
-    public boolean addVisita(Visita visita);
+    public boolean addVisita(Visita visita) throws DaoException;
     
     /**
      * Aggiunta di una ricetta per un singolo farmaco
@@ -54,7 +55,7 @@ public interface MedicoDao{
      *          Presa da un elenco fisso di possibili visite
      * @return T on success
      */
-    public boolean addVisitaSpecialistica(Integer id_medico,Integer id_paziente, Integer id_visita_specialistica);
+    public boolean addVisitaSpecialistica(Integer id_medico,Integer id_paziente, Integer id_visita_specialistica) throws DaoException;
     
     /**
      * @param id_medico Id del medico che crea la visita
@@ -63,5 +64,5 @@ public interface MedicoDao{
      *          Preso da 'esami_prescivibili' del DB
      * @return T on success
      */
-    public boolean addEsame(Integer id_medico,Integer id_paziente, Integer id_esame);
+    public boolean addEsame(Integer id_medico,Integer id_paziente, Integer id_esame) throws DaoException;
 }

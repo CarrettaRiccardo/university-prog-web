@@ -20,6 +20,27 @@ import java.util.List;
 public interface UtenteDao extends Dao<Utente, Integer>{
 
     /**
+     * Da accesso ai metodi dell' interfaccia MedicoDao
+     * @return 
+     */
+    public MedicoDao Medico();
+    /**
+     * Da accesso ai metodi dell' interfaccia PazienteDao
+     * @return 
+     */
+    public PazienteDao Paziente();
+    /**
+     * Da accesso ai metodi dell' interfaccia MedicoSpecDao
+     * @return 
+     */
+    public MedicoSpecDao MedicoSpecialista();
+    /**
+     * Da accesso ai metodi dell' interfaccia SspDao
+     * @return 
+     */
+    public SspDao Ssp();
+    
+    /**
      * Da usare se si sa già la modalità con cui si vuole leggere l'utente dal DB
      * @param primaryKey
      * @param modalita "Forza" il tipo di ritorno. Ovvero se un utente è un medico e modalità = 'paziente', allora ottengo come risultato un oggetto di tipo Paziente
@@ -27,6 +48,15 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * @throws DaoException 
      */
     public Utente getByPrimaryKey(Integer primaryKey, String modalita) throws DaoException;
+    
+    /**
+     * [Per lettura dati Utente] Il comportamento è speculare a login, ma legge i dati partendo dalla PK. Per leggere i dati dopo
+     * aver preso id_utente dal REMEMBER ME. Per maggiori info vedi login(..) in JDBCUtenteDao
+     * @param primaryKey
+     * @return Oggetto che rappresenta l'ogetto che vogliamo ottenere
+     * @throws DaoException 
+     */
+    public Utente getByPrimaryKey(Integer primaryKey) throws DaoException;
     
     /**
      * Verifica se username e password sono corretti. 

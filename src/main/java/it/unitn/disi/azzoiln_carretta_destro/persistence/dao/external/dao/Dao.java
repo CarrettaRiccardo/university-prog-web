@@ -22,5 +22,5 @@ public interface Dao<ENTITY_CLASS, PRIMARY_KEY_CLASS> {
      * @return Oggetto che rappresenta l'ogetto che vogliamo ottenere
      * @throws DaoException 
      */
-    public ENTITY_CLASS getByPrimaryKey(PRIMARY_KEY_CLASS primaryKey) throws DaoException;
+    //public ENTITY_CLASS getByPrimaryKey(PRIMARY_KEY_CLASS primaryKey) throws DaoException;
 }

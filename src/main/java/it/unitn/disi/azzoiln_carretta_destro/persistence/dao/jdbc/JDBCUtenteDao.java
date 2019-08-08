@@ -33,9 +33,52 @@ import java.util.logging.Logger;
  * @author Steve
  */
 public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
+    
+    private JDBCMedicoDao medico;
+    private JDBCPazienteDao paziente;
+    private JDBCMedicoSpecDao medicoSpec;
+    private JDBCSspDao ssp;
 
     public JDBCUtenteDao(Connection con){
         super(con);
+        medico = new JDBCMedicoDao(con);
+        paziente = new JDBCPazienteDao(con);
+        medicoSpec = new JDBCMedicoSpecDao(con);
+        ssp = new JDBCSspDao(con);
+    }
+    
+    
+    /**
+     * Da accesso ai metodi dell' interfaccia MedicoDao
+     * @return 
+     */
+    @Override
+    public JDBCMedicoDao Medico(){
+        return medico;
+    }    
+    /**
+     * Da accesso ai metodi dell' interfaccia pazienteDao
+     * @return 
+     */
+    @Override
+    public JDBCPazienteDao Paziente() {
+        return paziente;
+    }
+    /**
+     * Da accesso ai metodi dell' interfaccia MedicoSpecDao
+     * @return 
+     */
+    @Override
+    public JDBCMedicoSpecDao MedicoSpecialista() {
+        return medicoSpec;
+    }
+    /**
+     * Da accesso ai metodi dell' interfaccia SspDao
+     * @return 
+     */
+    @Override
+    public JDBCSspDao Ssp() {
+        return ssp;
     }
     
     
@@ -79,6 +122,46 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         }
         return ret;
     }
+    
+    
+     /**
+     * Il valore di ritorno -2 non è qui usato
+     * Il valore di ritorno -4 indica 'id non trovato'
+     * @param id
+     * @return
+     * @throws DaoException 
+     */
+    @Override
+    public Utente getByPrimaryKey(Integer id) throws DaoException {
+        Utente ret = null;
+        int res = -3;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE id = ?")) {
+            stm.setInt(1, id);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    switch(rs.getString("ruolo")){
+                        case "paziente": ret = getPaziente(rs, 0); break;
+                        case "medico": ret = getPersona(rs, 1, "medico"); break;
+                        case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
+                        case "ssp": ret = getSSP(rs, 2); break;
+                    }                     
+                }
+                else{
+                    ret = new Utente(-4); //id non trovato
+                }
+            } catch (SQLException ex) {
+                throw new DaoException("Error retriving ResultSet JDBCUtenteDao", ex);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("Error preparing Statement JDBCtenteDao", ex);
+        }
+        
+        return ret;
+    }
+    
+    
+    
 
 
     /**
@@ -89,7 +172,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
      * @param username
      * @param password
      * @return Un Utente con res = -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
- (scelta tra medico e paziente), 2 successo (SSR)
+               (scelta tra medico e paziente), 2 successo (SSR)
      * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      *
     */
@@ -250,44 +333,6 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     public List<Esame> getEsami(Integer id_paziente){
         LinkedList<Esame> ret = new LinkedList<>();
         return ret;
-    }
+    }   
 
-    /**
-     * Il valore di ritorno -2 non è qui usato
-     * Il valore di ritorno -4 indica 'id non trovato'
-     * @param id
-     * @return
-     * @throws DaoException 
-     */
-    @Override
-    public Utente getByPrimaryKey(Integer id) throws DaoException {
-        Utente ret = null;
-        int res = -3;
-        
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE u.id = ?")) {
-            stm.setInt(1, id);
-            try (ResultSet rs = stm.executeQuery()) {
-                if (rs.next()) {
-                    switch(rs.getString("ruolo")){
-                        case "paziente": ret = getPaziente(rs, 0); break;
-                        case "medico": ret = getPersona(rs, 1, "medico"); break;
-                        case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
-                        case "ssp": ret = getSSP(rs, 2); break;
-                    }                     
-                }
-                else{
-                    ret = new Utente(-4); //id non trovato
-                }
-            } catch (SQLException ex) {
-                throw new DaoException("Error retriving ResultSet JDBCUtenteDao", ex);
-            }
-        } catch (SQLException ex) {
-            throw new DaoException("Error preparing Statement JDBCtenteDao", ex);
-        }
-        
-        return ret;
-    }
-
-    
-    
 }
