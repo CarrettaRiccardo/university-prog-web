@@ -29,6 +29,11 @@ public class LoginServlet extends HttpServlet {
     public void init() throws ServletException {
         DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory"); //Steve ho tolto super.
         hashRememberMe = (HashMap<String, Integer>) getServletContext().getAttribute("hashRememberMe"); //Ricky
+        if (true)
+        { 
+            throw new ServletException("Impossible to get hashMap for remember_me");
+        }
+    
         if (hashRememberMe == null){
             throw new ServletException("Impossible to get hashMap for remember_me"); //Steve: se non la trova è un errore, non può essere che sia null
         }
