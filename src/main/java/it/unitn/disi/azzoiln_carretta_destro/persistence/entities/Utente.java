@@ -20,6 +20,16 @@ public class Utente {
     public Utente(int res) {
         this.res = res;
     }
+    
+    /**
+     * Usato per ritornare semplicemente errore nel login
+     *
+     * @param res
+     * @param nulla Campo non considerato. Solo petchè non potevo definire due metodi con la stessa firma
+     */
+    public Utente(int id, String nulla) {
+        this.res = res;
+    }
 
     public Utente(int id, String username, int provincia, String nome_provincia) {
         this.id = id;

@@ -5,6 +5,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
@@ -54,6 +55,7 @@ public class PazientiServlet extends HttpServlet {
                 return;
             }
             else if(u.getType() == UtenteType.MEDICO ){
+                request.setAttribute("nome", "Dott./ssa " + ((Medico)u).getNome() + ((Medico)u).getCognome());
                 pazienti = userDao.Medico().getPazienti(u.getId());
             }
             else if(u.getType() == UtenteType.MEDICO_SPEC){

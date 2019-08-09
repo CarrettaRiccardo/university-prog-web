@@ -37,7 +37,7 @@ public class Persona extends Utente {
         super(id);
         this.nome = nome;
         this.cognome = cognome;
-        this.data_nascita = data_nascita;
+        this.data_nascita = data;
         this.ruolo = ruolo;
         this.foto = foto;
     }
@@ -69,10 +69,10 @@ public class Persona extends Utente {
     
     /**
      * 
-     * @return Il path originale della foto oppure "images/defaul.jpeg" se trova Stringa vuota
+     * @return Il path originale della foto oppure "images/defaul.jpeg" se trova Stringa vuota | null
      */
     public String getFoto() {
-        return (!ruolo.equals("")) ? foto : "images/defaul.jpeg" ;
+        return (! (foto == null || foto.equals(""))) ? foto : "assets/uploads/profilo/default.jpg" ;
     }
 
     public Date getData_nascita() {

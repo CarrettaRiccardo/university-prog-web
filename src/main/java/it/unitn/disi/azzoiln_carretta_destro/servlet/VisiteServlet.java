@@ -38,7 +38,7 @@ public class VisiteServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if(request.getRequestURI().indexOf("newvisita") > 0){  //voglio accedere alla pagina per creare una nuova Visita
             request.setAttribute("title", "Crea visita");
-            request.setAttribute("page", "newVisita");
+            request.setAttribute("page", "new_visita");
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
             rd.forward(request, response);
             System.out.println("Usa il return !!");

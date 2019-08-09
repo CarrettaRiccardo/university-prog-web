@@ -134,7 +134,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             stm.setInt(1, id_medico);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                System.out.println(rs.getInt("id"));
+                 System.out.println(rs.getInt("id"));
                  Paziente r = new Paziente(rs.getInt("id"),rs.getString("nome"), rs.getString("cognome"), rs.getDate("data_nascita"),rs.getString("path"));
                  ret.add(r);
             }            
