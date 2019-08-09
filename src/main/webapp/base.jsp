@@ -32,7 +32,7 @@
             <jsp:include page="/components/navigation.jsp"/>
         </div>
         <div class="col-12 col-md-10">
-            <h2 class="mt-2 mb-4">${title}</h2>
+            <h2 class="mt-2 mb-4"> <fmt:message key="${title}"/> ${nome} </h2>
             <jsp:include page="/components/${page}.jsp"/>
         </div>
     </div>

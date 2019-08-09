@@ -1,3 +1,8 @@
+<%--
+    Pagina per SSP per vedere i medici della provincia
+--%>
+
+
 <%@ include file="../global/common.jsp" %>
 
 <table id="table" class="table table-striped table-borderless table-hover">
