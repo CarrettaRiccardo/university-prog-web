@@ -133,7 +133,6 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE id_medico = ? ORDER BY cognome,nome")) {
             stm.setInt(1, id_medico);
             ResultSet rs = stm.executeQuery();
-            System.out.println("id_medico");
             while (rs.next()) {
                 System.out.println(rs.getInt("id"));
                  Paziente r = new Paziente(rs.getInt("id"),rs.getString("nome"), rs.getString("cognome"), rs.getDate("data_nascita"),rs.getString("path"));

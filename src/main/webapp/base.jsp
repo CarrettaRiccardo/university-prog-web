@@ -26,7 +26,7 @@
     <jsp:param name="showMenu" value="true"/>
 </jsp:include>
 
-<div class="container-fluid pt-2">
+<div class="container-fluid pt-2 min-vh-100">
     <div class="row">
         <div class="col-12 col-md-2">
             <jsp:include page="/components/navigation.jsp"/>

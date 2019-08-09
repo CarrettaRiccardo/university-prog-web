@@ -45,8 +45,8 @@ public class PazientiServlet extends HttpServlet {
         
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/")) 
-            contextPath += "/";        
-        
+            contextPath += "/";
+
         try{
             if(u.getType() == UtenteType.PAZIENTE){                
                 //TODO: Decidere se visualizza qualcosa da questa pagina
