@@ -60,6 +60,7 @@
         <url-pattern>/app/choose.handler</url-pattern>
     </servlet-mapping>
 
+   
 
     <servlet>
         <servlet-name>Settings</servlet-name>
@@ -184,4 +185,8 @@
         <param-name>password</param-name>
         <param-value>sampirisi</param-value>
     </context-param>
+    
+    <error-page>
+        <location>/error.jsp</location>
+    </error-page>
 </web-app>
