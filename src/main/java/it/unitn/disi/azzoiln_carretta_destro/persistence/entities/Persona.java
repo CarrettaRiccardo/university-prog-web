@@ -34,7 +34,7 @@ public class Persona extends Utente {
     }
     
     public Persona(int id, String nome, String cognome, Date data,String ruolo,String foto) {
-        super(id);
+        super(id,"");
         this.nome = nome;
         this.cognome = cognome;
         this.data_nascita = data;

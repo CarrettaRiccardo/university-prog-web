@@ -55,7 +55,7 @@ public class PazientiServlet extends HttpServlet {
                 return;
             }
             else if(u.getType() == UtenteType.MEDICO ){
-                request.setAttribute("nome", "Dott./ssa " + ((Medico)u).getNome() + ((Medico)u).getCognome());
+                request.setAttribute("nome", ((Medico)u).getNome() + ((Medico)u).getCognome());
                 pazienti = userDao.Medico().getPazienti(u.getId());
             }
             else if(u.getType() == UtenteType.MEDICO_SPEC){
@@ -66,7 +66,7 @@ public class PazientiServlet extends HttpServlet {
                 return;
             }
 
-            request.setAttribute("pazienti", pazienti);
+            request.setAttribute("pazienti", pazienti);  
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
             rd.include(request, response);
         }

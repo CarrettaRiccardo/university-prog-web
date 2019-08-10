@@ -21,6 +21,8 @@ public class Common {
     private static final String ALGORITHM = "PBKDF2WithHmacSHA512";
     private static final String ALGORITHM_SALT = "SHA1PRNG";    
     
+ 
+    
     
     public static String randomAlphaNumeric() throws NoSuchAlgorithmException {
         /*

@@ -69,7 +69,6 @@ public class VisiteServlet extends HttpServlet {
             } catch (DaoException ex) {
                 throw new ServletException(ex.getMessage());
             }
-            
             request.setAttribute("paziente", paz);            
             rd.forward(request, response);
             return;
@@ -87,8 +86,6 @@ public class VisiteServlet extends HttpServlet {
             contextPath += "/";        
         
         try{
-            Utente u2 = null;
-            u2.getId();
             if(u.getType() == UtenteType.PAZIENTE){                
                 visite = userDao.getVisite(u.getId());
             }
@@ -105,12 +102,15 @@ public class VisiteServlet extends HttpServlet {
             rd.include(request, response);
         }
         catch(IdNotFoundException e){
-            throw new ServletException("paziente_not_found");  //TODO-> mostrare pagina di errore (NOT FOUND PAZIENTE) in base alla stringa per individuare il corretto messaggio
+            throw new ServletException("paziente_not_found");  
         }catch(DaoException e){
             throw new ServletException(e.getMessage());
         }
         catch(NumberFormatException e){
-            throw new ServletException("id_paziente_not_valid"); //TODO-> mostrare pagina di errore BAD REQUEST
+            throw new ServletException("id_paziente_not_valid");
+        }
+        catch(Exception e){
+            throw new ServletException();
         }
     }
 
@@ -127,7 +127,56 @@ public class VisiteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String anamnesi = request.getParameter("anamnesi");
-        System.out.println(anamnesi);
+        int id_paziente = -1;
+        
+        String contextPath = getServletContext().getContextPath();
+        if (!contextPath.endsWith("/")) 
+            contextPath += "/";        
+        if(request.getParameter("id_paziente") == null)
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+        try{
+            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if(id_paziente <= 0) throw  new NumberFormatException();
+        }catch(NumberFormatException e){
+            throw new ServletException("id_paziente_not_valid");
+        }
+        catch(Exception e){
+            throw new ServletException();
+        }
+        
+        Utente u = (Utente) request.getSession(false).getAttribute("utente");
+        Visita v = new Visita(anamnesi, id_paziente, u.getId());
+        boolean inserito;
+        try {
+            inserito = userDao.Medico().addVisita(v);
+        } catch (DaoException ex) {
+            inserito = false;
+        }
+        
+        /*request.setAttribute("title","Visite");               NON POSSIBILE PER LOOP
+        request.setAttribute("page", "paziente_dettagli");
+        request.setAttribute("subpage", "visite");
+        request.setAttribute("result", "ok"); //per mostre una conferma di creazione visita
+        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+        rd.forward(request, response);*/
+        if(inserito)
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/dettagli_paziente/visite?id_paziente=" + id_paziente + "&r"));
+        else{
+            Paziente paz = null;
+            try {
+                paz = (Paziente) userDao.getByPrimaryKey(id_paziente, "paziente");
+            } catch (DaoException ex) {
+                throw new ServletException(ex.getMessage());
+            }
+            
+            request.setAttribute("title", "crea_visita");
+            request.setAttribute("page", "new_visita");
+            request.setAttribute("i_anamnesi", anamnesi);
+            request.setAttribute("paziente", paz); 
+            
+            RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+            rd.include(request, response);
+        }
     }
 
 }

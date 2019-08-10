@@ -22,13 +22,13 @@ public class Utente {
     }
     
     /**
-     * Usato per ritornare semplicemente errore nel login
+     * Usato per creare elenco di pazienti/medici..
      *
      * @param res
      * @param nulla Campo non considerato. Solo petchè non potevo definire due metodi con la stessa firma
      */
     public Utente(int id, String nulla) {
-        this.res = res;
+        this.id = id;
     }
 
     public Utente(int id, String username, int provincia, String nome_provincia) {

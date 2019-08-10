@@ -6,13 +6,13 @@
 
 <%@ include file="../global/common.jsp" %>
 <jsp:useBean id="now" class="java.util.Date" />
-<fmt:formatDate var="data" value="${now}" pattern="dd-mm-yyyy" />
+<fmt:formatDate var="data" value="${now}"/>
 
 <form action="app/new_visita" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
-      <input type="email" class="form-control" id="paziente" placeholder="${paz.getNome() + paz.getCognome()}" readonly>
+      <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()}  ${paziente.getCognome()}" readonly>
     </div>
     <div class="form-group col-md-6">
       <label for="data">data</label>
@@ -21,10 +21,8 @@
   </div>
   <div class="form-group">
     <label for="anamnesi">Anamnesi</label>
-    <!--  <input type="text" class="form-control" id="anamnesi" placeholder="Il paziente presenta ..."> -->
-    <textarea class="form-control" id="anamnesi" name="anamnesi">
-    Il paziente presenta ...
-    </textarea>
+    <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
+    <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px"><c:choose><c:when test="${empty i_anamnesi}">Il paziente presenta ...</c:when><c:when test="${! empty i_anamnesi}">${i_anamnesi}</c:when></c:choose></textarea>
   </div>
   <button type="submit" class="btn btn-primary">Conferma</button>
 </form>

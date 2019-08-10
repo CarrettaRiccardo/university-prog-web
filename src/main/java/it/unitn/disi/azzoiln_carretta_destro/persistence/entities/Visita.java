@@ -7,19 +7,22 @@ import java.util.Date;
  * @author Steve
  */
 public class Visita extends Prescrizione {
-    private int id_ticket;
     private String anamnesi;
-    private Date time_visita;
 
-    public Visita(int id_ticket, String anamnesi, Date time_visita, int id, int id_paziente, int id_medico, Date time) {
+    public Visita(int id_ticket, String anamnesi, int id, int id_paziente, int id_medico, Date time) {
         super(id, id_paziente, id_medico, time);
-        this.id_ticket = id_ticket;
         this.anamnesi = anamnesi;
-        this.time_visita = time_visita;
     }
-
-    public int getId_ticket() {
-        return id_ticket;
+    
+    /**
+     * Per creazione nuova Visita
+     * @param anamnesi
+     * @param id_paziente
+     * @param id_medico 
+     */
+    public Visita(String anamnesi, int id_paziente, int id_medico) {
+        super( -1, id_paziente, id_medico, new Date(System.currentTimeMillis()) );
+        this.anamnesi = anamnesi;
     }
 
     public String getAnamnesi() {
@@ -30,7 +33,4 @@ public class Visita extends Prescrizione {
         return anamnesi.substring(0, 10);
     }
 
-    public Date getTime_visita() {
-        return time_visita;
-    }
 }

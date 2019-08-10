@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +34,33 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
     
     @Override
     public boolean addVisita(Visita visita) throws DaoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(visita == null || visita.getId_medico() <= 0 || visita.getId_paziente() <= 0 || visita.getId_paziente() > 0) return false;  
+        
+        try {
+            Integer new_id = null;
+            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)",Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, visita.getId_paziente());
+            ps.setInt(2, visita.getId_medico());
+            
+            int count = ps.executeUpdate();
+            if(count == 0) return false;
+            
+            ResultSet key = ps.getGeneratedKeys();
+            
+            if(key.next()) new_id = key.getInt(1); //prendo l'ID dell'ultima prescrizione fatta
+            else return false;
+            
+            ps = CON.prepareStatement("insert into visita (id_prescrizione,anamnesi) VALUES (?,?)");
+            ps.setInt(1, new_id);
+            ps.setString(2, visita.getAnamnesi());
+            count = ps.executeUpdate();
+            if(count == 0) return false;
+        } 
+        catch (SQLException ex) {
+            throw new DaoException(ex.getMessage(), ex);
+        }
+        
+        return true;
     }
 
     @Override

@@ -172,14 +172,9 @@ create table esame(
 
 create table visita(
     id_prescrizione int not null,
-    id_ticket int not null,
     anamnesi text not null,
-    time_visita timestamp not null DEFAULT NOW(),
     PRIMARY KEY(id_prescrizione),
     FOREIGN KEY fk_visita_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
-        ON UPDATE RESTRICT
-        ON DELETE RESTRICT,
-    FOREIGN KEY fk_visita_to_ticket(id_ticket) REFERENCES ticket(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
 )engine=InnoDB;
