@@ -115,7 +115,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>PazienteDetailsServlet</servlet-name>
-        <url-pattern>/app/dettagli_paziente/*</url-pattern>
+        <url-pattern>/app/dettagli_paziente</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>MediciServlet</servlet-name>

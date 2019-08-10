@@ -16,7 +16,8 @@ public class PazienteDettagliServlet extends HttpServlet {
         String[] parts = request.getRequestURI().split("/");
         request.setAttribute("subpage", parts[parts.length - 1].replace("\\?.*", ""));
 
-        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+        RequestDispatcher rd;
+        rd = request.getRequestDispatcher("/base.jsp");
         rd.include(request, response);
     }
 

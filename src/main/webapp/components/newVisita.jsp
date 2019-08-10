@@ -8,7 +8,7 @@
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate var="data" value="${now}" pattern="dd-mm-yyyy" />
 
-<form>
+<form action="app/visite" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
