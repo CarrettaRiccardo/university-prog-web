@@ -115,7 +115,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>PazienteDetailsServlet</servlet-name>
-        <url-pattern>/app/dettagli_paziente</url-pattern>
+        <url-pattern>/app/dettagli_paziente/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>MediciServlet</servlet-name>
@@ -144,6 +144,10 @@
     <servlet-mapping>
         <servlet-name>Visite</servlet-name>
         <url-pattern>/app/visite</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Visite</servlet-name>
+        <url-pattern>/app/new_visita</url-pattern>
     </servlet-mapping>
 
     <!-- SESSIONE -->
