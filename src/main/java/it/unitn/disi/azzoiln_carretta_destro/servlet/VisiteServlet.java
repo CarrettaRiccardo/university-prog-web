@@ -36,7 +36,7 @@ public class VisiteServlet extends HttpServlet {
     
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getRequestURI().indexOf("newvisita") > 0){  //voglio accedere alla pagina per creare una nuova Visita
+        if(request.getRequestURI().indexOf("new_visita") > 0){  //voglio accedere alla pagina per creare una nuova Visita
             request.setAttribute("title", "Crea visita");
             request.setAttribute("page", "new_visita");
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
@@ -56,6 +56,8 @@ public class VisiteServlet extends HttpServlet {
             contextPath += "/";        
         
         try{
+            Utente u2 = null;
+            u2.getId();
             if(u.getType() == UtenteType.PAZIENTE){                
                 visite = userDao.getVisite(u.getId());
             }
@@ -72,12 +74,12 @@ public class VisiteServlet extends HttpServlet {
             rd.include(request, response);
         }
         catch(IdNotFoundException e){
-            throw new ServletException(e.getMessage());  //TODO-> mostrare pagina di errore (NOT FOUND PAZIENTE) in base alla stringa per individuare il corretto messaggio
+            throw new ServletException("Paziente non trovato");  //TODO-> mostrare pagina di errore (NOT FOUND PAZIENTE) in base alla stringa per individuare il corretto messaggio
         }catch(DaoException e){
             throw new ServletException(e);
         }
         catch(NumberFormatException e){
-            throw new ServletException(e); //TODO-> mostrare pagina di errore BAD REQUEST
+            throw new ServletException(""); //TODO-> mostrare pagina di errore BAD REQUEST
         }
     }
 
