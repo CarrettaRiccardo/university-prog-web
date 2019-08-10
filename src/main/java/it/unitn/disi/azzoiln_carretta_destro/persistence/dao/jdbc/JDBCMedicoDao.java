@@ -64,7 +64,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             }
             else return false;
         } catch (SQLException ex) {
-            throw new DaoException("Impossible to create Ricetta", ex);
+            throw new DaoException("db_error", ex);
         }
         
         return true;
@@ -91,7 +91,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             count = ps.executeUpdate();
             if(count == 0) return false;
         } catch (SQLException ex) {
-            throw new DaoException("Impossible to create VisitaSpec", ex);
+            throw new DaoException("db_error", ex);
         }
         
         return true;
@@ -119,7 +119,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             count = ps.executeUpdate();
             if(count == 0) return false;
         } catch (SQLException ex) {
-            throw new DaoException("Impossible to create Esame", ex);
+            throw new DaoException("add_error", ex);
         }
         
         return true;
@@ -139,7 +139,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
                  ret.add(r);
             }            
         } catch (SQLException ex) {
-            throw new DaoException("Error retriving List<Paziente>", ex);
+            throw new DaoException("db_error", ex);
         }        
         return ret;
     }

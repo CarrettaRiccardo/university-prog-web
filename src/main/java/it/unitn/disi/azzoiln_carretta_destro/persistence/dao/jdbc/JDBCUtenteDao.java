@@ -119,7 +119,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
                 }
             }
         } catch (SQLException ex) {
-            throw new DaoException("Errore in getByPrimaryKey di UtenteDao", ex);
+            throw new DaoException("db_error", ex);
         }
         return ret;
     }
@@ -152,10 +152,10 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
                     ret = new Utente(-4); //id non trovato
                 }
             } catch (SQLException ex) {
-                throw new DaoException("Error retriving ResultSet JDBCUtenteDao", ex);
+                throw new DaoException("db_error", ex);
             }
         } catch (SQLException ex) {
-            throw new DaoException("Error preparing Statement JDBCtenteDao", ex);
+            throw new DaoException("db_error", ex);
         }
         
         return ret;
@@ -202,12 +202,12 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
                     ret = new Utente(-1); //username non trovato
                 }
             } catch (NoSuchAlgorithmException ex) {
-                throw new DaoException("NoSuchAlgorithmException UtenteDao", ex);
+                throw new DaoException("no_alghorithm", ex);
             } catch (InvalidKeySpecException ex) {
-                throw new DaoException("InvalidKeySpecException UtenteDao", ex);
+                throw new DaoException("invalid_key", ex);
             }
         } catch (SQLException ex) {
-            throw new DaoException("Error retriving salt UtenteDao", ex);
+            throw new DaoException("db_error", ex);
         }
         
         return ret;
@@ -254,7 +254,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             else if(count == 1) return true;
             
         } catch (SQLException ex) {
-            throw new DaoException("Impossible to update Utente", ex);
+            throw new DaoException("db_error", ex);
         }
         return false;
     }
@@ -274,7 +274,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         else if(user instanceof Medico){
             throw new DaoException("Ehi, non so cosa deve modificare. Se hai idee dimmelo :)");
         }
-        else throw new DaoException("Non è possibile modificare le informazioni di un oggetto Utente");
+        else throw new DaoException("update_error");
         
         return ret;
     }

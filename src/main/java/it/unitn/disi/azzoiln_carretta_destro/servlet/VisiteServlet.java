@@ -5,6 +5,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
@@ -14,7 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.rmi.ServerException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class VisiteServlet extends HttpServlet {
     
@@ -35,13 +39,40 @@ public class VisiteServlet extends HttpServlet {
     
     
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if(request.getRequestURI().indexOf("new_visita") > 0){  //voglio accedere alla pagina per creare una nuova Visita
-            request.setAttribute("title", "Crea visita");
+            int id_paziente = -1;
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) 
+                contextPath += "/";               
+            if(request.getParameter("id_paziente") == null)
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+            
+            try{
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+                if(id_paziente <= 0) throw  new NumberFormatException();
+            }catch(NumberFormatException e){
+                throw new ServletException("id_paziente_not_valid");
+            }
+            catch(Exception e){
+                throw new ServletException();
+            }
+            
+            request.setAttribute("title", "crea_visita");
             request.setAttribute("page", "new_visita");
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+            
+            Paziente paz = null;
+            try {
+                paz = (Paziente) userDao.getByPrimaryKey(id_paziente, "paziente");
+            } catch (DaoException ex) {
+                throw new ServletException(ex.getMessage());
+            }
+            
+            request.setAttribute("paziente", paz);            
             rd.forward(request, response);
-            System.out.println("Usa il return !!");
+            return;
         }
         
         
@@ -74,17 +105,29 @@ public class VisiteServlet extends HttpServlet {
             rd.include(request, response);
         }
         catch(IdNotFoundException e){
-            throw new ServletException("Paziente non trovato");  //TODO-> mostrare pagina di errore (NOT FOUND PAZIENTE) in base alla stringa per individuare il corretto messaggio
+            throw new ServletException("paziente_not_found");  //TODO-> mostrare pagina di errore (NOT FOUND PAZIENTE) in base alla stringa per individuare il corretto messaggio
         }catch(DaoException e){
-            throw new ServletException(e);
+            throw new ServletException(e.getMessage());
         }
         catch(NumberFormatException e){
-            throw new ServletException(""); //TODO-> mostrare pagina di errore BAD REQUEST
+            throw new ServletException("id_paziente_not_valid"); //TODO-> mostrare pagina di errore BAD REQUEST
         }
     }
 
+    
+    
+    
+    /**
+     * Prende i parametri da new_visita e crea una nuova Visita
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String anamnesi = request.getParameter("anamnesi");
+        System.out.println(anamnesi);
     }
 
 }

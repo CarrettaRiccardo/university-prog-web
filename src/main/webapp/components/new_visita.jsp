@@ -8,7 +8,7 @@
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate var="data" value="${now}" pattern="dd-mm-yyyy" />
 
-<form action="app/visite" method="POST">
+<form action="app/new_visita" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
@@ -21,7 +21,10 @@
   </div>
   <div class="form-group">
     <label for="anamnesi">Anamnesi</label>
-    <input type="text" class="form-control" id="anamnesi" placeholder="Il paziente presenta ...">
+    <!--  <input type="text" class="form-control" id="anamnesi" placeholder="Il paziente presenta ..."> -->
+    <textarea class="form-control" id="anamnesi" name="anamnesi">
+    Il paziente presenta ...
+    </textarea>
   </div>
   <button type="submit" class="btn btn-primary">Conferma</button>
 </form>
