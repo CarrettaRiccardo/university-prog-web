@@ -109,6 +109,14 @@
         <servlet-name>MediciServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.MediciServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PazienteDetailsServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.PazienteDettagliServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PazienteDetailsServlet</servlet-name>
+        <url-pattern>/app/dettagli_paziente/*</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>MediciServlet</servlet-name>
         <url-pattern>/app/medici</url-pattern>

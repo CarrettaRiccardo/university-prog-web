@@ -2,81 +2,98 @@ package it.unitn.disi.azzoiln_carretta_destro.filters;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
- *
  * @author Steve
  */
 public class AppFilter implements Filter {
-    
+
     private static final boolean debug = true;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-    
+
     public AppFilter() {
-    }    
-    
-    
+    }
+
     /**
-     * 
      * @param request
      * @param response
      * @return F <-> E' stato fatto un redirect
      * @throws IOException
-     * @throws ServletException 
+     * @throws ServletException
      */
-    private boolean doBeforeProcessing(ServletRequest request, ServletResponse response)
-            throws IOException, ServletException {
-        if (debug) {
-            log("AppFilter:DoBeforeProcessing");
-        }
+    private boolean doBeforeProcessing(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+        if (debug) log("AppFilter:DoBeforeProcessing");
 
-        if (request instanceof HttpServletRequest) {            
+        if (request instanceof HttpServletRequest) {
             ServletContext servletContext = ((HttpServletRequest) request).getServletContext();
             HttpSession session = ((HttpServletRequest) request).getSession(false);
             Utente user = null;
-            if (session != null) 
-                user = (Utente) session.getAttribute("utente");            
-            
+            if (session != null)
+                user = (Utente) session.getAttribute("utente");
+
             String contextPath = servletContext.getContextPath();
-            if (!contextPath.endsWith("/")) 
-                contextPath += "/";  
-            
+            if (!contextPath.endsWith("/")) contextPath += "/";
+
             if (user == null) {
                 ((HttpServletResponse) response).sendRedirect(((HttpServletResponse) response).encodeRedirectURL(contextPath + "login?login_error=auth"));
                 return false;
-            }
-            else if(((HttpServletRequest) request).getRequestURI().indexOf("choose") > 0)  //se sono nella pagina choose e continuo i controlli sotto stanti, entro in un loop. Quindi i blocco
+            } else if (((HttpServletRequest) request).getRequestURI().indexOf("choose") > 0) {  //se sono nella pagina choose e continuo i controlli sotto stanti, entro in un loop. Quindi i blocco
                 return true;
-            else if(user.getClass() == Persona.class){ //non è ancora stata fatta la scelta del tipo di utente da usare
+            } else if (user.getClass() == Persona.class) { //non è ancora stata fatta la scelta del tipo di utente da usare
                 ((HttpServletResponse) response).sendRedirect(contextPath + "app/choose");
                 return false;
             }
-        }
-        else{
+
+
+            // Caricamento sezioni visualizzabili
+            String sezioni = ""; // Sezioni mostrate nella barra di navigazione laterale
+            String sezioniDettagli = ""; // Sezioni mostrate nei dettagli dell'utente
+            switch (((Utente) ((HttpServletRequest) request).getSession(false).getAttribute("utente")).getType()) {
+                case PAZIENTE:
+                    sezioni = "prenotazioni,visite,visite_specialistiche,esami,ricette";
+                    sezioniDettagli = "";
+                    break;
+                case MEDICO:
+                    sezioni = "pazienti";
+                    sezioniDettagli = "visite,visite_specialistiche,esami,ricette";
+                    break;
+                case MEDICO_SPEC:
+                    sezioni = "pazienti";
+                    sezioniDettagli = "visite,visite_specialistiche,esami";
+                    break;
+                case SSP:
+                    sezioni = "medici";
+                    sezioniDettagli = "";
+                    break;
+            }
+            String[] sezioniTitles = sezioni.replaceAll("_", " ").split(",");
+            String[] sezioniDettagliTitles = sezioniDettagli.replaceAll("_", " ").split(",");
+            request.setAttribute("sezioni", sezioni);
+            request.setAttribute("sezioni_titles", sezioniTitles);
+            request.setAttribute("sezioni_dettagli", sezioniDettagli);
+            request.setAttribute("sezioni_dettagli_titles", sezioniDettagliTitles);
+
+        } else {
             throw new ServletException("Richiesta non riconusciuta valida");
         }
-        
+
+
         return true;
-    }    
-    
+    }
+
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -103,25 +120,23 @@ public class AppFilter implements Filter {
     }
 
     /**
-     *
-     * @param request The servlet request we are processing
+     * @param request  The servlet request we are processing
      * @param response The servlet response we are creating
-     * @param chain The filter chain we are processing
-     *
-     * @exception IOException if an input/output error occurs
-     * @exception ServletException if a servlet error occurs
+     * @param chain    The filter chain we are processing
+     * @throws IOException      if an input/output error occurs
+     * @throws ServletException if a servlet error occurs
      */
     public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain chain)
+                         FilterChain chain)
             throws IOException, ServletException {
-        
+
         if (debug) {
             log("AppFilter:doFilter()");
         }
-        
-        if(!doBeforeProcessing(request, response))  //Se il BeforeProcessing ha fatto un redirect allora non ha senso fare il chain.doFilter e tutto quello che viene dopo
+
+        if (!doBeforeProcessing(request, response))  //Se il BeforeProcessing ha fatto un redirect allora non ha senso fare il chain.doFilter e tutto quello che viene dopo
             return;
-        
+
         Throwable problem = null;
         try {
             chain.doFilter(request, response);
@@ -132,7 +147,7 @@ public class AppFilter implements Filter {
             problem = t;
             
         }
-        
+
         doAfterProcessing(request, response);
 
         // If there was a problem, we want to rethrow it if it is
@@ -167,16 +182,16 @@ public class AppFilter implements Filter {
     /**
      * Destroy method for this filter
      */
-    public void destroy() {        
+    public void destroy() {
     }
 
     /**
      * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) {        
+    public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
-            if (debug) {                
+            if (debug) {
                 log("AppFilter:Initializing filter");
             }
         }
@@ -195,20 +210,20 @@ public class AppFilter implements Filter {
         sb.append(")");
         return (sb.toString());
     }
-    
+
     private void sendProcessingError(Throwable t, ServletResponse response) {
-        String stackTrace = getStackTrace(t);        
-        
+        String stackTrace = getStackTrace(t);
+
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                PrintWriter pw = new PrintWriter(ps);                
+                PrintWriter pw = new PrintWriter(ps);
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
-                pw.print(stackTrace);                
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
+                pw.print(stackTrace);
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();
                 ps.close();
@@ -225,7 +240,7 @@ public class AppFilter implements Filter {
             }
         }
     }
-    
+
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -239,9 +254,9 @@ public class AppFilter implements Filter {
         }
         return stackTrace;
     }
-    
+
     public void log(String msg) {
-        filterConfig.getServletContext().log(msg);        
+        filterConfig.getServletContext().log(msg);
     }
-    
+
 }

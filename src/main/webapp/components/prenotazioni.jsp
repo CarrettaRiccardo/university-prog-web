@@ -1,6 +1,6 @@
 <%@ include file="../global/common.jsp" %>
 
-<table id="table" class="table table-striped table-borderless table-hover">
+<%--<table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-1 shadow-sm text-white">
     <tr>
         <th scope="col">#</th>
@@ -19,4 +19,13 @@
         </tr>
     </c:forEach>
     </tbody>
-</table>
+</table>--%>
+<input id="datepicker" width="276" />
+<script>
+
+    $('#datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+    }).on('change.dp', function(event){
+        
+    });
+</script>
