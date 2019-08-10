@@ -31,19 +31,25 @@
         <span class="text-gradient mb-5">Sanity</span><span class="font-weight-light">Manager</span>
     </div>
     <div id="messageBlock" class="text-center container-fluid"> 
-        <div class="alert alert-danger text-center mt-4" role="alert">    
-            <c:out value="${pageContext.errorData.statusCode}"/>
-            <c:out value=":"/>
-            <c:choose>
-                <c:when test="${pageContext.errorData.statusCode == '400'}"> <fmt:message key="error_code_400"/>  </c:when>
-                <c:when test="${pageContext.errorData.statusCode == '401'}"> <fmt:message key="error_code_401"/>  </c:when>
-                <c:when test="${pageContext.errorData.statusCode == '403'}"> <fmt:message key="error_code_403"/>  </c:when>
-                <c:when test="${pageContext.errorData.statusCode == '404'}"> <fmt:message key="error_code_404"/>  </c:when>
-                <c:when test="${pageContext.errorData.statusCode == '500'}"> <fmt:message key="error_code_500"/>  </c:when>
-                <c:otherwise> <c:out value="${pageContext.errorData.statusCode}"/> <fmt:message key="error_code_other"/>  </c:otherwise>
-            </c:choose>
+        <div class="alert alert-danger text-center mt-4" role="alert">   
+            <c:if test="${pageContext.exception.message == null}"> 
+                <c:out value="${pageContext.errorData.statusCode}"/>
+                <c:out value=":"/>
+                <c:choose>
+                    <c:when test="${pageContext.errorData.statusCode == '400'}"> <fmt:message key="error_code_400"/>  </c:when>
+                    <c:when test="${pageContext.errorData.statusCode == '401'}"> <fmt:message key="error_code_401"/>  </c:when>
+                    <c:when test="${pageContext.errorData.statusCode == '403'}"> <fmt:message key="error_code_403"/>  </c:when>
+                    <c:when test="${pageContext.errorData.statusCode == '404'}"> <fmt:message key="error_code_404"/>  </c:when>
+                    <c:when test="${pageContext.errorData.statusCode == '500'}"> <fmt:message key="error_code_500"/>  </c:when>
+                    <c:otherwise> <fmt:message key="error_code_other"/>  </c:otherwise>
+                </c:choose>
+            </c:if>
+            <c:if test="${pageContext.exception.message != null}">
+                <c:out value="${pageContext.exception.message}"/>
+            </c:if>
         </div>
         <div class="alert alert-dark text-center my-3">  
+            <c:if test="${pageContext.exception.message == null}">
             <c:choose>
                 <c:when test="${pageContext.errorData.statusCode == '400'}"> <fmt:message key="error_message_400"/>  </c:when>
                 <c:when test="${pageContext.errorData.statusCode == '401'}"> <fmt:message key="error_message_401"/>  </c:when>
@@ -54,10 +60,9 @@
                        <fmt:message key="error_message_other"/>
                 </c:otherwise>
             </c:choose>
+            </c:if>
             <c:if test="${pageContext.exception.message != null}">
-                <br/>
-                <br/>
-                <c:out value="${pageContext.exception.message}"/>
+                <fmt:message key="${pageContext.exception.message}"/>
             </c:if>
         </div>
         <button id="btnHome" class="btn btn-gradient btn-block rounded-pill mt-5">Torna alla Home</button>
