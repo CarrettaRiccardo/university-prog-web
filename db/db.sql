@@ -181,7 +181,7 @@ create table visita(
 
 create table visite_specialistiche(
     id int not null,
-    nome int not null,
+    nome text not null,
     PRIMARY KEY(id)
 )engine=InnoDB;
 

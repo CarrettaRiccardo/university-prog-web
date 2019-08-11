@@ -87,11 +87,16 @@ public class VisiteServlet extends HttpServlet {
             } else if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC) {
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 visite = userDao.getVisite(id_paziente);
-            } else { //sono SSP, non posso vedere le visite delle persone
+                for(Visita v : visite){
+                    System.out.println(v.getId());
+                }
+            }
+            else{ //sono SSP, non posso vedere le visite delle persone
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
                 return;
             }
 
+            //request.setAttribute("visite", visite);
             RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/visite.jsp" : "/base.jsp");
             rd.include(request, response);
         } catch (IdNotFoundException e) {

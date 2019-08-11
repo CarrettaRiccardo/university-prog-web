@@ -34,7 +34,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
     
     @Override
     public boolean addVisita(Visita visita) throws DaoException {
-        if(visita == null || visita.getId_medico() <= 0 || visita.getId_paziente() <= 0 || visita.getId_paziente() > 0) return false;  
+        if(visita == null || visita.getId_medico() <= 0 || visita.getId_paziente() <= 0) return false;  
         
         try {
             Integer new_id = null;
