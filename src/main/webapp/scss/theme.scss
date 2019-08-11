@@ -1,7 +1,7 @@
 $enable-gradients: true;
 
 $theme-colors: (
-  'primary': #0055CD
+        'primary': #0055CD
 );
 
 @import "../bootstrap/scss/bootstrap";
@@ -15,7 +15,7 @@ $gradients: #007BFF #001F87,
 
 
 .table tr {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 @for $i from 1 through length($gradients) {
@@ -23,12 +23,17 @@ $gradients: #007BFF #001F87,
   $gradient: linear-gradient(45deg, nth(nth($gradients, $i), 1), nth(nth($gradients, $i), 2));
 
   .btn-gradient#{$name} {
-    color: white;
-    border: 0;
+    color: #fff;
     background: $gradient;
-    &:hover, &:not(:disabled):not(.disabled).active, &:not(:disabled):not(.disabled):active{
+    border: 0;
+
+    &:hover, &:not(:disabled):not(.disabled).active, &:not(:disabled):not(.disabled):active {
       color: white;
       box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, .2);
+    }
+
+    &:focus, &.focus {
+      box-shadow: 0 0 0 0.2rem rgba(38, 111, 213, 0.5);
     }
   }
 

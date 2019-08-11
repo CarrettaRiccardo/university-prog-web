@@ -60,8 +60,7 @@ public class RicetteServlet extends HttpServlet {
             System.err.println("Aiai");
         }
 
-
-        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/ricette.jsp" : "/base.jsp");
         rd.include(request, response);
     }
 

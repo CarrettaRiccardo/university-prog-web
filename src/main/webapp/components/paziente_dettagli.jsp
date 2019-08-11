@@ -24,19 +24,26 @@
     </div>
 </div>
 
-<div class="mt-3">
+<div class="mt-3 position-relative">
     <ul class="nav nav-tabs">
+        <c:set var="activeIndex" value="${-1}"/>
         <c:forTokens items="${sezioni_dettagli}" var="sezione" varStatus="s" delims=",">
             <li class="nav-item">
-                <a class="nav-link ${(sezione == subpage ? "active " : "text-gradient-").concat(s.index + 2)}"
-                   href="app/dettagli_paziente/${sezione}">
+                <c:if test="${sezione == subpage}">
+                    <c:set var="activeIndex" value="${s.index}"/>
+                </c:if>
+                <a class="nav-link ${(sezione == subpage ? "active " : "text-gradient-".concat(s.index + 2))}"
+                   href="app/dettagli_paziente/${sezione}?id_paziente=${param.id_paziente}">
                     <span class="h6 text-capitalize">${sezioni_dettagli_titles[s.index]}</span>
                 </a>
             </li>
         </c:forTokens>
-        <a class="btn btn-gradient">SAS</a>
     </ul>
-
+    <a class="btn btn-gradient-${activeIndex + 2} text-white h6 position-absolute" style="top:0; right:0;"
+       href="app/new_visita?id_paziente=${param.id_paziente}">
+        <span class="font-weight-bolder">+</span>
+        <span class="text-capitalize">Aggiungi</span>
+    </a>
 </div>
 
 <div class="card border-top-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
@@ -45,3 +52,12 @@
         <jsp:include page="/app/${subpage}"/>
     </div>
 </div>
+
+<c:if test="${param.r ne null}">
+    <div class="alert alert-success alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2" role="alert">
+        Operazione eseguita con <b>successo</b>!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</c:if>

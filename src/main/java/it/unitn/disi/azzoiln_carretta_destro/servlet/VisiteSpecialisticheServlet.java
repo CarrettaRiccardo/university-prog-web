@@ -12,7 +12,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         request.setAttribute("title", "Visite specialistiche");
         request.setAttribute("page", "visite_specialistiche");
 
-        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/visite_specialistiche.jsp" : "/base.jsp");
         rd.include(request, response);
     }
 

@@ -12,7 +12,8 @@ public class EsamiServlet extends HttpServlet {
         request.setAttribute("title", "Esami");
         request.setAttribute("page", "esami");
 
-        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/esami.jsp" : "/base.jsp");
+
         rd.include(request, response);
     }
 
