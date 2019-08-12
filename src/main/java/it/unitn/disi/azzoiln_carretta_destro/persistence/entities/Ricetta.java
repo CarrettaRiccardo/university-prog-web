@@ -26,7 +26,7 @@ public class Ricetta extends Prescrizione{
      * @param time_prescrizione 
      */
     public Ricetta(int id_prescrizione,int id_paziente, int id_medico,int id_farmaco, String nome_farmaco, Float costo, short quantita, Date time_vendita, Date time_prescrizione) {
-        super(id_prescrizione, id_paziente, id_medico, time_vendita);
+        super(id_prescrizione, id_paziente, id_medico, time_prescrizione);
         this.id_farmaco = id_farmaco;
         this.nome_farmaco = nome_farmaco;
         this.costo = (costo == null) ? costo : (float)-1.0;

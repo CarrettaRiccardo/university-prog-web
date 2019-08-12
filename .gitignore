@@ -219,3 +219,24 @@ gradle-app.setting
 **/build/
 
 # End of https://www.gitignore.io/api/java,gradle,maven,eclipse,intellij,netbeans
+select2/
+
+src/main/webapp/images/background_border_bottom\.gif
+
+src/main/webapp/images/bg_gradient\.gif
+
+src/main/webapp/images/level1_selected-1lvl\.jpg
+
+src/main/webapp/images/masthead\.png
+
+src/main/webapp/images/pbdis\.png
+
+src/main/webapp/images/pbena\.png
+
+src/main/webapp/app\.gif
+
+src/main/webapp/cc\.gif
+
+src/main/webapp/cg\.gif
+
+src/main/webapp/collapse\.gif

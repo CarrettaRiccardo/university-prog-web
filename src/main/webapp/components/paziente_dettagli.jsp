@@ -42,7 +42,7 @@
     <a class="btn btn-gradient-${activeIndex + 2} text-white h6 position-absolute" style="top:0; right:0;"
        href="app/new_visita?id_paziente=${param.id_paziente}">
         <span class="font-weight-bolder">+</span>
-        <span class="text-capitalize">Aggiungi</span>
+        <span class="text-capitalize"> <fmt:message key="aggiungi"/> </span>
     </a>
 </div>
 

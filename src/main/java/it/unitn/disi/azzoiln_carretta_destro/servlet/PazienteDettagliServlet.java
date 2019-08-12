@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class PazienteDettagliServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("title", "Dettagli paziente");
+        request.setAttribute("title", "Dettagli_paziente");
         request.setAttribute("page", "paziente_dettagli");
 
         // Estraggo la sezione caricata leggendo l'url ed estraendo solo l'ultimo elemento

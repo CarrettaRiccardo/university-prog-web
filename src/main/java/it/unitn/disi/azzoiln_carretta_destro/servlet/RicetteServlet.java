@@ -5,9 +5,16 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaco;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,6 +29,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
 
 /**
  *
@@ -46,22 +55,79 @@ public class RicetteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("title", "Ricette");
-        request.setAttribute("page", "ricette");
+        if (request.getRequestURI().indexOf("new_ricetta") > 0) {  //voglio accedere alla pagina per creare una nuova Ricetta
+            int id_paziente = -1;
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/"))
+                contextPath += "/";
+            if (request.getParameter("id_paziente") == null)
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
 
-        try {
-            Ricetta r = new Ricetta(2,2,1,(short)3);
-            System.out.println( userDao.Medico().addRicetta(r) );  //Esempio di come richiamare i metodi specifici di un Medico
+            try {
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+                if (id_paziente <= 0) throw new NumberFormatException();
+            } catch (NumberFormatException e) {
+                throw new ServletException("id_paziente_not_valid");
+            } catch (Exception e) {
+                throw new ServletException();
+            }
+
+            request.setAttribute("title", "crea_ricetta");
+            request.setAttribute("page", "new_ricetta");
+            RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+
+            Paziente paz = null;
+            try {
+                paz = (Paziente) userDao.getByPrimaryKey(id_paziente, "paziente");
+            } catch (DaoException ex) {
+                throw new ServletException(ex.getMessage());
+            }
             
-            List<Ricetta> elenco = userDao.getRicette(1);
-            System.out.println(elenco.get(0).getNomeFarmaco() + "-" + elenco.get(0).getCosto());
-        } catch (DaoException ex) {
-            Logger.getLogger(RicetteServlet.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Aiai");
+            request.setAttribute("url_farmaci_rest", getServletContext().getInitParameter("url_farmaci_rest"));
+            System.out.println("sasasa" + getServletContext().getInitParameter("url_farmaci_rest"));
+            rd.forward(request, response);
+            return;
         }
 
-        RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/ricette.jsp" : "/base.jsp");
-        rd.include(request, response);
+        request.setAttribute("page", "ricette");
+
+        Utente u = (Utente) request.getSession(false).getAttribute("utente");
+        List<Ricetta> ricette;
+
+        String contextPath = getServletContext().getContextPath();
+        if (!contextPath.endsWith("/"))
+            contextPath += "/";
+
+        try {
+            if (u.getType() == UtenteType.PAZIENTE) {
+                request.setAttribute("title", "Ricette_paziente"); //per personalizzare il titolo che viene mostrato
+                ricette = userDao.getRicette(u.getId());
+            } else if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC) {
+                request.setAttribute("title", "Ricette_medico");
+                request.setAttribute("nome", ((Medico)u).getNome() + ((Medico)u).getCognome());  //per mostrare il nome del medico loggato
+                Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+                ricette = userDao.getRicette(id_paziente);
+                for(Ricetta v : ricette){
+                    System.out.println("Ricetta: " + v.getId());
+                }
+            }
+            else{ //sono SSP, non posso vedere le visite delle persone
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+                return;
+            }
+
+            request.setAttribute("ricette", ricette);
+            RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/ricette.jsp" : "/base.jsp");
+            rd.include(request, response);
+        } catch (IdNotFoundException e) {
+            throw new ServletException("paziente_not_found");
+        } catch (DaoException e) {
+            throw new ServletException(e.getMessage());
+        } catch (NumberFormatException e) {
+            throw new ServletException("id_paziente_not_valid");
+        } catch (Exception e) {
+            throw new ServletException();
+        }
     }
 
     @Override

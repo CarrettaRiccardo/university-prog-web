@@ -8,6 +8,7 @@ package it.unitn.disi.azzoiln_carretta_destro.persistence.dao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaco;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
@@ -107,5 +108,20 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * @param id_paziente
      * @return Elenco degli esami del paziente ordinati in ordine cronologico inverso
      */
-    public List<Esame> getEsami(Integer id_paziente) throws DaoException ;
+    public List<Esame> getEsami(Integer id_paziente) throws DaoException;
+
+    
+    /**
+     * 
+     * @return Elenco di tutti i farmaci disponibili
+     */
+    public List<Farmaco> getFarmaci() throws DaoException;
+
+    /**
+     * Usato da WB farmaci
+     * @param hint Stringa cercato dall' utente
+     * @return Lista dei farmaci con nome simile ad hint
+     * @throws DaoException 
+     */
+    public List<Farmaco> getFarmaci(String hint) throws DaoException;
 }

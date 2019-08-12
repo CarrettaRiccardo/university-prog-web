@@ -82,7 +82,7 @@
 
 
     <servlet>
-        <servlet-name>Visite</servlet-name>
+        <servlet-name>VisiteServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.VisiteServlet</servlet-class>
     </servlet>
     <servlet>
@@ -142,12 +142,16 @@
         <url-pattern>/app/visite_specialistiche</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Visite</servlet-name>
+        <servlet-name>VisiteServlet</servlet-name>
         <url-pattern>/app/visite</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Visite</servlet-name>
+        <servlet-name>VisiteServlet</servlet-name>
         <url-pattern>/app/new_visita</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RicetteServlet</servlet-name>
+        <url-pattern>/app/new_ricetta</url-pattern>
     </servlet-mapping>
 
     <!-- SESSIONE -->
@@ -197,7 +201,14 @@
         <param-name>password</param-name>
         <param-value>sampirisi</param-value>
     </context-param>
+    <context-param>
+        <description>URL per web service per ottenere elenco farmaci</description>
+        <param-name>url_farmaci_rest</param-name>
+        <param-value>http://localhost:8080/project/app/services/farmaci/</param-value>
+    </context-param>
     
+    
+    <!-- ERROR PAGES -->
     <error-page>
         <location>/error.jsp</location>
     </error-page>

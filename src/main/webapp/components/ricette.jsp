@@ -3,19 +3,17 @@
 <table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-5 shadow-sm text-white">
     <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
+        <th scope="col">Nome farmaco</th>
+        <th scope="col">Data prescrizione</th>
+        <th scope="col">Quantità</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach begin="1" end="100" var="i">
-        <tr>
-            <th scope="row"><c:out value="${i}"/></th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+    <c:forEach items="${ricette}" var="ric">
+        <tr  <c:if test="${empty ric.getTime_vendita()}"> <c:out value='style=font-weight:bold'/></c:if>    >
+            <td><c:out value="${ric.getNomeFarmaco()}"/></td>
+            <td><c:out value="${ric.getTime()}"/></td>
+            <td><c:out value="${ric.getQuantita()}"/></td>
         </tr>
     </c:forEach>
     </tbody>

@@ -26,10 +26,28 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/datatables.min.css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
 
+<%-- Select2  --%>>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+
+
 <script>
 jQuery(document).ready(function($) {
     $(".clickable-row").click(function() {
         window.location = $(this).data("href");
     });
+    
+    $("#autocomplete").select2({
+        placeholder: "Scegli un farmaco",
+        allowClear: true,
+        disabled: false,
+        ajax: {
+            url: function (request) {
+                return <c:out value=' "${url_farmaci_rest}" '/> + request.term;
+            },
+            dataType: "json"
+        }
+    });
+    $("#autocomplete").val(null).trigger("change");
 });
 </script>

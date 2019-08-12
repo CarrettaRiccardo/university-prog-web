@@ -5,6 +5,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
@@ -71,7 +72,6 @@ public class VisiteServlet extends HttpServlet {
         }
 
 
-        request.setAttribute("title", "Visite");
         request.setAttribute("page", "visite");
 
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
@@ -83,12 +83,15 @@ public class VisiteServlet extends HttpServlet {
 
         try {
             if (u.getType() == UtenteType.PAZIENTE) {
+                request.setAttribute("title", "Visite_paziente"); //per personalizzare il titolo che viene mostrato
                 visite = userDao.getVisite(u.getId());
             } else if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC) {
+                request.setAttribute("title", "Visite_medico");
+                request.setAttribute("nome", ((Medico)u).getNome() + ((Medico)u).getCognome());  //per mostrare il nome del medico loggato
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 visite = userDao.getVisite(id_paziente);
                 for(Visita v : visite){
-                    System.out.println(v.getId());
+                    System.out.println("Visita: " + v.getId());
                 }
             }
             else{ //sono SSP, non posso vedere le visite delle persone
@@ -96,7 +99,7 @@ public class VisiteServlet extends HttpServlet {
                 return;
             }
 
-            //request.setAttribute("visite", visite);
+            request.setAttribute("visite", visite);
             RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/visite.jsp" : "/base.jsp");
             rd.include(request, response);
         } catch (IdNotFoundException e) {

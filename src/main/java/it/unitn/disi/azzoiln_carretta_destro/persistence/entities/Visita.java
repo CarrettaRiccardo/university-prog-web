@@ -9,7 +9,7 @@ import java.util.Date;
 public class Visita extends Prescrizione {
     private String anamnesi;
 
-    public Visita(int id_ticket, String anamnesi, int id, int id_paziente, int id_medico, Date time) {
+    public Visita(String anamnesi, int id, int id_paziente, int id_medico, Date time) {
         super(id, id_paziente, id_medico, time);
         this.anamnesi = anamnesi;
     }
@@ -30,7 +30,7 @@ public class Visita extends Prescrizione {
     }
     
     public String getAnamnesiShort() {
-        return anamnesi.substring(0, 10);
+        return anamnesi.substring(0, 20) + "..";
     }
 
 }

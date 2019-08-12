@@ -38,7 +38,7 @@ public class PazientiServlet extends HttpServlet {
     
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("title", "Pazienti");
+        request.setAttribute("title", "Pazienti_medico");
         request.setAttribute("page", "pazienti");
         
         Utente u = (Utente) request.getSession(false).getAttribute("utente");

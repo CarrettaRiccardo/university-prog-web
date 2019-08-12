@@ -8,6 +8,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaco;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
@@ -289,6 +290,17 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     public List<Visita> getVisite(Integer id_paziente) throws DaoException{
         if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<Visita> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.* FROM visita v inner join prescrizione p on p.id = v.id_prescrizione WHERE p.id_paziente = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 Visita r = new Visita(rs.getString("anamnesi"),rs.getInt("id"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+                 ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }  
         return ret;
     }
     
@@ -314,7 +326,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         List<Ricetta> ret = new LinkedList<>();
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione WHERE id_prescrizione = ? ORDER BY time DESC")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione WHERE id_paziente = ? ORDER BY time DESC")) {
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -322,7 +334,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
                  ret.add(r);
             }            
         } catch (SQLException ex) {
-            throw new DaoException("Error retriving List<Ricetta>", ex);
+            throw new DaoException("db_error", ex);
         }        
         return ret;
     }
@@ -339,5 +351,38 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         LinkedList<Esame> ret = new LinkedList<>();
         return ret;
     }   
+
+    @Override
+    public List<Farmaco> getFarmaci() throws DaoException {
+        List<Farmaco> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM farmaci ORDER BY nome")) {
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 Farmaco r = new Farmaco(rs.getInt("id"),rs.getString("nome"));
+                 ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }        
+        return ret;
+    }
+    
+    @Override
+    public List<Farmaco> getFarmaci(String hint) throws DaoException {
+        List<Farmaco> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM farmaci WHERE nome LIKE ? ORDER BY nome")) {
+            stm.setString(1, "%" + hint + "%");
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 Farmaco r = new Farmaco(rs.getInt("id"),rs.getString("nome"));
+                 ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }        
+        return ret;
+    }
 
 }

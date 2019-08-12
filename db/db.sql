@@ -103,7 +103,8 @@ create table farmaci(
     id int not null AUTO_INCREMENT,
     nome varchar(255) not null,
     costo float not null,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    INDEX(nome)
 )engine=InnoDB;
 
 
