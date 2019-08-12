@@ -20,12 +20,17 @@
     </c:forEach>
     </tbody>
 </table>--%>
-<input id="datepicker" width="276" />
+<div class="my-4">
+    <p class="font-weight-bold" style="float: left; font-size: 17px">Seleziona la data per la visita:</p>
+    <input id="datepicker" class="text-center mb-3" style="float: left" width="276" />
+    <button id="loadDate" class="btn btn-gradient btn-block rounded-pill ml-3 mb-3" style="width: 236px; float: left">Visualizza disponibilita'</button>
+</div>
 <script>
-
     $('#datepicker').datepicker({
-        format: 'dd/mm/yyyy',
-    }).on('change.dp', function(event){
+        format: 'dd/mm/yyyy'
+    });
+    
+    $('#loadDate').click({
         
     });
 </script>
