@@ -37,14 +37,15 @@ jQuery(document).ready(function($) {
     $(".clickable-row").click(function() {
         window.location = $(this).data("href");
     });
-<c:if test="${title == 'crea_ricetta'}">    <!-- Codice per ricerca con autocompletamento -->
+    
+<c:if test="${! empty url_rest}">    <!-- Codice per ricerca con autocompletamento -->
     $("#autocomplete").select2({
         placeholder: "Scegli un farmaco",
         allowClear: true,
         disabled: false,
         ajax: {
             url: function (params) {
-                    return "${url_farmaci_rest}" + params.term;
+                    return "${url_rest}" + params.term;
                     
                 },
             },

@@ -83,7 +83,7 @@ public class RicetteServlet extends HttpServlet {
                 throw new ServletException(ex.getMessage());
             }
             
-            request.setAttribute("url_farmaci_rest", getServletContext().getInitParameter("url_farmaci_rest"));
+            request.setAttribute("url_rest", getServletContext().getInitParameter("url_farmaci_rest"));
             System.out.println("sasasa" + getServletContext().getInitParameter("url_farmaci_rest"));
             rd.forward(request, response);
             return;
