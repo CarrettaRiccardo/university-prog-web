@@ -1,6 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+
 <%-- Configurazione base path, per non inserire "/project" in ogni link --%>
 <base href="/project/"/>
 
@@ -13,7 +14,7 @@
         crossorigin="anonymous"></script>
         
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     
@@ -26,9 +27,9 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/datatables.min.css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
 
-<%-- Select2  --%>>
+<%-- Select2  --%>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.js"></script>
 
 
 <script>
@@ -36,18 +37,21 @@ jQuery(document).ready(function($) {
     $(".clickable-row").click(function() {
         window.location = $(this).data("href");
     });
-    
+<c:if test="${title == 'crea_ricetta'}">    <!-- Codice per ricerca con autocompletamento -->
     $("#autocomplete").select2({
         placeholder: "Scegli un farmaco",
         allowClear: true,
         disabled: false,
         ajax: {
-            url: function (request) {
-                return <c:out value=' "${url_farmaci_rest}" '/> + request.term;
+            url: function (params) {
+                    return "${url_farmaci_rest}" + params.term;
+                    
+                },
             },
-            dataType: "json"
-        }
+        dataType: "json"
+        
     });
     $("#autocomplete").val(null).trigger("change");
+</c:if>
 });
 </script>

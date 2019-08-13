@@ -8,7 +8,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaco;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaci;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
@@ -353,14 +353,14 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     }   
 
     @Override
-    public List<Farmaco> getFarmaci() throws DaoException {
-        List<Farmaco> ret = new LinkedList<>();
+    public Farmaci getFarmaci() throws DaoException {
+        Farmaci ret = new Farmaci();
         
         try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM farmaci ORDER BY nome")) {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 Farmaco r = new Farmaco(rs.getInt("id"),rs.getString("nome"));
-                 ret.add(r);
+                 ret.addFarmaco(rs.getInt("id"),rs.getString("nome"));
+                 //ret.add(r);
             }            
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
@@ -369,15 +369,15 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     }
     
     @Override
-    public List<Farmaco> getFarmaci(String hint) throws DaoException {
-        List<Farmaco> ret = new LinkedList<>();
+    public Farmaci getFarmaci(String hint) throws DaoException {
+        Farmaci ret = new Farmaci();
         
         try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM farmaci WHERE nome LIKE ? ORDER BY nome")) {
             stm.setString(1, "%" + hint + "%");
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 Farmaco r = new Farmaco(rs.getInt("id"),rs.getString("nome"));
-                 ret.add(r);
+                 ret.addFarmaco(rs.getInt("id"),rs.getString("nome"));
+                 //ret.add(r);
             }            
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);

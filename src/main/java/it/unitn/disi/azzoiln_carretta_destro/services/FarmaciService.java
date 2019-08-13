@@ -6,12 +6,14 @@
 package it.unitn.disi.azzoiln_carretta_destro.services;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaco;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaci;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -51,6 +53,7 @@ public class FarmaciService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getFarmaci() throws DaoFactoryException {
+        System.out.println(context.getRequestUri());
         return getFarmaci("");
     }
     
@@ -59,19 +62,19 @@ public class FarmaciService {
     @Path("{hint_nome}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getFarmaci(@PathParam("hint_nome") String hint) throws DaoFactoryException {
-        List<Farmaco> ret = null;
+        //List<Object> ret = new LinkedList<>();
+        Farmaci f = null;
         Gson gson = new Gson();
         
         try{
-            if ((hint == null) || "undefined".equals(hint)) {
-                ret = user.getFarmaci();
-            } else {
-                ret = user.getFarmaci(hint);
-            }
+            if ((hint == null) || "undefined".equals(hint))
+                f = new Farmaci();
+            else 
+                f = user.getFarmaci(hint);
         }
         catch(DaoException ex){
             return gson.toJson(new String(""));     //in questo modo se ci sono errori simulo di non aver trovato farmaci
         }
-        return gson.toJson(ret);
+        return gson.toJson(f);
     }
 }
