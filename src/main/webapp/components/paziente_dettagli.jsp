@@ -33,14 +33,14 @@
                     <c:set var="activeIndex" value="${s.index}"/>
                 </c:if>
                 <a class="nav-link ${(sezione == subpage ? "active " : "text-gradient-".concat(s.index + 2))}"
-                   href="app/dettagli_paziente/${sezione}?id_paziente=${param.id_paziente}">
+                   href="app/${u_url}/dettagli_paziente/${sezione}?id_paziente=${param.id_paziente}">
                     <span class="h6 text-capitalize">${sezioni_dettagli_titles[s.index]}</span>
                 </a>
             </li>
         </c:forTokens>
     </ul>
     <a class="btn btn-gradient-${activeIndex + 2} text-white h6 position-absolute" style="top:0; right:0;"
-       href="app/new_${subpage}?id_paziente=${param.id_paziente}">
+       href="app/${u_url}/new_${subpage}?id_paziente=${param.id_paziente}">
         <span class="font-weight-bolder">+</span>
         <span class="text-capitalize"> <fmt:message key="aggiungi"/> </span>
     </a>
@@ -49,7 +49,7 @@
 <div class="card border-top-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
     <div class="card-body">
         <%-- Inclusione della servlet per caricare i dati --%>
-        <jsp:include page="/app/${subpage}"/>
+        <jsp:include page="/app/${u_url}/${subpage}"/>
     </div>
 </div>
 

@@ -69,28 +69,26 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         
         try {
             Integer new_id = null;
-            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)");
+            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)",Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, r.getId_paziente());
             ps.setInt(2, r.getId_medico());
-            
+            System.out.println("qua");
             int count = ps.executeUpdate();
             if(count == 0) return false;
-            
+            System.out.println("qua2");
             ResultSet key = ps.getGeneratedKeys();
-            if(key.next()) new_id = key.getInt(0); //prendo l'ID dell'ultima prescrizione fatta
+            if(key.next()) new_id = key.getInt(1); //prendo l'ID dell'ultima prescrizione fatta
             else return false;
+            System.out.println("qua2");
             
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                int id_new_ricetta = rs.getInt("id");
-                ps = CON.prepareStatement("insert into farmaco (id_prescrizione, id_farmaco, quantita) VALUES (?,?,?)");
-                ps.setInt(1, id_new_ricetta);
-                ps.setInt(2, r.getId_farmaco());
-                ps.setInt(3, r.getQuantita());
-                count = ps.executeUpdate();
-                if(count == 0) return false;
-            }
-            else return false;
+            
+            ps = CON.prepareStatement("insert into farmaco (id_prescrizione, id_farmaco, quantita) VALUES (?,?,?)");
+            ps.setInt(1, new_id);
+            ps.setInt(2, r.getId_farmaco());
+            ps.setInt(3, r.getQuantita());
+            count = ps.executeUpdate();
+            
+            if(count == 0) return false;
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
         }

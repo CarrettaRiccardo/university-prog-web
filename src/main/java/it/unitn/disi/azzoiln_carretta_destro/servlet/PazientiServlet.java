@@ -38,9 +38,6 @@ public class PazientiServlet extends HttpServlet {
     
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("title", "Pazienti_medico");
-        request.setAttribute("page", "pazienti");
-        
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
         List<Paziente> pazienti = null;
         
@@ -51,7 +48,7 @@ public class PazientiServlet extends HttpServlet {
         try{
             if(u.getType() == UtenteType.PAZIENTE){                
                 //TODO: Decidere se visualizza qualcosa da questa pagina
-                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "home"));
                 return;
             }
             else if(u.getType() == UtenteType.MEDICO ){
@@ -62,21 +59,23 @@ public class PazientiServlet extends HttpServlet {
                 //TODO: Decidere cosa visualizza
             }
             else{ //sono SSP, non posso vedere le visite delle persone
-                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "home"));
                 return;
             }
 
+            request.setAttribute("title", "Pazienti_medico");
+            request.setAttribute("page", "pazienti");
             request.setAttribute("pazienti", pazienti);  
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
             rd.include(request, response);
         }
         catch(IdNotFoundException e){
-            throw new ServletException(e.getMessage());  //TODO-> mostrare pagina di errore (NOT FOUND PAZIENTE) in base alla stringa per individuare il corretto messaggio
+            throw new ServletException(e.getMessage());  
         }catch(DaoException e){
             throw new ServletException(e);
         }
         catch(NumberFormatException e){
-            throw new ServletException(e); //TODO-> mostrare pagina di errore BAD REQUEST
+            throw new ServletException(e); //TODO: BAD REQUEST
         }
     }
 

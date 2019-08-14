@@ -15,10 +15,11 @@ public class PazienteDettagliServlet extends HttpServlet {
         // Estraggo la sezione caricata leggendo l'url ed estraendo solo l'ultimo elemento
         String[] parts = request.getRequestURI().split("/");
         String subpage = parts[parts.length - 1].replace("\\?.*", "");
-
+System.out.println("\n\nsasas" + subpage + "\n\n");
         // Controllo che la sottosezione a cui l'utente prova ad accedere è valida
         if (((String) request.getAttribute("sezioni_dettagli")).contains(subpage)) {
             request.setAttribute("subpage", subpage);
+            
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
             rd.include(request, response);
         } else {
