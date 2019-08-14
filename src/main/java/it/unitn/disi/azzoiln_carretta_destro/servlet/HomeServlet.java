@@ -15,15 +15,15 @@ public class HomeServlet extends HttpServlet {
         Utente utente = (Utente) request.getSession(false).getAttribute("utente");
         String redirectUrl ="";
         switch(utente.getType()){
-            case PAZIENTE: redirectUrl = "prenotazioni";break;
-            case MEDICO: redirectUrl = "pazienti"; break;
-            case MEDICO_SPEC: redirectUrl = "visite_specialistiche"; break;
-            case SSP: redirectUrl = "medici"; break;
+            case PAZIENTE: redirectUrl = "paziente/prenotazioni";break;
+            case MEDICO: redirectUrl = "medico/pazienti"; break;
+            case MEDICO_SPEC: redirectUrl = "medico_spec/visite_specialistiche"; break;
+            case SSP: redirectUrl = "ssp/medici"; break;
         }
 
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/")) contextPath += "/";
-        response.sendRedirect(contextPath + "app/" + redirectUrl);
+        response.sendRedirect(contextPath + "app/"+ redirectUrl);
     }
 
 }

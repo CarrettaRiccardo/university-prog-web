@@ -61,7 +61,7 @@ public class VisiteServlet extends HttpServlet {
                 visite = userDao.getVisite(id_paziente);
             }
             else{ //sono SSP, non posso vedere le visite delle persone
-                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;
             }
 
@@ -94,7 +94,7 @@ public class VisiteServlet extends HttpServlet {
         if (!contextPath.endsWith("/"))
             contextPath += "/";
         if (request.getParameter("id_paziente") == null)
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
             id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
@@ -145,7 +145,7 @@ public class VisiteServlet extends HttpServlet {
         }
         
         if (inserito){
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/dettagli_paziente/visite?id_paziente=" + v.getId_paziente() + "&r"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_paziente/visite?id_paziente=" + v.getId_paziente() + "&r"));
             return;
         }
         

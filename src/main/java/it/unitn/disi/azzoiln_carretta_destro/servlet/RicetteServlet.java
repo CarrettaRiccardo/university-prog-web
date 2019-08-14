@@ -85,7 +85,7 @@ public class RicetteServlet extends HttpServlet {
                 }
             }
             else{ //sono SSP, non posso vedere le visite delle persone
-                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;
             }
 
@@ -117,7 +117,7 @@ public class RicetteServlet extends HttpServlet {
         if (!contextPath.endsWith("/"))
             contextPath += "/";
         if (request.getParameter("id_paziente") == null)
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
             id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
@@ -161,7 +161,7 @@ public class RicetteServlet extends HttpServlet {
         }
         
         if (inserito){
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/dettagli_paziente/ricette?id_paziente=" + r.getId_paziente() + "&r"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_paziente/ricette?id_paziente=" + r.getId_paziente() + "&r"));
             return;
         }
         

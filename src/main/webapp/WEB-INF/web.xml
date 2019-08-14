@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!-- SERVLET -->
     <servlet>
         <servlet-name>Login</servlet-name>
@@ -10,7 +9,6 @@
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.LoginServlet</servlet-class>
@@ -19,8 +17,6 @@
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login.handler</url-pattern>
     </servlet-mapping>
-
-
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.LogoutServlet</servlet-class>
@@ -29,8 +25,6 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/app/logout.handler</url-pattern>
     </servlet-mapping>
-
-
     <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.HomeServlet</servlet-class>
@@ -39,8 +33,6 @@
         <servlet-name>Home</servlet-name>
         <url-pattern>/app/home</url-pattern>
     </servlet-mapping>
-
-
     <servlet>
         <servlet-name>Choose</servlet-name>
         <jsp-file>/choose.jsp</jsp-file>
@@ -49,8 +41,6 @@
         <servlet-name>Choose</servlet-name>
         <url-pattern>/app/choose</url-pattern>
     </servlet-mapping>
-
-
     <servlet>
         <servlet-name>ChooseServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.ChooseServlet</servlet-class>
@@ -59,9 +49,6 @@
         <servlet-name>ChooseServlet</servlet-name>
         <url-pattern>/app/choose.handler</url-pattern>
     </servlet-mapping>
-
-   
-
     <servlet>
         <servlet-name>Settings</servlet-name>
         <jsp-file>/settings.jsp</jsp-file>
@@ -70,7 +57,6 @@
         <servlet-name>Settings</servlet-name>
         <url-pattern>/app/settings</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>Error</servlet-name>
         <jsp-file>/error.jsp</jsp-file>
@@ -79,8 +65,6 @@
         <servlet-name>Error</servlet-name>
         <url-pattern>/error</url-pattern>
     </servlet-mapping>
-
-
     <servlet>
         <servlet-name>VisiteServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.VisiteServlet</servlet-class>
@@ -115,45 +99,62 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>PazienteDetailsServlet</servlet-name>
-        <url-pattern>/app/dettagli_paziente/*</url-pattern>
+        <url-pattern>/app/paziente/dettagli_paziente/*</url-pattern>
+        <url-pattern>/app/medico/dettagli_paziente/*</url-pattern>
+        <url-pattern>/app/medico_spec/dettagli_paziente/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>MediciServlet</servlet-name>
-        <url-pattern>/app/medici</url-pattern>
+        <url-pattern>/app/paziente/medici</url-pattern>
+        <url-pattern>/app/ssp/medici</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PazientiServlet</servlet-name>
-        <url-pattern>/app/pazienti</url-pattern>
+        <url-pattern>/app/medico/pazienti</url-pattern>
+        <url-pattern>/app/medico_spec/pazienti</url-pattern>
+        <url-pattern>/app/ssp/pazienti</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>
-        <url-pattern>/app/ricette</url-pattern>
+        <url-pattern>/app/paziente/ricette</url-pattern>
+        <url-pattern>/app/medico/ricette</url-pattern>
+        <url-pattern>/app/medico_spec/ricette</url-pattern>
+        <url-pattern>/app/ssp/ricette</url-pattern><!-- MAGARI PER STATS. -->
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EsamiServlet</servlet-name>
-        <url-pattern>/app/esami</url-pattern>
+        <url-pattern>/app/paziente/esami</url-pattern>
+        <url-pattern>/app/medico/esami</url-pattern>
+        <url-pattern>/app/medico_spec/esami</url-pattern>
+        <url-pattern>/app/ssp/esami</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PrenotazioniServlet</servlet-name>
-        <url-pattern>/app/prenotazioni</url-pattern>
+        <url-pattern>/app/paziente/prenotazioni</url-pattern>
+        <url-pattern>/app/medico/prenotazioni</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteSpecialisticheServlet</servlet-name>
-        <url-pattern>/app/visite_specialistiche</url-pattern>
+        <url-pattern>/app/paziente/visite_specialistiche</url-pattern>
+        <url-pattern>/app/ssp/visite_specialistiche</url-pattern>
+        <url-pattern>/app/medico/visite_specialistiche</url-pattern>
+        <url-pattern>/app/medicoS-pec/visite_specialistiche</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteServlet</servlet-name>
-        <url-pattern>/app/visite</url-pattern>
+        <url-pattern>/app/paziente/visite</url-pattern>
+        <url-pattern>/app/medico/visite</url-pattern>
+        <url-pattern>/app/medico_spec/visite</url-pattern>
+        <url-pattern>/app/ssp/visite</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteServlet</servlet-name>
-        <url-pattern>/app/new_visita</url-pattern>
+        <url-pattern>/app/medico/new_visita</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>
-        <url-pattern>/app/new_ricetta</url-pattern>
+        <url-pattern>/app/medico/new_ricetta</url-pattern>
     </servlet-mapping>
-
     <!-- SESSIONE -->
     <session-config>
         <session-timeout>
@@ -169,11 +170,41 @@
         <filter-name>NoJspFilter</filter-name>
         <filter-class>it.unitn.disi.azzoiln_carretta_destro.filters.NoJspFilter</filter-class>
     </filter>
-
+    <filter>
+        <filter-name>PazienteFilter</filter-name>
+        <filter-class>it.unitn.disi.azzoiln_carretta_destro.filters.PazienteFilter</filter-class>
+    </filter>
+    <!-- LISTENERS -->
+    <filter>
+        <filter-name>MedicoFilter</filter-name>
+        <filter-class>it.unitn.disi.azzoiln_carretta_destro.filters.MedicoFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>SspFilter</filter-name>
+        <filter-class>it.unitn.disi.azzoiln_carretta_destro.filters.SspFilter</filter-class>
+    </filter>
     <filter-mapping>
-        <description>Per evitare che un utente vada su una pagina con l'estensione del file esplicita e per impedire quindi di acccedere direttamente a pagine usate solo per 
-            essere incluse in altre per formare pagine più complesse
-        </description>
+        <filter-name>SspFilter</filter-name>
+        <url-pattern>/app/ssp/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>MedicoFilter</filter-name>
+        <url-pattern>/app/medico/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>PazienteFilter</filter-name>
+        <url-pattern>/app/paziente/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
         <filter-name>NoJspFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
@@ -184,7 +215,6 @@
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
     </filter-mapping>
-    <!-- LISTENERS -->
     <listener>
         <listener-class>it.unitn.disi.azzoiln_carretta_destro.listeners.AppListener</listener-class>
     </listener>
@@ -206,8 +236,6 @@
         <param-name>url_farmaci_rest</param-name>
         <param-value>http://localhost:8080/project/app/services/farmaci/</param-value>
     </context-param>
-    
-    
     <!-- ERROR PAGES -->
     <error-page>
         <location>/error.jsp</location>
