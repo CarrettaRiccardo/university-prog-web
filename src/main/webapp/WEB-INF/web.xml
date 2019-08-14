@@ -147,11 +147,11 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteServlet</servlet-name>
-        <url-pattern>/app/new_visita</url-pattern>
+        <url-pattern>/app/new_visite</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>
-        <url-pattern>/app/new_ricetta</url-pattern>
+        <url-pattern>/app/new_ricette</url-pattern>
     </servlet-mapping>
 
     <!-- SESSIONE -->

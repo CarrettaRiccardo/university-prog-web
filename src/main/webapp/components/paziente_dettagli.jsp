@@ -40,7 +40,7 @@
         </c:forTokens>
     </ul>
     <a class="btn btn-gradient-${activeIndex + 2} text-white h6 position-absolute" style="top:0; right:0;"
-       href="app/new_visita?id_paziente=${param.id_paziente}">
+       href="app/new_${subpage}?id_paziente=${param.id_paziente}">
         <span class="font-weight-bolder">+</span>
         <span class="text-capitalize"> <fmt:message key="aggiungi"/> </span>
     </a>
@@ -54,7 +54,8 @@
 </div>
 
 <c:if test="${param.r ne null}">
-    <div class="alert alert-success alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2" role="alert">
+    <div class="alert alert-success alert-dismissible fade show position-fixed"
+         style="right: 20px; bottom: 0; z-index: 2" role="alert">
         Operazione eseguita con <b>successo</b>!
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
