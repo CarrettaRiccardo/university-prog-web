@@ -8,15 +8,15 @@
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate var="data" value="${now}"/>
 
-<form action="app/new_visita" method="POST">
+<form action="app/new_ricetta" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
-      <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()}  ${paziente.getCognome()}" readonly>
+      <input type="text" class="form-control" id="paziente" placeholder="${paziente.getNome()}  ${paziente.getCognome()}" readonly>
     </div>
     <div class="form-group col-md-6">
       <label for="data">Data</label>
-      <input type="password" class="form-control" id="data" placeholder="${data}" readonly>
+      <input type="text" class="form-control" id="data" placeholder="${data}" readonly>
     </div>
   </div>
   <div class="form-row">
@@ -24,14 +24,24 @@
       <label for="anamnesi">Seleziona farmaco</label>
       <!--<input type="search" id="form-autocomplete" class="form-control mdb-autocomplete">
       <input type="hidden" id="form-autocomplete-value" name="id_farmaco">-->
-      <select id="autocomplete" name="autocomplete" class="form-control select2-allow-clear"></select>
+      <select id="autocomplete" name="id_farmaco" class="form-control select2-allow-clear" required></select>
       <small class="form-text text-muted">Click the input text or space to start to digit.</small>
     </div>
     <div class="form-group col-md-4">
       <label for="quantita">Quantità</label>
-      <input type="number" class="form-control" id="quantita" placeholder="1">
+      <input type="number" class="form-control" id="quantita" name="qta" value="<c:choose><c:when test="${! empty i_qta}">${i_qta}</c:when><c:when test="${empty i_qta}">1</c:when></c:choose>"
+             placeholder="1" required min='1' max='300'>
     </div>
   </div>
-  <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
+  <input type="hidden" name="id_paziente" value="${paziente.getId()}"> 
   <button type="submit" class="btn btn-primary">Conferma</button>
 </form>
+  
+<c:if test="${errore ne null}">
+    <div class="alert alert-danger alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2" role="alert">
+        <strong>Errore</strong> nell' eseguire l'operazione!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</c:if>

@@ -38,9 +38,6 @@ public class PazientiServlet extends HttpServlet {
     
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("title", "Pazienti_medico");
-        request.setAttribute("page", "pazienti");
-        
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
         List<Paziente> pazienti = null;
         
@@ -66,6 +63,8 @@ public class PazientiServlet extends HttpServlet {
                 return;
             }
 
+            request.setAttribute("title", "Pazienti_medico");
+            request.setAttribute("page", "pazienti");
             request.setAttribute("pazienti", pazienti);  
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
             rd.include(request, response);

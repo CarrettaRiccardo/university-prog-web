@@ -1,6 +1,8 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.entities;
 
 import java.util.Date;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -77,6 +79,35 @@ public class Ricetta extends Prescrizione{
 
     public int getId_farmaco() {        
         return id_farmaco;
+    }
+    
+    /**
+     * Esegue tutta la logica di gestione parametri e controllo valori non validi
+     * @param req 
+     * @param u Utente di sessione per prelevare id_medico
+     * @return  Oggetto Ricetta compilato
+     * @throws javax.servlet.ServletException 
+     */
+    public static Ricetta loadFromHttpRequest(final HttpServletRequest req, final Utente u) throws ServletException{
+        int id_paziente = -1, id_farmaco = -1,qta = -1;
+        
+        if (req.getParameter("id_paziente") == null || req.getParameter("id_farmaco") == null || req.getParameter("qta") == null)
+            throw new ServletException("bad_request");
+        try {
+            id_paziente = Integer.parseInt(req.getParameter("id_paziente"));
+            id_farmaco = Integer.parseInt(req.getParameter("id_farmaco"));
+            qta = Integer.parseInt(req.getParameter("qta"));
+            if (id_paziente <= 0 ) throw new NumberFormatException("id_paziente_not_valid");
+            if (id_farmaco <= 0 ) throw new NumberFormatException("id_medico_not_valid");
+            if (qta <= 0) throw new NumberFormatException("qta_not_valid");
+            if (qta > 200) throw new NumberFormatException("numer_too_big");
+        } catch (NumberFormatException e) {
+            throw new ServletException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServletException();
+        }
+        
+        return new Ricetta(id_paziente,u.getId(),id_farmaco, (short) qta);
     }
     
 }
