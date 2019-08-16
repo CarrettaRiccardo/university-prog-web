@@ -6,12 +6,16 @@
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.rmi.ServerError;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.Filter;
@@ -23,7 +27,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * Filtro su tutti gli URL /Medico/*
+ * Se un URL comprende un id_paziente come parametro controlla che sia effettivamente un suo Paziente. Altrimenti da errore 'not_authorized'
  * @author Steve
  */
 public class MedicoFilter implements Filter {
@@ -42,7 +47,7 @@ public class MedicoFilter implements Filter {
     
     
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, DaoException {
         if (debug) {
             log("MedicoFilter:DoBeforeProcessing");
         }
@@ -53,9 +58,24 @@ public class MedicoFilter implements Filter {
             if(req.getParameter("id_paziente") != null){
                 //E' settato un id_paziente. Devo controllare tramite una query che sia un mio paziente
                 //Altrimenti errore
-                //TODO: gestire errore conversoine String->Int con errore specifico
-                Integer id_paziente = Integer.parseInt(req.getParameter("id_paziente"));
-                //userDao = (UtenteDao) filterConfig.getServletContext().getAttribute("daoFactory");
+                Integer id_paziente = null;
+                try{
+                    id_paziente = Integer.parseInt(req.getParameter("id_paziente"));
+                }catch(NumberFormatException e){
+                    throw  new ServletException("id_paziente not valid", e);
+                }
+                finally{
+                    if(id_paziente == null || id_paziente <= 0)
+                        throw new ServletException("id_paziente not valid");
+                }
+                
+                
+                Utente u = (Utente) ((HttpServletRequest) request).getSession(false).getAttribute("utente");
+                if( ! (u instanceof Medico) )  //se non sono un medico non posso accedere all' URL Medico
+                    throw new ServletException("not_authorized");
+                System.out.println(userDao.Medico().isMyPatient(id_paziente,u.getId()));
+                if(! userDao.Medico().isMyPatient(id_paziente,u.getId()))
+                    throw new ServletException("not_my_patient");  //Il Paziente è riferito ad un altro dottore
             }
             
             req.setAttribute("u_url", "medico");
@@ -96,6 +116,7 @@ public class MedicoFilter implements Filter {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet error occurs
      */
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
@@ -104,12 +125,17 @@ public class MedicoFilter implements Filter {
             log("MedicoFilter:doFilter()");
         }
         
-        doBeforeProcessing(request, response);
+        
         
         Throwable problem = null;
         try {
+            doBeforeProcessing(request, response);
             chain.doFilter(request, response);
-        } catch (Throwable t) {
+        }
+        catch(DaoException d){
+            throw new ServletException("db_error");
+        }
+        catch (Throwable t) {
             // If an exception is thrown somewhere down the filter chain,
             // we still want to execute our after processing, and then
             // rethrow the problem after that.
@@ -161,8 +187,17 @@ public class MedicoFilter implements Filter {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
             if (debug) {                
-                log("MedicoFilter:Initializing filter");
+                log("MedicoFilter:Initializing filter + getUserDao");
             }
+        }
+        
+        DaoFactory daoFactory = (DaoFactory) filterConfig.getServletContext().getAttribute("daoFactory"); 
+        if (daoFactory == null)
+            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, "Impossible to get dao factory for user storage system Filter", new ServletException("Impossible to get dao factory for user storage system Filter"));                    
+        try {
+            userDao = daoFactory.getDAO(UtenteDao.class);
+        } catch (DaoFactoryException ex) {
+            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -177,16 +212,6 @@ public class MedicoFilter implements Filter {
         StringBuffer sb = new StringBuffer("MedicoFilter(");
         sb.append(filterConfig);
         sb.append(")");
-
-        DaoFactory daoFactory = (DaoFactory) filterConfig.getServletContext().getAttribute("daoFactory"); 
-        if (daoFactory == null)
-            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, "Impossible to get dao factory for user storage system Filter", new ServletException("Impossible to get dao factory for user storage system Filter"));                    
-        try {
-            userDao = daoFactory.getDAO(UtenteDao.class);
-        } catch (DaoFactoryException ex) {
-            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         return (sb.toString());
     }
     

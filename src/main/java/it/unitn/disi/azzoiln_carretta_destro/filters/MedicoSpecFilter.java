@@ -6,10 +6,14 @@
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -48,11 +52,7 @@ public class MedicoSpecFilter implements Filter {
             HttpServletRequest req = (HttpServletRequest) request;
             
             if(req.getParameter("id_paziente") != null){
-                //E' settato un id_paziente. Devo controllare tramite una query che sia un mio paziente
-                //Altrimenti errore
-                //TODO: gestire errore conversoine String->Int con errore specifico
-                Integer id_paziente = Integer.parseInt(req.getParameter("id_paziente"));
-                userDao = (UtenteDao) filterConfig.getServletContext().getAttribute("daoFactory");
+                Integer id_paziente = Integer.parseInt(req.getParameter("id_paziente")); //eccezione
             }
             
             req.setAttribute("u_url", "medico_spec");
@@ -160,6 +160,15 @@ public class MedicoSpecFilter implements Filter {
             if (debug) {                
                 log("MedicoSpecFilter:Initializing filter");
             }
+        }
+        
+        DaoFactory daoFactory = (DaoFactory) filterConfig.getServletContext().getAttribute("daoFactory"); 
+        if (daoFactory == null)
+            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, "Impossible to get dao factory for user storage system Filter", new ServletException("Impossible to get dao factory for user storage system Filter"));                    
+        try {
+            userDao = daoFactory.getDAO(UtenteDao.class);
+        } catch (DaoFactoryException ex) {
+            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

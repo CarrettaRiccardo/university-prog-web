@@ -1,6 +1,8 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.entities;
 
 import java.util.Date;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Steve
@@ -37,6 +39,9 @@ public class VisitaSpecialistica extends Prescrizione{
     }
     
     
+ 
+    
+    
     
 
     public int getId_medico_specialista() {
@@ -54,6 +59,10 @@ public class VisitaSpecialistica extends Prescrizione{
     public String getAnamnesi() {
         return anamnesi;
     }
+    
+    public String getAnamnesiShort() {
+        return (anamnesi == null) ? "" : (anamnesi.substring(0, 20) + "..");
+    }
 
     public Date getTime_visita() {
         return time_visita;
@@ -65,6 +74,34 @@ public class VisitaSpecialistica extends Prescrizione{
 
     public String getNome_medico_specialista() {
         return nome_medico_specialista;
+    }
+    
+    
+    /**
+     * Esegue tutta la logica di gestione parametri e controllo valori non validi
+     * @param req 
+     * @param u Utente di sessione per prelevare id_medico
+     * @return  Oggetto VisitaSpecialistica
+     * @throws javax.servlet.ServletException 
+     */
+    public static VisitaSpecialistica loadFromHttpRequest(final HttpServletRequest request, final Utente u) throws ServletException{
+        int id_paziente = -1;
+        Integer id_visita = -1;
+
+        if (request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null)
+            throw new ServletException("bad_request");
+        try {
+            id_visita = Integer.parseInt(request.getParameter("id_visita"));
+            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if (id_paziente <= 0) throw new NumberFormatException("id_paziente_not_valid");
+            if (id_visita <= 0) throw new NumberFormatException("id_visita_not_valid");
+        } catch (NumberFormatException e) {
+            throw new ServletException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServletException();
+        }
+        
+        return new VisitaSpecialistica(id_visita,id_paziente,u.getId());
     }
     
     

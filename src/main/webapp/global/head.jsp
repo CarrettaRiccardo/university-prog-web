@@ -40,7 +40,7 @@ jQuery(document).ready(function($) {
     
 <c:if test="${! empty url_rest}">    <!-- Codice per ricerca con autocompletamento -->
     $("#autocomplete").select2({
-        placeholder: "Scegli un farmaco",
+        placeholder: "Digita un nome",
         allowClear: true,
         disabled: false,
         ajax: {

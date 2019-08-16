@@ -11,6 +11,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -97,27 +98,28 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
     }
 
     @Override
-    public boolean addVisitaSpecialistica(Integer id_medico, Integer id_paziente, Integer id_visita_specialistica) throws DaoException {
-        if(id_medico == null || id_medico == null || id_visita_specialistica == null) return false;  
+    public boolean addVisitaSpecialistica(VisitaSpecialistica v) throws DaoException {
+        if(v.getId_medico() <= 0 || v.getId_paziente() <= 0 || v.getId_visita_spec() <= 0) return false;  
         
         try {
             Integer new_id = null;
-            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)");
-            ps.setInt(1, id_paziente);
-            ps.setInt(2, id_medico);
+            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)",Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, v.getId_paziente());
+            ps.setInt(2, v.getId_medico());
             
             int count = ps.executeUpdate();
             if(count == 0) return false;
             ResultSet key = ps.getGeneratedKeys();
-            if(key.next()) new_id = key.getInt(0); //prendo l'ID dell'ultima prescrizione fatta
+            if(key.next()) new_id = key.getInt(1); //prendo l'ID dell'ultima prescrizione fatta
             else return false;
             
-            ps = CON.prepareStatement("insert into visita_specialistica (id_prescrizione) VALUES (?)");
+            ps = CON.prepareStatement("insert into visita_specialistica (id_prescrizione,id_visita_spec) VALUES (?,?)");
             ps.setInt(1, new_id);
+            ps.setInt(2, v.getId_visita_spec());
             count = ps.executeUpdate();
             if(count == 0) return false;
         } catch (SQLException ex) {
-            throw new DaoException("db_error", ex);
+            throw new DaoException(ex.getMessage(), ex);
         }
         
         return true;
@@ -167,6 +169,25 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
         }        
+        return ret;
+    }
+
+    @Override
+    public boolean isMyPatient(Integer id_paziente, Integer id_medico) throws DaoException {
+        boolean ret = false;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id FROM utenti u WHERE id=? AND id_medico = ?")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_medico);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()){
+                 System.out.println("Si, " + id_paziente + " è mio " + id_medico);
+                 ret = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n\n");
+            throw new DaoException("db_error", ex);
+        } 
         return ret;
     }
     

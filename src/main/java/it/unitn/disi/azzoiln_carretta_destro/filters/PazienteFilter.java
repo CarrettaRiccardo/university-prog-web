@@ -19,7 +19,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * Filtreo su URL /PAZIENTE/
  * @author Steve
  */
 public class PazienteFilter implements Filter {
@@ -43,16 +43,7 @@ public class PazienteFilter implements Filter {
         
         if(request instanceof HttpServletRequest){
             HttpServletRequest req = (HttpServletRequest) request;
-            
-            if(req.getParameter("id_paziente") != null){
-                //E' settato un id_paziente. Devo controllare tramite una query che sia un mio paziente
-                //Altrimenti errore
-                //TODO: gestire errore conversoine String->Int con errore specifico
-                Integer id_paziente = Integer.parseInt(req.getParameter("id_paziente"));
-                userDao = (UtenteDao) filterConfig.getServletContext().getAttribute("daoFactory");
-            }
-            
-            req.setAttribute("u_url", "paziente");
+            req.setAttribute("u_url", "paziente"); //deve essere impostato per automatizzare il redirect da una pagina all'altra con i vari possibili URL tra medico/Paziente..
         }
 
         

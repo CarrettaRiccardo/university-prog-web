@@ -8,10 +8,12 @@ package it.unitn.disi.azzoiln_carretta_destro.persistence.dao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaci;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Farmaci;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.VisiteSpecialistiche;
 import java.util.List;
 
 /**
@@ -92,8 +94,9 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * Ottiene l' elenco delle visite specialistiche del paziente ordinate in ordine cronologico inverso
      * @param id_paziente
      * @return Elenco delle visite specialistiche del paziente ordinate in ordine cronologico inverso
+     * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      */
-    public List<Visita> getVisiteSpecialistiche(Integer id_paziente) throws DaoException;
+    public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente) throws DaoException;
     
     /**
      * Ottiene l' elenco delle ricette ordinate in ordine cronologico inverso
@@ -124,4 +127,13 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * @throws DaoException 
      */
     public Farmaci getFarmaci(String hint) throws DaoException;
+
+    
+    /**
+     * Usato da WB visite specialistiche
+     * @param hint Stringa cercato dall' utente
+     * @return Lista delle visite disponibili
+     * @throws DaoException 
+     */
+    public VisiteSpecialistiche getAllVisiteSpec(String hint) throws DaoException;
 }

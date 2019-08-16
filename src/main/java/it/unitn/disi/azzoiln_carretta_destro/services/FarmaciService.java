@@ -11,7 +11,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaci;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Farmaci;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

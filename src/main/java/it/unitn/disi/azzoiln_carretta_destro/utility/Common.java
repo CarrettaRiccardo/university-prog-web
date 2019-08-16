@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Classe per metodi statici di comune utilità nell' Applicazione
@@ -22,7 +23,20 @@ public class Common {
     private static final String ALGORITHM_SALT = "SHA1PRNG";    
     
  
-    
+    /**
+     * Per ottnere URL completo della base del progetto.
+     * ES: http://localhost:8080/project/
+     * @param req
+     * @return 
+     */
+    public static String getDomain(HttpServletRequest req){
+        String scheme = req.getScheme();             // http
+        String serverName = req.getServerName();     // hostname.com
+        String contextPath = req.getContextPath();   ///project
+        int portNum = req.getServerPort();
+        
+        return scheme + "://" + serverName + ":" + portNum +  "" + contextPath + "/";
+    }
     
     public static String randomAlphaNumeric() throws NoSuchAlgorithmException {
         /*
