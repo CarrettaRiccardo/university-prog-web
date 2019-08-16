@@ -39,9 +39,6 @@ public interface PazienteDao{
     
     /**
      * 
-     * @param id_paziente
-     * @param id_medico Medico da cui si rivolge
-     * @param date Data e ora stabiliti per la prenotazione
      * @return T on success
      */
     public boolean newPrenotazione(Prenotazione prenotazione);
@@ -49,9 +46,17 @@ public interface PazienteDao{
     /**
      * 
      * @param id_paziente
-     * @return Elenco delle prenotazioni di un paziente da oggi in poi
+     * @return Elenco delle prenotazioni di quel giorno
      */
-    public List<Prenotazione> getPrenotazioni(Integer id_paziente);
+    public List<Prenotazione> getPrenotazioni(String data) throws DaoException;
+    
+    
+        /**
+     * 
+     * @param id_paziente
+     * @return Elenco delle prenotazioni di un paziente
+     */
+    public List<Prenotazione> getPrenotazioni(Integer id_paziente) throws DaoException;
     
     
     

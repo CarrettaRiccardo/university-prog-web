@@ -30,5 +30,7 @@ public interface DaoFactory {
      * parameter.
      * @throws DaoFactoryException if an error occurred during the operation.
      */
+    //public PazienteDao getDAO(Class<PazienteDao> aClass);
     public <DAO_CLASS extends Dao> DAO_CLASS getDAO(Class<DAO_CLASS> daoInterface) throws DaoFactoryException;
+
 }
