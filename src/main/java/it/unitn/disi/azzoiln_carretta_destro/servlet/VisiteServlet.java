@@ -39,7 +39,7 @@ public class VisiteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().indexOf("new_visita") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
+        if (request.getRequestURI().indexOf("new_visite") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
             manageNewVisita(request, response);
             return;
         }
@@ -106,7 +106,7 @@ public class VisiteServlet extends HttpServlet {
         }
 
         request.setAttribute("title", "crea_visita");
-        request.setAttribute("page", "new_visita");
+        request.setAttribute("page", "new_visite");
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
 
         Paziente paz = null;

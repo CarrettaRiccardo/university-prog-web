@@ -58,7 +58,7 @@ public class RicetteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().indexOf("new_ricetta") > 0) {  //voglio accedere alla pagina per creare una nuova Ricetta
+        if (request.getRequestURI().indexOf("new_ricette") > 0) {  //voglio accedere alla pagina per creare una nuova Ricetta
             manageNewRicetta(request, response);
             return;
         }
@@ -129,7 +129,7 @@ public class RicetteServlet extends HttpServlet {
         }
 
         request.setAttribute("title", "crea_ricetta");
-        request.setAttribute("page", "new_ricetta");
+        request.setAttribute("page", "new_ricette");
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
 
         Paziente paz = null;
