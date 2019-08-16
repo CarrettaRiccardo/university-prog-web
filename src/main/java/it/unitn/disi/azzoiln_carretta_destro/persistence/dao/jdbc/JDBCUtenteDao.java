@@ -408,7 +408,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             stm.setString(1, "%" + hint + "%");
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 ret.addVisita(rs.getInt("id"),rs.getString("nome"));
+                 ret.addVisitaSpecialistica(rs.getInt("id"),rs.getString("nome"));
                  //ret.add(r);
             }            
         } catch (SQLException ex) {

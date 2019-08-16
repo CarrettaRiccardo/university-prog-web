@@ -42,6 +42,7 @@ public class Visite_specWB {
 
     
     @GET
+    @Path("{hint_nome}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getVisite(@PathParam("hint_nome") String hint) {
         VisiteSpecialistiche f = null;

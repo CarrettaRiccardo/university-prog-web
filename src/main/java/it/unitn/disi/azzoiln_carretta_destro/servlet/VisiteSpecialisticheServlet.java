@@ -11,6 +11,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -116,7 +117,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             throw new ServletException(ex.getMessage());
         }
         request.setAttribute("paziente", paz);
-        request.setAttribute("url_rest",contextPath + "/" + getServletContext().getInitParameter("url_visite_spec_rest"));  //per url WB per autocompletamento
+        request.setAttribute("url_rest",Common.getDomain(request) + getServletContext().getInitParameter("url_visite_spec_rest"));  //per url WB per autocompletamento
         rd.forward(request, response);
     }
     

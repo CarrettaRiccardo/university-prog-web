@@ -15,6 +15,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
+import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -139,8 +140,9 @@ public class RicetteServlet extends HttpServlet {
             throw new ServletException(ex.getMessage());
         }
             
+        
         request.setAttribute("paziente", paz);
-        request.setAttribute("url_rest",contextPath + "/" + getServletContext().getInitParameter("url_farmaci_rest"));  //per url WB per autocompletamento
+        request.setAttribute("url_rest",Common.getDomain(request) + getServletContext().getInitParameter("url_farmaci_rest"));  //per url WB per autocompletamento
         rd.forward(request, response);
     }
     
