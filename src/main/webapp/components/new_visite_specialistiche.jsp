@@ -8,7 +8,7 @@
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate var="data" value="${now}"/>
 
-<form action="app/${u_url}/new_visita_specialistica" method="POST">
+<form action="app/${u_url}/new_visite_specialistiche" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
@@ -24,6 +24,7 @@
     <select id="autocomplete" name="id_visita" class="form-control select2-allow-clear" required></select>
     <small class="form-text text-muted">Click the input text or space to start to digit.</small>
   </div>
+    <input type="hidden" name="id_paziente" value="${paziente.getId()}"> 
   <button type="submit" class="btn btn-primary">Conferma</button>
 </form>
   

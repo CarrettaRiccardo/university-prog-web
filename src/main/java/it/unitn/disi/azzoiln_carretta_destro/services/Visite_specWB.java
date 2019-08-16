@@ -37,7 +37,7 @@ public class Visite_specWB {
     
     public Visite_specWB(@Context ServletContext sc) throws DaoFactoryException {
         user = ((DaoFactory) sc.getAttribute("daoFactory")).getDAO(UtenteDao.class);
-        System.out.println("WB farmaci()");
+        System.out.println("WB visite_spec()");
     }
 
     

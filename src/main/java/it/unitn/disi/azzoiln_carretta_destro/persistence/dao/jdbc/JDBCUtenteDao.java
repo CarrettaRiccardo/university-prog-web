@@ -321,11 +321,12 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_spec"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+                 VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
                  ret.add(r);
             }            
         } catch (SQLException ex) {
-            throw new DaoException("db_error", ex);
+            //throw new DaoException("db_error", ex);
+            System.out.println(ex.getMessage() + "\n\n");
         }
         return ret;
     }
@@ -404,7 +405,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     public VisiteSpecialistiche getAllVisiteSpec(String hint) throws DaoException {
         VisiteSpecialistiche ret = new VisiteSpecialistiche();
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM farmaci WHERE nome LIKE ? ORDER BY nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM visite_specialistiche WHERE nome LIKE ? ORDER BY nome")) {
             stm.setString(1, "%" + hint + "%");
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {

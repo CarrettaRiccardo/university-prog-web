@@ -75,7 +75,9 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             throw new ServletException("id_paziente_not_valid");
         } catch (Exception e) {
-            throw new ServletException();
+            System.out.println(e.getMessage() +  "\n\n\n");
+            //throw new ServletException();
+            throw new ServletException(e.getMessage());
         }
     }
     
@@ -136,6 +138,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         try {
             inserito = userDao.Medico().addVisitaSpecialistica(v);
         } catch (DaoException ex) {
+            System.out.println("Errore addVisitaSpecialistica (VisiteSpecServlet) -->\n" + ex.getMessage() + "\n\n");
             inserito = false;
         }
         

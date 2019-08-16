@@ -103,7 +103,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         
         try {
             Integer new_id = null;
-            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)");
+            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)",Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, v.getId_paziente());
             ps.setInt(2, v.getId_medico());
             
@@ -119,7 +119,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             count = ps.executeUpdate();
             if(count == 0) return false;
         } catch (SQLException ex) {
-            throw new DaoException("db_error", ex);
+            throw new DaoException(ex.getMessage(), ex);
         }
         
         return true;
