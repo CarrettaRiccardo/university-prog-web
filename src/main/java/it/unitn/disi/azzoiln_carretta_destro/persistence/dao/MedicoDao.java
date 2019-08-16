@@ -6,6 +6,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
 import java.util.List;
 
 /**
@@ -49,13 +50,9 @@ public interface MedicoDao{
     
     
     /**
-     * @param id_medico Id del medico che crea la visita
-     * @param id_paziente
-     * @param id_visita_specialistica Id della visita che viene prescitta al paziente. 
-     *          Presa da un elenco fisso di possibili visite
      * @return T on success
      */
-    public boolean addVisitaSpecialistica(Integer id_medico,Integer id_paziente, Integer id_visita_specialistica) throws DaoException;
+    public boolean addVisitaSpecialistica(VisitaSpecialistica v) throws DaoException;
     
     /**
      * @param id_medico Id del medico che crea la visita

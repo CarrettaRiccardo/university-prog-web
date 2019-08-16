@@ -155,6 +155,12 @@
         <servlet-name>RicetteServlet</servlet-name>
         <url-pattern>/app/medico/new_ricette</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VisiteSpecialisticheServlet</servlet-name>
+        <url-pattern>/app/medico/new_visite_specialistiche</url-pattern>
+    </servlet-mapping>
+    
+    
     <!-- SESSIONE -->
     <session-config>
         <session-timeout>
@@ -236,7 +242,11 @@
     <context-param>
         <description>URL per web service per ottenere elenco farmaci</description>
         <param-name>url_farmaci_rest</param-name>
-        <param-value>http://localhost:8080/project/app/services/farmaci/</param-value>
+        <param-value>app/services/farmaci/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>url_visite_spec_rest</param-name>
+        <param-value>app/services/visite_spec/</param-value>
     </context-param>
     <!-- ERROR PAGES -->
     <error-page>

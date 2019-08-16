@@ -205,7 +205,7 @@ create table visita_specialistica(
     FOREIGN KEY fk_visita_specialistica_to_ticket(id_ticket) REFERENCES ticket(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,
-    FOREIGN KEY fk_visita_specialistica_to_utenti_to_visite(id_visita_spec) REFERENCES visite_specialistiche(id)
+    FOREIGN KEY fk_visita_specialistica_to_visite(id_visita_spec) REFERENCES visite_specialistiche(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
 )engine=InnoDB;

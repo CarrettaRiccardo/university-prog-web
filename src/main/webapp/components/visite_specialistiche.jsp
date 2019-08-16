@@ -3,19 +3,17 @@
 <table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-3 shadow-sm text-white">
     <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Data Visita</th>
+        <th scope="col">Esito</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach begin="1" end="100" var="i">
+    <c:forEach items="${visite}" var="visita">
         <tr>
-            <th scope="row"><c:out value="${i}"/></th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <th scope="row"><c:out value="${visita.getNome_visita()}"/></th>
+            <th scope="row"><c:out value="${visita.getTime_visita()}"/></th>
+            <td><c:out value="${visita.getAnamnesiShort()}"/></td>
         </tr>
     </c:forEach>
     </tbody>

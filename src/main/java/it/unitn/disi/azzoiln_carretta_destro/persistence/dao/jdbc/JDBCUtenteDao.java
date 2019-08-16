@@ -8,7 +8,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Farmaci;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Farmaci;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
@@ -16,6 +16,8 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.VisiteSpecialistiche;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -308,11 +310,23 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
      * Ottiene l' elenco delle visite specialistiche del paziente ordinate in ordine cronologico inverso
      * @param id_paziente
      * @return Elenco delle visite specialistiche del paziente ordinate in ordine cronologico inverso
+     * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      */
     @Override
-    public List<Visita> getVisiteSpecialistiche(Integer id_paziente) throws DaoException{
+    public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente) throws DaoException{
         if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
-        LinkedList<Visita> ret = new LinkedList<>();
+        LinkedList<VisitaSpecialistica> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec FROM visita_specialistica v inner join prescrizione p on p.id = v.id_prescrizione inner join visite_specialistiche v2 on v2.id = v.id_visita_spec WHERE p.id_paziente = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_spec"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+                 ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
         return ret;
     }
     
@@ -377,6 +391,24 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                  ret.addFarmaco(rs.getInt("id"),rs.getString("nome"));
+                 //ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }        
+        return ret;
+    }
+    
+    
+    @Override
+    public VisiteSpecialistiche getAllVisiteSpec(String hint) throws DaoException {
+        VisiteSpecialistiche ret = new VisiteSpecialistiche();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM farmaci WHERE nome LIKE ? ORDER BY nome")) {
+            stm.setString(1, "%" + hint + "%");
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 ret.addVisita(rs.getInt("id"),rs.getString("nome"));
                  //ret.add(r);
             }            
         } catch (SQLException ex) {

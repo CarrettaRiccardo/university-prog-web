@@ -6,10 +6,14 @@
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -30,6 +34,7 @@ public class SspFilter implements Filter {
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
+    private UtenteDao userDao;
     
     public SspFilter() {
     }    
@@ -43,7 +48,7 @@ public class SspFilter implements Filter {
         if(request instanceof HttpServletRequest){
             HttpServletRequest req = (HttpServletRequest) request;
             
-            req.setAttribute("u_url", "medico");
+            req.setAttribute("u_url", "ssp");
         }
     }    
     
@@ -148,6 +153,15 @@ public class SspFilter implements Filter {
             if (debug) {                
                 log("SspFilter:Initializing filter");
             }
+        }
+        
+        DaoFactory daoFactory = (DaoFactory) filterConfig.getServletContext().getAttribute("daoFactory"); 
+        if (daoFactory == null)
+            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, "Impossible to get dao factory for user storage system Filter", new ServletException("Impossible to get dao factory for user storage system Filter"));                    
+        try {
+            userDao = daoFactory.getDAO(UtenteDao.class);
+        } catch (DaoFactoryException ex) {
+            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

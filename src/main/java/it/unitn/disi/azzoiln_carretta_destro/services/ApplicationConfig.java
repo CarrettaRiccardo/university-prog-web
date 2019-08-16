@@ -25,6 +25,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(it.unitn.disi.azzoiln_carretta_destro.services.FarmaciService.class);
+        resources.add(it.unitn.disi.azzoiln_carretta_destro.services.Visite_specWB.class);
     }
     
 }
