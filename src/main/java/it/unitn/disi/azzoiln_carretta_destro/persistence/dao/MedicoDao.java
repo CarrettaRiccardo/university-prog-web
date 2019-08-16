@@ -65,4 +65,13 @@ public interface MedicoDao{
      * @return T on success
      */
     public boolean addEsame(Integer id_medico,Integer id_paziente, Integer id_esame) throws DaoException;
+
+    /**
+     * 
+     * @param id_paziente
+     * @param id_medico
+     * @return T se il Paziente è effettivamente collegato ad quel Medico
+     * @throws DaoException 
+     */
+    public boolean isMyPatient(Integer id_paziente, Integer id_medico) throws DaoException;
 }

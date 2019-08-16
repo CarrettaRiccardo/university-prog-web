@@ -169,6 +169,25 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         }        
         return ret;
     }
+
+    @Override
+    public boolean isMyPatient(Integer id_paziente, Integer id_medico) throws DaoException {
+        boolean ret = false;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id FROM utenti u WHERE id=? AND id_medico = ?")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_medico);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()){
+                 System.out.println("Si, " + id_paziente + " è mio " + id_medico);
+                 ret = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n\n");
+            throw new DaoException("db_error", ex);
+        } 
+        return ret;
+    }
     
     
 }
