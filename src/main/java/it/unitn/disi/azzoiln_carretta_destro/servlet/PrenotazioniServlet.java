@@ -45,16 +45,27 @@ public class PrenotazioniServlet extends HttpServlet {
         if (request.getParameter("date") != null && !request.getParameter("date").isEmpty()){
             try {
                 String date = request.getParameter("date");
-                
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		sdf.setLenient(false);
-                sdf.parse(date);
+                sdf.parse(date);// restituisce una "ParseException" se non e' valida
                 
-                request.setAttribute("date", date);
+                
+                if (request.getParameter("orario") != null && !request.getParameter("orario").isEmpty()){
+                    Integer ora = Integer.parseInt(request.getParameter("orario")); 
+                    if (ora <= 18 && ora >= 8){
+                        userDao.Paziente().newPrenotazione(new Prenotazione(1,2, date + " " + ora + ":00"));
+                    }
+                    else{
+                        throw new NumberFormatException();
+                    }
+                }
                 List<Prenotazione> l = new LinkedList<Prenotazione>(userDao.Paziente().getPrenotazioni(request.getParameter("date")));
                 request.setAttribute("reservations", l);
+                request.setAttribute("date", date);
             } catch (ParseException ex){
                 throw new ServletException("invalid_date_exception");
+            } catch (NumberFormatException ex){
+                throw new ServletException("invalid_hour_exception");
             } catch (Exception ex) {
                 throw new ServletException("retrieving_reservations_error");
             }
@@ -65,6 +76,6 @@ public class PrenotazioniServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        doGet(request, response);
     }
 }

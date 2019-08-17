@@ -46,10 +46,14 @@
             </c:if>
             <c:if test="${not contains}">
                 <div class="alert alert-dark text-center my-3" style="width: 500px">
-                    <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${date}"></c:out></p>
-                    <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
-                    <p><c:out value="Nessuna prenotazione"></c:out></p>
-                    <button class="btn btn-gradient btn-block rounded-pill text-center ml-3 mt-2" style="width: 150px">Prenota</button> 
+                    <form action="app/paziente/prenotazioni" method="post">
+                        <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${date}"></c:out></p>
+                        <input type="hidden" name="date" value="<c:out value="${date}"/>"/>
+                        <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                        <input type="hidden" name="orario" value="<c:out value="${i}"/>"/>
+                        <p><c:out value="Nessuna prenotazione"></c:out></p>
+                        <button class="btn btn-gradient btn-block rounded-pill text-center ml-3 mt-2" style="width: 150px">Prenota</button> 
+                    </form>
                 </div>
             </c:if>
         </c:forEach>

@@ -41,7 +41,7 @@ public interface PazienteDao{
      * 
      * @return T on success
      */
-    public boolean newPrenotazione(Prenotazione prenotazione);
+    public boolean newPrenotazione(Prenotazione prenotazione) throws DaoException;
     
     /**
      * 

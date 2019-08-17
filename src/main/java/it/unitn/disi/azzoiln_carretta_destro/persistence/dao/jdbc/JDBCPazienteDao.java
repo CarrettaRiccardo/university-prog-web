@@ -42,8 +42,15 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
     }
 
     @Override
-    public boolean newPrenotazione(Prenotazione prenotazione) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean newPrenotazione(Prenotazione prenotazione) throws DaoException {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO `prog_web`.`prenotazione` " +
+                "(`id_paziente`,`id_medico`,`data`) VALUES " +
+                "("+ prenotazione.getIdPaziente() + "," + prenotazione.getIdMedico() + ",'" + prenotazione.getTimestamp() + "')")) {
+            stm.execute();
+            return true;
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }        
     }
 
     @Override
