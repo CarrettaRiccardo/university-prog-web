@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,16 +42,19 @@ public class PrenotazioniServlet extends HttpServlet {
         request.setAttribute("title", "Prenotazioni");
         request.setAttribute("page", "prenotazioni");
         
-        if (request.getParameter("date") != null){
+        if (request.getParameter("date") != null && !request.getParameter("date").isEmpty()){
             try {
-                // TODO fa errore nell'ottenere la lista dal db
-                List<Prenotazione> l = new LinkedList<Prenotazione>(/*userDao.Paziente().getPrenotazioni(request.getParameter("date"))*/);
-                l.add(new Prenotazione(0, 1, "ciao"));
-                //l.add(new Prenotazione(0, 1, request.getParameter("date")));
-                l.add(new Prenotazione(3, 1, "ciao1"));
-                l.add(new Prenotazione(0, 7, "aaa"));
-                request.setAttribute("reservations", l);
+                String date = request.getParameter("date");
                 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		sdf.setLenient(false);
+                sdf.parse(date);
+                
+                request.setAttribute("date", date);
+                List<Prenotazione> l = new LinkedList<Prenotazione>(userDao.Paziente().getPrenotazioni(request.getParameter("date")));
+                request.setAttribute("reservations", l);
+            } catch (ParseException ex){
+                throw new ServletException("invalid_date_exception");
             } catch (Exception ex) {
                 throw new ServletException("retrieving_reservations_error");
             }

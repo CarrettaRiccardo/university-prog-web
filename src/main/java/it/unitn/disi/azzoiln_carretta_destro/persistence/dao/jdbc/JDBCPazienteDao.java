@@ -50,13 +50,17 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
     public List<Prenotazione> getPrenotazioni(String data) throws DaoException {
         List<Prenotazione> ret = new LinkedList<Prenotazione>();
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT id_paziente, id_medico, data FROM prenotazione"
-                + "WHERE time_on >= (\"" + data + " 00:00:00\")"
-                + " AND time_on <= (\"" + data + " 23:59:59\")")) {
+        /*"SELECT p.id_paziente as paz, p.id_medico as med, p.data as data, u.nome as pazNome, u.cognome as pazCognome, u2.nome as medNome, u2.cognome as medCognome FROM prenotazione as p inner JOIN utenti as u on p.id_paziente = u.id inner join utenti as u2 on p.id_medico = u2.id"
+                + " WHERE p.data >= (\"" + data + " 00:00:00\")"
+                + " AND p.data <= (\"" + data + " 23:59:59\")"))*/
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT p.id_paziente as paz, p.id_medico as med, p.data as data, u.nome as pazNome, u.cognome as pazCognome, u2.nome as medNome, u2.cognome as medCognome FROM prenotazione as p inner JOIN utenti as u on p.id_paziente = u.id inner join utenti as u2 on p.id_medico = u2.id"
+                + " WHERE p.data >= (\"" + data + " 00:00:00\")"
+                + " AND p.data <= (\"" + data + " 23:59:59\")")) {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 ret.add(new Prenotazione(rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getString("data")));
-            }            
+                 ret.add(new Prenotazione(rs.getInt("paz"), rs.getInt("med"), rs.getString("data")));//, rs.getString("pazNome").concat(" ").concat(rs.getString("pazCognome")), rs.getString("medNome").concat(" ").concat(rs.getString("medCognome"))));
+            }
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
         }        
@@ -68,7 +72,7 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
         List<Prenotazione> ret = new LinkedList<Prenotazione>();
         
         try (PreparedStatement stm = CON.prepareStatement("SELECT id_paziente, id_medico, data FROM prenotazione"
-                + "WHERE id_paziente = ?")) {
+                + " WHERE id_paziente = ?")) {
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {

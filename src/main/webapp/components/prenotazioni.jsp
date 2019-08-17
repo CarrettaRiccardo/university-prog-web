@@ -24,17 +24,41 @@
     <p class="font-weight-bold" style="float: left; font-size: 17px">Seleziona la data per la visita:</p>
     <input id="datepicker" class="text-center mb-3" style="float: left" width="276" />
     <button id="loadDate" class="btn btn-gradient btn-block rounded-pill ml-3 mb-3" style="width: 236px; float: left">Visualizza disponibilita'</button>
-    
-    <c:if test="${reservations}">
-        <c:forEach items="${reservations}" var="reserv"> 
-            <div class="alert alert-dark text-center my-3" style="width: 500px">
-                <p><c:out value="${reserv.getIdPaziente()}"></c:out></p>
-                <p><c:out value="${reserv.getIdMedico()}"></c:out></p>
-                <p><c:out value="${reserv.getTimestamp()}"></c:out></p>
-            </div>
+</div>
+<div style="margin-top: 150px">
+    <c:if test="${not empty date}">
+        <c:forEach begin="1" end="23" step="1" var="i">
+            <c:set var="contains" value="false"/>
+            <c:if test="${not empty reservations}">
+                <c:forEach var="reserv" items="${reservations}">
+                    <fmt:parseDate value="${reserv.getTimestamp()}" pattern="yyyy-MM-dd HH:mm" var="timest" />
+                    <fmt:formatDate value="${timest}" pattern="HH" var="hour" />
+                    <c:if test="${hour eq i}">
+                        <c:set var="contains" value="true" />
+                        <fmt:formatDate value="${timest}" pattern="yyyy-MM-dd" var="day" />
+                        <div class="alert alert-danger text-center my-3" style="width: 500px">
+                            <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
+                            <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                            <p><c:out value="Prenotazione non disponibile"></c:out></p>
+                        </div>
+                    </c:if>
+                </c:forEach>
+            </c:if>
+            <c:if test="${not contains}">
+                <div class="alert alert-dark text-center my-3" style="width: 500px">
+                    <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${date}"></c:out></p>
+                    <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                    <p><c:out value="Nessuna prenotazione"></c:out></p>
+                    <button class="btn btn-gradient btn-block rounded-pill text-center ml-3 mt-2" style="width: 150px">Prenota</button> 
+                </div>
+            </c:if>
         </c:forEach>
     </c:if>
-    </div>
+    <c:if test="${empty date}">
+        <div class="alert alert-danger text-center my-3" style="width: 250px; height: 50px">
+            <p>Seleziona una data!</p>
+        </div>
+    </c:if>
 </div>
 <script>
     function findGetParameter(parameterName) {
@@ -61,7 +85,7 @@
     
     var x = findGetParameter("date");
     if (x != null){
-        alert();
+        
     }
     
     

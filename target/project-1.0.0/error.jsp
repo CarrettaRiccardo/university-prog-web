@@ -24,7 +24,7 @@
         <span class="text-gradient mb-5">Sanity</span><span class="font-weight-light">Manager</span>
     </div>
     <div id="messageBlock" class="text-center container-fluid">
-        <div class="alert alert-danger text-center mt-4" role="alert">
+        <div class="alert alert-danger text-center mt-4">
             <c:if test="${pageContext.exception.message == null}">
                 <c:out value="${pageContext.errorData.statusCode}"/>
                 <c:out value=":"/>
