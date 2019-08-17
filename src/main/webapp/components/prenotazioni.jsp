@@ -27,7 +27,7 @@
 </div>
 <div style="margin-top: 150px">
     <c:if test="${not empty date}">
-        <c:forEach begin="1" end="23" step="1" var="i">
+        <c:forEach begin="8" end="18" step="1" var="i">
             <c:set var="contains" value="false"/>
             <c:if test="${not empty reservations}">
                 <c:forEach var="reserv" items="${reservations}">
@@ -84,8 +84,8 @@
     
     
     var x = findGetParameter("date");
-    if (x != null){
-        
+    if (x != null){ 
+        $('#datepicker').val(x);
     }
     
     
