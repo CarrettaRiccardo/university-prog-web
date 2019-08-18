@@ -36,10 +36,20 @@
                     <c:if test="${hour eq i}">
                         <c:set var="contains" value="true" />
                         <fmt:formatDate value="${timest}" pattern="yyyy-MM-dd" var="day" />
-                        <div class="alert alert-danger text-center my-3" style="width: 500px">
-                            <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
-                            <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
-                            <p><c:out value="Prenotazione non disponibile"></c:out></p>
+                        <c:choose>
+                            <c:when test="${reserv.getIdPaziente() == sessionScope.utente.getId()}">
+                                <div class="alert alert-success text-center my-3" style="width: 500px">
+                                <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
+                                <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                                <p><c:out value="Prenotazione effettuata"></c:out></p>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="alert alert-danger text-center my-3" style="width: 500px">
+                                <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
+                                <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                                <p><c:out value="Prenotazione non disponibile"></c:out></p>
+                            </c:otherwise>
+                        </c:choose>
                         </div>
                     </c:if>
                 </c:forEach>
@@ -52,7 +62,11 @@
                         <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
                         <input type="hidden" name="orario" value="<c:out value="${i}"/>"/>
                         <p><c:out value="Nessuna prenotazione"></c:out></p>
-                        <button class="btn btn-gradient btn-block rounded-pill text-center ml-3 mt-2" style="width: 150px">Prenota</button> 
+                        <jsp:useBean id="now" class="java.util.Date"/>
+                        <fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="nowDate"/>
+                        <c:if test="${date > nowDate}">
+                            <button class="btn btn-gradient btn-block rounded-pill text-center ml-3 mt-2" style="width: 150px">Prenota</button> 
+                        </c:if>
                     </form>
                 </div>
             </c:if>

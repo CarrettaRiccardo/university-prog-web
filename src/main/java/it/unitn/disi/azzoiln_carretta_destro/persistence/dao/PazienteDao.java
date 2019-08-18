@@ -48,7 +48,7 @@ public interface PazienteDao{
      * @param id_paziente
      * @return Elenco delle prenotazioni di quel giorno
      */
-    public List<Prenotazione> getPrenotazioni(String data) throws DaoException;
+    public List<Prenotazione> getPrenotazioni(String data, Integer idMedico) throws DaoException;
     
     
         /**

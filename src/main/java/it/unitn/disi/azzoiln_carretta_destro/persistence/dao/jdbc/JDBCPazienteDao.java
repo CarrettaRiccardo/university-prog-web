@@ -54,7 +54,7 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
     }
 
     @Override
-    public List<Prenotazione> getPrenotazioni(String data) throws DaoException {
+    public List<Prenotazione> getPrenotazioni(String data, Integer idMedico) throws DaoException {
         List<Prenotazione> ret = new LinkedList<Prenotazione>();
         
         /*"SELECT p.id_paziente as paz, p.id_medico as med, p.data as data, u.nome as pazNome, u.cognome as pazCognome, u2.nome as medNome, u2.cognome as medCognome FROM prenotazione as p inner JOIN utenti as u on p.id_paziente = u.id inner join utenti as u2 on p.id_medico = u2.id"
@@ -63,7 +63,8 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
         
         try (PreparedStatement stm = CON.prepareStatement("SELECT p.id_paziente as paz, p.id_medico as med, p.data as data, u.nome as pazNome, u.cognome as pazCognome, u2.nome as medNome, u2.cognome as medCognome FROM prenotazione as p inner JOIN utenti as u on p.id_paziente = u.id inner join utenti as u2 on p.id_medico = u2.id"
                 + " WHERE p.data >= (\"" + data + " 00:00:00\")"
-                + " AND p.data <= (\"" + data + " 23:59:59\")")) {
+                + " AND p.data <= (\"" + data + " 23:59:59\")"
+                + " AND p.id_medico = " + idMedico)) {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                  ret.add(new Prenotazione(rs.getInt("paz"), rs.getInt("med"), rs.getString("data")));//, rs.getString("pazNome").concat(" ").concat(rs.getString("pazCognome")), rs.getString("medNome").concat(" ").concat(rs.getString("medCognome"))));

@@ -6,6 +6,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Prenotazione;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,17 +50,18 @@ public class PrenotazioniServlet extends HttpServlet {
 		sdf.setLenient(false);
                 sdf.parse(date);// restituisce una "ParseException" se non e' valida
                 
+                Utente u = (Utente) request.getSession(true).getAttribute("utente");
                 
                 if (request.getParameter("orario") != null && !request.getParameter("orario").isEmpty()){
                     Integer ora = Integer.parseInt(request.getParameter("orario")); 
                     if (ora <= 18 && ora >= 8){
-                        userDao.Paziente().newPrenotazione(new Prenotazione(1,2, date + " " + ora + ":00"));
+                        userDao.Paziente().newPrenotazione(new Prenotazione(u.getId(), 2 /* TODO idMedico */, date + " " + ora + ":00"));
                     }
                     else{
                         throw new NumberFormatException();
                     }
-                }
-                List<Prenotazione> l = new LinkedList<Prenotazione>(userDao.Paziente().getPrenotazioni(request.getParameter("date")));
+                }// TODO filtrare per idMedico di base
+                List<Prenotazione> l = new LinkedList<Prenotazione>(userDao.Paziente().getPrenotazioni(request.getParameter("date"), 2 /* TODO idMedico */));
                 request.setAttribute("reservations", l);
                 request.setAttribute("date", date);
             } catch (ParseException ex){
