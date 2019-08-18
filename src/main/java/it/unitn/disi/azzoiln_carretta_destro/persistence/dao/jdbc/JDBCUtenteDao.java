@@ -417,5 +417,4 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         }        
         return ret;
     }
-
 }

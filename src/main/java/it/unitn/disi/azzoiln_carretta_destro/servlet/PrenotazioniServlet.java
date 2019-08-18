@@ -5,8 +5,11 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Prenotazione;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +28,7 @@ import java.util.logging.Logger;
 public class PrenotazioniServlet extends HttpServlet {
     
     private UtenteDao userDao;
+    //private PazienteDao pazDao;
 
     @Override
     public void init() throws ServletException {
@@ -34,6 +38,7 @@ public class PrenotazioniServlet extends HttpServlet {
         }
         try {
             userDao = daoFactory.getDAO(UtenteDao.class);
+            //pazDao = daoFactory.getDAO(PazienteDao.class);
         } catch (DaoFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
@@ -43,6 +48,16 @@ public class PrenotazioniServlet extends HttpServlet {
         request.setAttribute("title", "Prenotazioni");
         request.setAttribute("page", "prenotazioni");
         
+        Utente u = (Utente) request.getSession(true).getAttribute("utente");
+        Paziente p = null;
+        
+        if (u.getType() == UtenteType.PAZIENTE){// TODO  PazienteDao
+            p = (Paziente) u;
+            //Medico m = pazDao.getMedico(p.getId_medico());
+            String nomeMedico = "";//m.getNome() + " " + m.getCognome();
+            request.setAttribute("nomeMedico", nomeMedico);
+        }
+                    
         if (request.getParameter("date") != null && !request.getParameter("date").isEmpty()){
             try {
                 String date = request.getParameter("date");
@@ -50,19 +65,22 @@ public class PrenotazioniServlet extends HttpServlet {
 		sdf.setLenient(false);
                 sdf.parse(date);// restituisce una "ParseException" se non e' valida
                 
-                Utente u = (Utente) request.getSession(true).getAttribute("utente");
-                
-                if (request.getParameter("orario") != null && !request.getParameter("orario").isEmpty()){
-                    Integer ora = Integer.parseInt(request.getParameter("orario")); 
-                    if (ora <= 18 && ora >= 8){
-                        userDao.Paziente().newPrenotazione(new Prenotazione(u.getId(), 2 /* TODO idMedico */, date + " " + ora + ":00"));
+                Integer idMedico = null;
+                if (p != null){
+                    idMedico = p.getId_medico();
+
+                    if (request.getParameter("orario") != null && !request.getParameter("orario").isEmpty()){
+                        Integer ora = Integer.parseInt(request.getParameter("orario")); 
+                        if (ora <= 18 && ora >= 8){
+                            userDao.Paziente().newPrenotazione(new Prenotazione(u.getId(), idMedico, date + " " + ora + ":00"));
+                        }
+                        else{
+                            throw new NumberFormatException();
+                        }
                     }
-                    else{
-                        throw new NumberFormatException();
-                    }
-                }// TODO filtrare per idMedico di base
-                List<Prenotazione> l = new LinkedList<Prenotazione>(userDao.Paziente().getPrenotazioni(request.getParameter("date"), 2 /* TODO idMedico */));
-                request.setAttribute("reservations", l);
+                    List<Prenotazione> l = new LinkedList<Prenotazione>(userDao.Paziente().getPrenotazioni(request.getParameter("date"), idMedico));
+                    request.setAttribute("reservations", l);
+                }
                 request.setAttribute("date", date);
             } catch (ParseException ex){
                 throw new ServletException("invalid_date_exception");
