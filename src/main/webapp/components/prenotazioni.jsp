@@ -3,10 +3,13 @@
 <div class=" text-center my-4">
     <p class="font-weight-bold" style="float: left; font-size: 17px">Seleziona la data per la visita:</p>
     <input id="datepicker" class="text-center mb-3" style="float: left" width="276" />
-    <button id="loadDate" class="btn btn-gradient btn-block rounded-pill ml-3 mb-3" style="width: 236px; float: left">Visualizza disponibilita'</button>
+    <button id="loadDate" class="btn btn-gradient btn-block rounded-pill ml-3 mb-3" <c:if test="${empty medico || medico.getId() == 0}"><c:out value="disabled"></c:out></c:if> style="width: 236px; float: left">Visualizza disponibilita'</button>
     
     <p class="position-absolute" style="right: 20px; top: 20px; position: absolute; font-size: 17px">Medico di base:</p>
     <p class="font-weight-bold position-absolute" style="right: 20px; top: 50px; font-size: 17px">
+        <c:if test="${empty medico || medico.getId() == 0}">
+            <c:out value="-"></c:out>
+        </c:if>
         <c:if test="${medico.getId() > 0}">
             <c:out value="${medico.getNome()} ${medico.getCognome()}"></c:out>
         </c:if>
@@ -14,7 +17,7 @@
     <p class="font-italic text-right position-absolute" style="right: 20px; top: 80px; font-size: 13px; width: 170px">(puoi cambiare medico di base nelle impostazioni)</p>
 </div>
 <div class="text-center" style="margin-top: 150px">
-    <c:if test="${not empty date}">
+    <c:if test="${not empty date && not (empty medico || medico.getId() == 0)}">
         <%-- BEGIN E END INDICANO GLI ORARI POSSIBILI, c'e' anche un check sulla servlet --%>
         <c:forEach begin="8" end="17" step="1" var="i">
             <c:if test="${i == 12}">
@@ -67,9 +70,19 @@
             </c:if>
         </c:forEach>
     </c:if>
-    <c:if test="${empty date}">
-        <div class="alert alert-danger text-center my-3" style="width: 250px; height: 50px">
-            <p>Seleziona una data!</p>
+    <c:if test="${empty date || empty medico || medico.getId() == 0}">
+            <c:choose>
+                <c:when test="${empty medico || medico.getId() == 0}">
+                    <div class="alert alert-danger text-center my-3" style="width: 250px; height: 70px">
+                        <p>Seleziona una medico di base!</p>
+                    </div>
+                </c:when>
+                <c:when test="${empty date}">
+                    <div class="alert alert-danger text-center my-3" style="width: 250px; height: 50px">
+                        <p>Seleziona una data!</p>
+                    </div>
+                </c:when>
+            </c:choose>
         </div>
     </c:if>
 </div>

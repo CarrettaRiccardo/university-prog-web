@@ -18,8 +18,7 @@ public class Persona extends Utente {
         this.cf = cf;
         this.data_nascita = data_nascita;
         this.ruolo = ruolo;
-        this.nome_comune = nome_comune;
-        this.id_comune = id_comune;
+        this.id_comune = comune;
         this.foto = foto;
     }
 
@@ -28,6 +27,7 @@ public class Persona extends Utente {
         this.nome = nome;
         this.cognome = cognome;
         this.cf = cf;
+        this.id_comune = comune;
         this.data_nascita = data_nascita;
         this.ruolo = ruolo;
         this.foto = "";

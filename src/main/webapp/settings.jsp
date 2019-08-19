@@ -22,23 +22,23 @@
         </div>
 
         <div class="col col-12 col-md">
-            <form>
+            <form action="app/settings.handler" method="POST">
 
                 <h5 class="text-primary">Dati personali</h5>
                 <div class="row">
                     <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" name="nome" value="${nome}" placeholder="Nome"/>
+                        <input type="text" class="form-control" disabled value="${nome}" placeholder="Nome"/>
                     </div>
                     <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" name="cognome" value="${cognome}" placeholder="Cognome"/>
+                        <input type="text" class="form-control" disabled value="${cognome}" placeholder="Cognome"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" name="cf" value="${codice_fiscale}" placeholder="Codice fiscale"/>
+                        <input type="text" class="form-control" disabled value="${codice_fiscale}" placeholder="Codice fiscale"/>
                     </div>
                     <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" name="data" value="${data_nascita}" placeholder="Data Nascita"/>
+                        <input type="text" class="form-control" disabled value="${data_nascita}" placeholder="Data Nascita"/>
                     </div>
                 </div>
 
@@ -50,7 +50,7 @@
                                 <option disabled selected value>-- Seleziona un Medico di Base --</option>
                                 <c:if test="${not empty medici}">
                                     <c:forEach items="${medici}" var="med">
-                                        <option <c:if test="${id_medico == med.getId()}"><c:out value="selected"/></c:if>>
+                                        <option value="${med.getId()}" <c:if test="${id_medico == med.getId()}"><c:out value="selected"/></c:if>>
                                             <c:out value="${med.getNome()} ${med.getCognome()} (${med.getLaurea()})"></c:out>
                                         </option>
                                     </c:forEach>
@@ -62,7 +62,7 @@
                                 <option disabled selected value>-- Seleziona una Provincia --</option>
                                 <c:if test="${not empty province}">
                                     <c:forEach items="${province}" var="prov">
-                                        <option <c:if test="${nome_provincia == prov}"><c:out value="selected"/></c:if>>
+                                        <option value="${prov}" <c:if test="${nome_provincia == prov}"><c:out value="selected"/></c:if>>
                                             <c:out value="${prov}"></c:out>
                                         </option>
                                     </c:forEach>

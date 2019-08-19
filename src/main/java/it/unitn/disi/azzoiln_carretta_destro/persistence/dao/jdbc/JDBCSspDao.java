@@ -82,6 +82,23 @@ public class JDBCSspDao extends JDBCDao<Ssp,Integer> implements SspDao{
         }        
         return ret;
     }
+    
+    // Serve perchè non esiste la classe Provincia, e le tuple normali non esistono
+    @Override
+    public Integer getIdProvincia(String nome_provincia) throws DaoException {
+        Integer ret = null;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id FROM province as p WHERE p.nome = ?")) {
+            stm.setString(1, nome_provincia);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()){
+                ret = rs.getInt("id");
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }        
+        return ret;
+    }
 
     @Override
     public List<String> getListProvince() throws DaoException {

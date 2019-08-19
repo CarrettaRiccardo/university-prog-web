@@ -26,5 +26,7 @@ public interface SspDao{
     
     public String getNomeProvincia(Integer id_provincia) throws DaoException;
     
+    public Integer getIdProvincia(String nome_provincia) throws DaoException;
+    
     public List<String> getListProvince() throws DaoException;
 }

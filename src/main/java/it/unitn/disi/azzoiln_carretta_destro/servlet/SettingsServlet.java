@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -108,6 +110,47 @@ public class SettingsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // se sono lasciati nulli dovrebbe dare errore "invalid_selection"
+        try {
+            Integer idMed = null;
+            String idM = request.getParameter("medico");
+            String nomeProv = request.getParameter("provincia");
+            if (idM != null && nomeProv != null)
+                idMed = Integer.parseInt(idM);
+            else
+                throw new NullPointerException();
+            
+            HttpSession session = request.getSession(false);
+        
+            Utente u = (Utente) session.getAttribute("utente");
+            Utente newUtente = null;
+            
+            // creo l'oggetto Utente con i nuovi valori
+            if (u.getType() == UtenteType.PAZIENTE){
+                Paziente p = (Paziente) u;
+                
+                newUtente = new Paziente(p.getId(), p.getUsername(), 
+                        p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
+                        idMed, userDao.Ssp().getIdProvincia(nomeProv), p.getId_Comune(), true, nomeProv, p.getFoto());
+
+            } else {
+                if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
+                    Medico m = (Medico) u;
+                    
+                    // TODO
+                }
+            }
+            // aggiorno l'utente
+            userDao.update(newUtente);
+            session.setAttribute("utente", newUtente);
+        } catch (NullPointerException ex) {
+            throw new ServletException("invalid_selection");
+        } catch (Exception ex) {
+            throw new ServletException("update_error");
+        } 
+        
+        // prende e inserisce i dati modificati
+        doGet(request, response);
     }
 
    
