@@ -27,30 +27,61 @@
                 <h5 class="text-primary">Dati personali</h5>
                 <div class="row">
                     <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" placeholder="Nome">
+                        <input type="text" class="form-control" name="nome" value="${nome}" placeholder="Nome"/>
                     </div>
                     <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" placeholder="Cognome">
+                        <input type="text" class="form-control" name="cognome" value="${cognome}" placeholder="Cognome"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" placeholder="Codice fiscale">
+                        <input type="text" class="form-control" name="cf" value="${codice_fiscale}" placeholder="Codice fiscale"/>
                     </div>
                     <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" placeholder="Telefono">
+                        <input type="text" class="form-control" name="data" value="${data_nascita}" placeholder="Data Nascita"/>
                     </div>
                 </div>
 
-                <h5 class="text-primary mt-3">Altro</h5>
-                <div class="row">
-                    <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" placeholder="boh">
+                <c:if test="${tipo == 'paziente'}">
+                    <h5 class="text-primary mt-3">Altro</h5>
+                    <div class="row">
+                        <div class="col col-12 col-lg-6 py-1">
+                            <select class="form-control" name="medico">
+                                <option disabled selected value>-- Seleziona un Medico di Base --</option>
+                                <c:if test="${not empty medici}">
+                                    <c:forEach items="${medici}" var="med">
+                                        <option <c:if test="${id_medico == med.getId()}"><c:out value="selected"/></c:if>>
+                                            <c:out value="${med.getNome()} ${med.getCognome()} (${med.getLaurea()})"></c:out>
+                                        </option>
+                                    </c:forEach>
+                                </c:if>
+                              </select>
+                        </div>
+                        <div class="col col-12 col-lg-6 py-1">
+                            <select class="form-control" name="provincia">
+                                <option disabled selected value>-- Seleziona una Provincia --</option>
+                                <c:if test="${not empty province}">
+                                    <c:forEach items="${province}" var="prov">
+                                        <option <c:if test="${nome_provincia == prov}"><c:out value="selected"/></c:if>>
+                                            <c:out value="${prov}"></c:out>
+                                        </option>
+                                    </c:forEach>
+                                </c:if>
+                              </select>
+                        </div>
                     </div>
-                    <div class="col col-12 col-lg-6 py-1">
-                        <input type="text" class="form-control" placeholder="boh2">
+                </c:if>
+                <c:if test="${tipo == 'medico'}">
+                    <h5 class="text-primary mt-3">Altro</h5>
+                    <div class="row">
+                        <div class="col col-12 col-lg-6 py-1">
+                            <input type="text" class="form-control" value="<c:out value="${laurea}"></c:out>" placeholder="Laurea"/>
+                        </div>
+                        <div class="col col-12 col-lg-6 py-1">
+                            <input type="text" class="form-control" value="<c:out value="${carriera}"></c:out>" placeholder="Inizio Carriera"/>
+                        </div>
                     </div>
-                </div>
+                </c:if>
 
                 <button type="submit" class="btn btn-primary float-right">Salva</button>
             </form>

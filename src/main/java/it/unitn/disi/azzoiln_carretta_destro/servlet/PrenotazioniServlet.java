@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 public class PrenotazioniServlet extends HttpServlet {
     
     private UtenteDao userDao;
-    //private PazienteDao pazDao;
 
     @Override
     public void init() throws ServletException {
@@ -38,7 +37,6 @@ public class PrenotazioniServlet extends HttpServlet {
         }
         try {
             userDao = daoFactory.getDAO(UtenteDao.class);
-            //pazDao = daoFactory.getDAO(PazienteDao.class);
         } catch (DaoFactoryException ex) {
             throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
@@ -53,9 +51,13 @@ public class PrenotazioniServlet extends HttpServlet {
         
         if (u.getType() == UtenteType.PAZIENTE){// TODO  PazienteDao
             p = (Paziente) u;
-            //Medico m = pazDao.getMedico(p.getId_medico());
-            String nomeMedico = "";//m.getNome() + " " + m.getCognome();
-            request.setAttribute("nomeMedico", nomeMedico);
+            Medico m;
+            try {
+                m = (Medico) userDao.getByPrimaryKey(p.getId_medico(), "medico");
+                request.setAttribute("medico", m);
+            } catch (Exception ex) {
+                throw new ServletException("db_error", ex);
+            }
         }
                     
         if (request.getParameter("date") != null && !request.getParameter("date").isEmpty()){
@@ -71,7 +73,7 @@ public class PrenotazioniServlet extends HttpServlet {
 
                     if (request.getParameter("orario") != null && !request.getParameter("orario").isEmpty()){
                         Integer ora = Integer.parseInt(request.getParameter("orario")); 
-                        if (ora <= 18 && ora >= 8){
+                        if (ora <= 17 && ora >= 8 && ora != 12 && ora != 13){
                             userDao.Paziente().newPrenotazione(new Prenotazione(u.getId(), idMedico, date + " " + ora + ":00"));
                         }
                         else{

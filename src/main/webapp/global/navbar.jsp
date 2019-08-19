@@ -21,7 +21,7 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdownMenu">
-                <a class="dropdown-item" href="app/settings">Impostazioni</a>
+                <a class="dropdown-item" href="app/settings.handler">Impostazioni</a>
                 <a class="dropdown-item" href="app/logout.handler">Logout</a>
             </div>
         </div>

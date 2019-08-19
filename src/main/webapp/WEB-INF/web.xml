@@ -58,6 +58,14 @@
         <url-pattern>/app/settings</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>SettingsServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.SettingsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SettingsServlet</servlet-name>
+        <url-pattern>/app/settings.handler</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>Error</servlet-name>
         <jsp-file>/error.jsp</jsp-file>
     </servlet>

@@ -7,54 +7,63 @@
     
     <p class="position-absolute" style="right: 20px; top: 20px; position: absolute; font-size: 17px">Medico di base:</p>
     <p class="font-weight-bold position-absolute" style="right: 20px; top: 50px; font-size: 17px">
-        <c:out value="${nomeMedico}"></c:out>
+        <c:if test="${medico.getId() > 0}">
+            <c:out value="${medico.getNome()} ${medico.getCognome()}"></c:out>
+        </c:if>
     </p>
     <p class="font-italic text-right position-absolute" style="right: 20px; top: 80px; font-size: 13px; width: 170px">(puoi cambiare medico di base nelle impostazioni)</p>
 </div>
 <div class="text-center" style="margin-top: 150px">
     <c:if test="${not empty date}">
-        <c:forEach begin="8" end="18" step="1" var="i">
-            <c:set var="contains" value="false"/>
-            <c:if test="${not empty reservations}">
-                <c:forEach var="reserv" items="${reservations}">
-                    <fmt:parseDate value="${reserv.getTimestamp()}" pattern="yyyy-MM-dd HH:mm" var="timest" />
-                    <fmt:formatDate value="${timest}" pattern="HH" var="hour" />
-                    <c:if test="${hour eq i}">
-                        <c:set var="contains" value="true" />
-                        <fmt:formatDate value="${timest}" pattern="yyyy-MM-dd" var="day" />
-                        <c:choose>
-                            <c:when test="${reserv.getIdPaziente() == sessionScope.utente.getId()}">
-                                <div class="alert alert-success text-center my-3" style="width: 550px">
-                                <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
-                                <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
-                                <p><c:out value="Prenotazione effettuata"></c:out></p>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="alert alert-danger text-center my-3" style="width: 550px">
-                                <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
-                                <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
-                                <p><c:out value="Prenotazione non disponibile"></c:out></p>
-                            </c:otherwise>
-                        </c:choose>
-                        </div>
-                    </c:if>
-                </c:forEach>
+        <%-- BEGIN E END INDICANO GLI ORARI POSSIBILI, c'e' anche un check sulla servlet --%>
+        <c:forEach begin="8" end="17" step="1" var="i">
+            <c:if test="${i == 12}">
+                <hr class="my-4">
             </c:if>
-            <c:if test="${not contains}">
-                <div class="alert alert-dark text-center my-3" style="width: 550px">
-                    <form action="app/paziente/prenotazioni" method="post">
-                        <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${date}"></c:out></p>
-                        <input type="hidden" name="date" value="<c:out value="${date}"/>"/>
-                        <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
-                        <input type="hidden" name="orario" value="<c:out value="${i}"/>"/>
-                        <p><c:out value="Nessuna prenotazione"></c:out></p>
-                        <jsp:useBean id="now" class="java.util.Date"/>
-                        <fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="nowDate"/>
-                        <c:if test="${date > nowDate}">
-                            <button class="btn btn-gradient btn-block rounded-pill text-center ml-3 mt-2" style="width: 150px">Prenota</button> 
+            <c:if test="${i != 12 && i != 13}">
+                <c:set var="contains" value="false"/>
+                <c:if test="${not empty reservations}">
+                    <c:forEach var="reserv" items="${reservations}">
+                        <fmt:parseDate value="${reserv.getTimestamp()}" pattern="yyyy-MM-dd HH:mm" var="timest" />
+                        <fmt:formatDate value="${timest}" pattern="HH" var="hour" />
+                        <c:if test="${hour eq i}">
+                            <c:set var="contains" value="true" />
+                            <fmt:formatDate value="${timest}" pattern="yyyy-MM-dd" var="day" />
+                            <c:choose>
+                                <c:when test="${reserv.getIdPaziente() == sessionScope.utente.getId()}">
+                                    <div class="alert alert-success text-center my-3" style="width: 550px">
+                                        <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
+                                        <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                                        <p><c:out value="Prenotazione effettuata"></c:out></p>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="alert alert-danger text-center my-3" style="width: 550px">
+                                        <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
+                                        <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                                        <p><c:out value="Prenotazione non disponibile"></c:out></p>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </c:if>
-                    </form>
-                </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${not contains}">
+                    <div class="alert alert-dark text-center my-3" style="width: 550px">
+                        <form action="app/paziente/prenotazioni" method="post">
+                            <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${date}"></c:out></p>
+                            <input type="hidden" name="date" value="<c:out value="${date}"/>"/>
+                            <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                            <input type="hidden" name="orario" value="<c:out value="${i}"/>"/>
+                            <p><c:out value="Nessuna prenotazione"></c:out></p>
+                            <jsp:useBean id="now" class="java.util.Date"/>
+                            <fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="nowDate"/>
+                            <c:if test="${date > nowDate}">
+                                <button class="btn btn-gradient btn-block rounded-pill text-center ml-3 mt-2" style="width: 150px">Prenota visita</button> 
+                            </c:if>
+                        </form>
+                    </div>
+                </c:if>
             </c:if>
         </c:forEach>
     </c:if>
