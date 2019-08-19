@@ -1,5 +1,8 @@
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 
@@ -22,6 +25,8 @@ public class AppFilter implements Filter {
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
+    
+    private UtenteDao userDao;
 
     public AppFilter() {
     }
@@ -133,6 +138,9 @@ public class AppFilter implements Filter {
             log("AppFilter:doFilter()");
         }
 
+        long startTime = System.nanoTime();
+        
+        
         if (!doBeforeProcessing(request, response))  //Se il BeforeProcessing ha fatto un redirect allora non ha senso fare il chain.doFilter e tutto quello che viene dopo
             return;
 
@@ -160,6 +168,10 @@ public class AppFilter implements Filter {
             }
             sendProcessingError(problem, response);
         }
+        
+        
+        long endTime = System.nanoTime();
+        userDao.addLogTime(((HttpServletRequest)request).getRequestURI(), (endTime - startTime)/ 1000000); //registro il tempo in ms
     }
 
     /**
@@ -187,12 +199,23 @@ public class AppFilter implements Filter {
     /**
      * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) {
+    public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
             if (debug) {
                 log("AppFilter:Initializing filter");
             }
+        }
+        
+        //Ottengo accesso al DAO per poter registrare il tempo di risposta
+        DaoFactory daoFactory = (DaoFactory) filterConfig.getServletContext().getAttribute("daoFactory"); //Steve ho tolto super.
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get dao factory for user storage system");
+        }
+        try {
+            userDao = daoFactory.getDAO(UtenteDao.class);
+        } catch (DaoFactoryException ex) {
+            throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
     }
 

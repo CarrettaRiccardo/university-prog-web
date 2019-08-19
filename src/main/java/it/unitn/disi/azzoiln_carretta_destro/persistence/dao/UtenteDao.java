@@ -145,4 +145,11 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * @throws DaoException 
      */
     public Esami getEsami(String hint) throws DaoException;
+
+    /**
+     * Registra il tempo impiegato per elaborare la risposta. Per statistiche
+     * @param requestURI
+     * @param l tempo in millisecondi
+     */
+    public void addLogTime(String requestURI, long time);
 }

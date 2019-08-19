@@ -26,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -444,5 +445,24 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             throw new DaoException("db_error", ex);
         }        
         return ret;
+    }
+    
+    @Override
+    public void addLogTime(String url, long time){
+        if(time <= 0) return;
+        
+        try {
+            Integer new_id = null;
+            PreparedStatement ps = CON.prepareStatement("insert into log_time (url,time_took) VALUES (?,?)");
+            ps.setString(1, url);
+            ps.setLong(2, time);
+            
+            int count = ps.executeUpdate();
+            if(count == 0)
+                System.out.println("Log time inserimento fallito");
+        } 
+        catch (SQLException ex) {
+            System.out.println("Log time execption : \n" + ex.getMessage());
+        }
     }
 }

@@ -212,7 +212,11 @@ create table visita_specialistica(
 
 
 
-
+create table log_time(
+	url text not null,
+	time_took int not null,
+	time_request timestamp DEFAULT NOW()
+)engine=MyIsam;
 
 
 
