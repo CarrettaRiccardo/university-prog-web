@@ -13,6 +13,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Esami;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.VisiteSpecialistiche;
 import java.util.List;
 
@@ -136,4 +137,12 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * @throws DaoException 
      */
     public VisiteSpecialistiche getAllVisiteSpec(String hint) throws DaoException;
+    
+    /**
+     * Usato da WB esami
+     * @param hint Stringa cercato dall' utente
+     * @return Lista dei farmaci con nome simile ad hint
+     * @throws DaoException 
+     */
+    public Esami getEsami(String hint) throws DaoException;
 }

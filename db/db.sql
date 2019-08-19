@@ -266,6 +266,35 @@ NULL,
 'Medicina generale, Università di Padova',
 '1989-01-01');
 
+
+INSERT INTO `prog_web`.`utenti`
+(`id`,
+`nome`,
+`cognome`,
+`data_nascita`,
+`username`,
+`password`,
+`cf`,
+`ruolo`,
+`id_medico`,
+`provincia`,
+`comune`,
+`paziente_attivo`)
+VALUES
+(1,
+'Steve',
+'Azzolin',
+'1998-06-23',
+'steve.azzolin1@gmail.com',
+'1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
+'ABCDEFGHIL',
+'paziente',
+2,
+15,
+15,
+1);
+
+
 INSERT INTO `prog_web`.`prescrizione`
 (`id`,
 `id_paziente`,
@@ -298,32 +327,4 @@ VALUES
 NULL,
 2,
 NULL);
-
-
-INSERT INTO `prog_web`.`utenti`
-(`id`,
-`nome`,
-`cognome`,
-`data_nascita`,
-`username`,
-`password`,
-`cf`,
-`ruolo`,
-`id_medico`,
-`provincia`,
-`comune`,
-`paziente_attivo`)
-VALUES
-(1,
-'Steve',
-'Azzolin',
-'1998-06-23',
-'steve.azzolin1@gmail.com',
-'1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-'ABCDEFGHIL',
-'paziente',
-2,
-15,
-15,
-1);
 */

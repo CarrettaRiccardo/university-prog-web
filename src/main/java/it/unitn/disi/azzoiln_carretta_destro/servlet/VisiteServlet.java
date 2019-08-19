@@ -141,6 +141,7 @@ public class VisiteServlet extends HttpServlet {
         try {
             inserito = userDao.Medico().addVisita(v);
         } catch (DaoException ex) {
+            System.out.println(ex.getMessage());
             inserito = false;
         }
         

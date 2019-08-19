@@ -17,6 +17,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Esami;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.VisiteSpecialistiche;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 import java.security.NoSuchAlgorithmException;
@@ -364,6 +365,17 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     public List<Esame> getEsami(Integer id_paziente) throws DaoException{
         if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<Esame> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM esame r inner join esami_prescrivibili f on f.id = r.id_esame inner join prescrizione p on p.id = r.id_prescrizione WHERE id_paziente = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Esame e = new Esame(rs.getInt("id_esame"), rs.getInt("id_ticket"), rs.getInt("id_ssp"), rs.getString("risultato"), rs.getDate("time_esame"), rs.getInt("id_prescrizione"),rs.getInt("id_paziente"),rs.getInt("id_medico"), rs.getDate("time"), rs.getString("nome"));
+                ret.add(e);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }        
         return ret;
     }   
 
@@ -411,6 +423,22 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             while (rs.next()) {
                  ret.addVisitaSpecialistica(rs.getInt("id"),rs.getString("nome"));
                  //ret.add(r);
+            }            
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }        
+        return ret;
+    }
+    
+    @Override
+    public Esami getEsami(String hint) throws DaoException {
+        Esami ret = new Esami();
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM esami_prescrivibili WHERE nome LIKE ? ORDER BY nome")) {
+            stm.setString(1, "%" + hint + "%");
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 ret.addEsame(rs.getInt("id"),rs.getString("nome"));
             }            
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);

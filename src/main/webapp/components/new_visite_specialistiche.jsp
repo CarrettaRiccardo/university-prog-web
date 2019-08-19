@@ -30,7 +30,7 @@
   
 <c:if test="${errore ne null}">
     <div class="alert alert-danger alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2" role="alert">
-        <strong>Errore</strong> nell' eseguire l'operazione!
+        <fmt:message key="error_creation_medico"/>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>

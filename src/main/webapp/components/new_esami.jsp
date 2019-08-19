@@ -1,6 +1,6 @@
 <%-- 
-    Document   : Pagina con interfaccia per creare una nuova visita
-    Created on : 8 ago 2019, 17:20:32
+    Document   : new_esami
+    Created on : 16 ago 2019, 16:25:16
     Author     : Steve
 --%>
 
@@ -8,7 +8,7 @@
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate var="data" value="${now}"/>
 
-<form action="app/${u_url}/new_visite" method="POST">
+<form action="app/${u_url}/new_esami" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
@@ -20,10 +20,11 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="anamnesi">Anamnesi</label>
-    <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
-    <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px"><c:choose><c:when test="${empty i_anamnesi}">Il paziente presenta ...</c:when><c:when test="${! empty i_anamnesi}">${i_anamnesi}</c:when></c:choose></textarea>
+    <label for="autocomplete">Esame</label>
+    <select id="autocomplete" name="id_esame" class="form-control select2-allow-clear" required></select>
+    <small class="form-text text-muted">Click the input text or space to start to digit.</small>
   </div>
+    <input type="hidden" name="id_paziente" value="${paziente.getId()}"> 
   <button type="submit" class="btn btn-primary">Conferma</button>
 </form>
   

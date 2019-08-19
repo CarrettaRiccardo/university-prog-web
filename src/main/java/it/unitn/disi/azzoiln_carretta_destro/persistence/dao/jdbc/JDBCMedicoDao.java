@@ -58,6 +58,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             if(count == 0) return false;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             throw new DaoException(ex.getMessage(), ex);
         }
         
@@ -126,27 +127,28 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
     }
 
     @Override
-    public boolean addEsame(Integer id_medico, Integer id_paziente, Integer id_esame) throws DaoException {
-        if(id_medico == null || id_medico == null || id_esame == null) return false;  
+    public boolean addEsame(Esame e) throws DaoException {
+        if(e.getId_medico() <= 0 || e.getId_paziente() <= 0 || e.getId_esame() <= 0) return false;  
         
         try {
             Integer new_id = null;
-            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)");
-            ps.setInt(1, id_paziente);
-            ps.setInt(2, id_medico);
+            PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)",Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, e.getId_paziente());
+            ps.setInt(2, e.getId_medico());
             
             int count = ps.executeUpdate();
             if(count == 0) return false;
             ResultSet key = ps.getGeneratedKeys();
-            if(key.next()) new_id = key.getInt(0); //prendo l'ID dell'ultima prescrizione fatta
+            if(key.next()) new_id = key.getInt(1); //prendo l'ID dell'ultima prescrizione fatta
             else return false;
             
             ps = CON.prepareStatement("insert into esame (id_prescrizione,id_esame) VALUES (?,?)");
             ps.setInt(1, new_id);
-            ps.setInt(1, id_esame);
+            ps.setInt(2, e.getId_esame());
             count = ps.executeUpdate();
             if(count == 0) return false;
         } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             throw new DaoException("add_error", ex);
         }
         

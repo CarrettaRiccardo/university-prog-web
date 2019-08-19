@@ -2,6 +2,7 @@ package it.unitn.disi.azzoiln_carretta_destro.persistence.dao;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
@@ -51,17 +52,16 @@ public interface MedicoDao{
     
     /**
      * @return T on success
+     * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      */
     public boolean addVisitaSpecialistica(VisitaSpecialistica v) throws DaoException;
     
     /**
-     * @param id_medico Id del medico che crea la visita
-     * @param id_paziente
-     * @param id_esame Id dell' esame che viene prescitto al paziente. 
-     *          Preso da 'esami_prescivibili' del DB
+     * @param Esame da inserire
      * @return T on success
+     * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      */
-    public boolean addEsame(Integer id_medico,Integer id_paziente, Integer id_esame) throws DaoException;
+    public boolean addEsame(Esame e) throws DaoException;
 
     /**
      * 

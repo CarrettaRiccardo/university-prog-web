@@ -8,7 +8,7 @@
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate var="data" value="${now}"/>
 
-<form action="app/${u_url}/new_ricetta" method="POST">
+<form action="app/${u_url}/new_ricette" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
@@ -39,7 +39,7 @@
   
 <c:if test="${errore ne null}">
     <div class="alert alert-danger alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2" role="alert">
-        <strong>Errore</strong> nell' eseguire l'operazione!
+        <fmt:message key="error_creation_medico"/>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>

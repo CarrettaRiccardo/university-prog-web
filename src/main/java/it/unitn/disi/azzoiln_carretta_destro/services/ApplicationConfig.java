@@ -24,6 +24,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(it.unitn.disi.azzoiln_carretta_destro.services.EsamiWB.class);
         resources.add(it.unitn.disi.azzoiln_carretta_destro.services.FarmaciService.class);
         resources.add(it.unitn.disi.azzoiln_carretta_destro.services.Visite_specWB.class);
     }

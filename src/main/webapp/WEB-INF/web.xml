@@ -167,6 +167,10 @@
         <servlet-name>VisiteSpecialisticheServlet</servlet-name>
         <url-pattern>/app/medico/new_visite_specialistiche</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EsamiServlet</servlet-name>
+        <url-pattern>/app/medico/new_esami</url-pattern>
+    </servlet-mapping>
     
     
     <!-- SESSIONE -->
@@ -255,6 +259,10 @@
     <context-param>
         <param-name>url_visite_spec_rest</param-name>
         <param-value>app/services/visite_spec/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>url_esami_rest</param-name>
+        <param-value>app/services/esami/</param-value>
     </context-param>
     <!-- ERROR PAGES -->
     <error-page>
