@@ -75,15 +75,17 @@
                     <h5 class="text-primary mt-3">Altro</h5>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
-                            <input type="text" class="form-control" value="<c:out value="${laurea}"></c:out>" placeholder="Laurea"/>
+                            <input type="text" class="form-control" disabled value="<c:out value="${laurea}"></c:out>" placeholder="Laurea"/>
                         </div>
                         <div class="col col-12 col-lg-6 py-1">
-                            <input type="text" class="form-control" value="<c:out value="${carriera}"></c:out>" placeholder="Inizio Carriera"/>
+                            <input type="text" class="form-control" disabled value="<c:out value="${carriera}"></c:out>" placeholder="Inizio Carriera"/>
                         </div>
                     </div>
                 </c:if>
 
-                <button type="submit" class="btn btn-primary float-right">Salva</button>
+                <button type="submit"
+                        <c:if test="${tipo == 'medico'}"><c:out value="disabled"></c:out></c:if>
+                        class="btn btn-primary float-right">Salva</button>
             </form>
         </div>
     </div>

@@ -21,9 +21,11 @@ import java.io.PrintWriter;
 import java.rmi.ServerException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -82,13 +84,35 @@ public class SettingsServlet extends HttpServlet {
                 session.setAttribute("nome_provincia", userDao.Ssp().getNomeProvincia(u.getProvincia()));
                 List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
                 session.setAttribute("province", pr);
-                List<Medico> md = new LinkedList<>(userDao.Ssp().getMedici(u.getProvincia()));
+                List<Medico> md = new ArrayList<>(userDao.Ssp().getMedici(u.getProvincia()));
+                // rimuovo dalla lista se stesso se è anche un medico
+                Integer i = 0;
+                Boolean removed = false;
+                while (!removed && i < md.size()){
+                    if (md.get(i).getId() == p.getId()){
+                        md.remove(md.get(i));
+                        removed = true;
+                    }
+                    i++;
+                }
                 session.setAttribute("medici", md);
 
             } else {
                 if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
-                    Paziente p = (Paziente) u;
+                    Medico m = (Medico) u;
+                    session.setAttribute("tipo", "medico");
 
+                    String date = m.getData_nascita().toString();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    sdf.setLenient(false);
+                    sdf.parse(date);
+
+                    session.setAttribute("nome", m.getNome());
+                    session.setAttribute("cognome", m.getCognome());
+                    session.setAttribute("codice_fiscale", m.getCf());
+                    session.setAttribute("data_nascita", date);
+                    session.setAttribute("laurea", m.getLaurea());
+                    session.setAttribute("carriera", m.getInizioCarriera());
                 }
             }
         } catch (ParseException ex){
@@ -132,13 +156,14 @@ public class SettingsServlet extends HttpServlet {
                 newUtente = new Paziente(p.getId(), p.getUsername(), 
                         p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
                         idMed, userDao.Ssp().getIdProvincia(nomeProv), p.getId_Comune(), true, nomeProv, p.getFoto());
-
-            } else {
-                if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
+            } else { // il medico non credo debba modificare niente (?)
+                /*if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
                     Medico m = (Medico) u;
                     
-                    // TODO
-                }
+                    newUtente = new Medico(m.getId(), m.getUsername(), 
+                        m.getNome(), m.getCognome(), m.getCf(), m.getData_nascita(),
+                        true, userDao.Ssp().getIdProvincia(nomeProv), m.getId_Comune(), m.getLaurea(), m.getInizioCarriera(), nomeProv, m.getFoto());
+                }*/
             }
             // aggiorno l'utente
             userDao.update(newUtente);
