@@ -152,4 +152,12 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * @param l tempo in millisecondi
      */
     public void addLogTime(String requestURI, long time);
+
+    /**
+     * 
+     * @param id_paziente
+     * @param id_visita
+     * @return I dati di una singola visita
+     */
+    public Visita getVisita(int id_paziente, int id_visita) throws DaoException;
 }

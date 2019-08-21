@@ -1,8 +1,10 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao;
 
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import java.util.List;
 
 /**
  * Definisco i metodi che le implementazioni devono implementare
@@ -42,5 +44,13 @@ public interface MedicoSpecDao {
      * @return 
      */
     public boolean richiamaPaziente(Integer id_paziente);
+
+    
+    /**
+     * Ottiene l'elenco dei pazienti che può visitare in un determinato giorno
+     * @param id
+     * @return 
+     */
+    public List<Paziente> getPazienti(Integer id) throws DaoException;
     
 }

@@ -157,6 +157,7 @@ public class RicetteServlet extends HttpServlet {
         Ricetta r = Ricetta.loadFromHttpRequest(request, u);
         boolean inserito;
         try {
+            if(u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
             inserito = userDao.Medico().addRicetta(r);
         } catch (DaoException ex) {
             inserito = false;

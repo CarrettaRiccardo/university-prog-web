@@ -52,7 +52,16 @@ public class MedicoSpecFilter implements Filter {
             HttpServletRequest req = (HttpServletRequest) request;
             
             if(req.getParameter("id_paziente") != null){
-                Integer id_paziente = Integer.parseInt(req.getParameter("id_paziente")); //eccezione
+                Integer id_paziente = null;
+                try{
+                    id_paziente = Integer.parseInt(req.getParameter("id_paziente"));
+                }catch(NumberFormatException e){
+                    throw  new ServletException("id_paziente not valid", e);
+                }
+                finally{
+                    if(id_paziente == null || id_paziente <= 0)
+                        throw new ServletException("id_paziente not valid");
+                }
             }
             
             req.setAttribute("u_url", "medico_spec");

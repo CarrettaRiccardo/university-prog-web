@@ -17,7 +17,7 @@ public class HomeServlet extends HttpServlet {
         switch(utente.getType()){
             case PAZIENTE: redirectUrl = "paziente/prenotazioni";break;
             case MEDICO: redirectUrl = "medico/pazienti"; break;
-            case MEDICO_SPEC: redirectUrl = "medico_spec/visite_specialistiche"; break;
+            case MEDICO_SPEC: redirectUrl = "medico_spec/pazienti"; break;
             case SSP: redirectUrl = "ssp/medici"; break;
         }
 

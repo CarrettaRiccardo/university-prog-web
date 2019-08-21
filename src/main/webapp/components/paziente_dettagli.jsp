@@ -40,9 +40,17 @@
         </c:forTokens>
     </ul>
     <a class="btn btn-gradient-${activeIndex + 2} text-white h6 position-absolute" style="top:0; right:0;"
-       href="app/${u_url}/new_${subpage}?id_paziente=${param.id_paziente}">
+        <c:choose>
+            <c:when test="${sessionScope.utente.getType() == UtenteType.MEDICO}">  href="app/${u_url}/new_${subpage}?id_paziente=${param.id_paziente}"> </c:when>
+            <c:when test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC}">  href="app/${u_url}/compile_visite_specialistiche?id_paziente=${param.id_paziente}"> </c:when>
+        </c:choose>
         <span class="font-weight-bolder">+</span>
-        <span class="text-capitalize"> <fmt:message key="aggiungi"/> </span>
+        <span class="text-capitalize"> 
+            <c:choose>
+                <c:when test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC}">  <fmt:message key="aggiungi"/> </c:when>
+                <c:otherwise> <fmt:message key="compila_visita_spec"/> </c:otherwise>
+            </c:choose>
+        </span>
     </a>
 </div>
 

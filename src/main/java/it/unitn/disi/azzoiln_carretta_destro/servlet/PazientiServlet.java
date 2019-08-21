@@ -6,6 +6,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
@@ -52,18 +53,21 @@ public class PazientiServlet extends HttpServlet {
                 return;
             }
             else if(u.getType() == UtenteType.MEDICO ){
+                request.setAttribute("title", "Pazienti_medico");
                 request.setAttribute("nome", ((Medico)u).getNome() + ((Medico)u).getCognome());
                 pazienti = userDao.Medico().getPazienti(u.getId());
             }
             else if(u.getType() == UtenteType.MEDICO_SPEC){
-                //TODO: Decidere cosa visualizza
+                request.setAttribute("title", "Pazienti_medico_spec");
+                request.setAttribute("nome", ((MedicoSpecialista)u).getNome() + ((MedicoSpecialista)u).getCognome());
+                pazienti = userDao.MedicoSpecialista().getPazienti(u.getId());
             }
             else{ //sono SSP, non posso vedere le visite delle persone
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "home"));
                 return;
             }
 
-            request.setAttribute("title", "Pazienti_medico");
+            
             request.setAttribute("page", "pazienti");
             request.setAttribute("pazienti", pazienti);  
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");

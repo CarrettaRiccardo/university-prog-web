@@ -7,6 +7,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class VisiteServlet extends HttpServlet {
 
@@ -56,7 +59,7 @@ public class VisiteServlet extends HttpServlet {
                 visite = userDao.getVisite(u.getId());
             } else if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC) {
                 request.setAttribute("title", "Visite_medico");
-                request.setAttribute("nome", ((Medico)u).getNome() + ((Medico)u).getCognome());  //per mostrare il nome del medico loggato
+                request.setAttribute("nome", ((Persona)u).getNome() + ((Persona)u).getCognome());  //per mostrare il nome del medico loggato
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 visite = userDao.getVisite(id_paziente);
             }
@@ -67,6 +70,7 @@ public class VisiteServlet extends HttpServlet {
 
             request.setAttribute("visite", visite);
             request.setAttribute("page", "visite");
+            request.setAttribute("id_paziente", request.getParameter("id_paziente") );
             RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/visite.jsp" : "/base.jsp");
             rd.include(request, response);
         } catch (IdNotFoundException e) {
@@ -89,7 +93,7 @@ public class VisiteServlet extends HttpServlet {
      * @throws IOException 
      */
     private void manageNewVisita(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id_paziente = -1;
+        int id_paziente = -1,id_visita = -1;
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";
@@ -104,9 +108,39 @@ public class VisiteServlet extends HttpServlet {
         } catch (Exception e) {
             throw new ServletException();
         }
+        
+        if(request.getParameter("id_visita") != null){ //mostro il riepilogo della visita
+            request.setAttribute("title", "view_visita");
+            request.setAttribute("page", "new_visite");
+            System.out.println("rerererer");
+            try {
+                id_visita = Integer.parseInt(request.getParameter("id_visita"));
+                if (id_visita <= 0) throw new NumberFormatException();
+            } catch (NumberFormatException e) {
+                throw new ServletException("id_paziente_not_valid");
+            } catch (Exception e) {
+                throw new ServletException();
+            }
+            
+            Visita v = null;
+            try {
+                v = userDao.getVisita(id_paziente,id_visita);
+                System.out.println("La visita da mostrare ->" + v.getAnamnesi());
+            } catch (DaoException ex) {
+                Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            finally{
+                if(v == null) throw new ServletException("visita_not_found"); //se non trova id_visita o la query che specifica id_paziente=? AND id_visita non ha ritornato nulla
+            }
+            request.setAttribute("i_visita", v);
+        }
+        else{ //Un medico che vuole creare una visita. Il controllo che sia davvero un medico viene fatto quando cerca di salvare i dati
+            request.setAttribute("title", "crea_visita");
+            request.setAttribute("page", "new_visite");
+        }
 
-        request.setAttribute("title", "crea_visita");
-        request.setAttribute("page", "new_visite");
+        /*request.setAttribute("title", "crea_visita");
+        request.setAttribute("page", "new_visite");*/
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
 
         Paziente paz = null;
@@ -115,6 +149,7 @@ public class VisiteServlet extends HttpServlet {
         } catch (DaoException ex) {
             throw new ServletException(ex.getMessage());
         }
+        
         request.setAttribute("paziente", paz);
         rd.forward(request, response);
     }
@@ -139,6 +174,7 @@ public class VisiteServlet extends HttpServlet {
         
         boolean inserito;
         try {
+            if(u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
             inserito = userDao.Medico().addVisita(v);
         } catch (DaoException ex) {
             System.out.println(ex.getMessage());
@@ -151,7 +187,7 @@ public class VisiteServlet extends HttpServlet {
         }
         
 
-        request.setAttribute("i_anamnesi", v.getAnamnesi());
+        request.setAttribute("i_visita", v);
         request.setAttribute("errore", "errore");
         manageNewVisita(request, response);
     }

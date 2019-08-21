@@ -136,6 +136,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         
         boolean inserito;
         try {
+            if(u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
             inserito = userDao.Medico().addVisitaSpecialistica(v);
         } catch (DaoException ex) {
             System.out.println("Errore addVisitaSpecialistica (VisiteSpecServlet) -->\n" + ex.getMessage() + "\n\n");

@@ -196,6 +196,7 @@ create table visita_specialistica(
     anamnesi text DEFAULT NULL,
     time_visita timestamp DEFAULT NULL,
     PRIMARY KEY(id_prescrizione),
+    UNIQUE(time_visita),
     FOREIGN KEY fk_visita_specialistica_to_prescrizione(id_prescrizione) REFERENCES prescrizione(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,

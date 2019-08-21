@@ -10,6 +10,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCD
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Farmaci;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
@@ -109,13 +110,11 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
                                            rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), 
                                            rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"),rs.getString("path"));
                     }
+                    else if(rs.getString("ruolo").equals("medico_spec")){
+                        ret = new MedicoSpecialista(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),rs.getInt("provincia"), rs.getInt("comune"),rs.getString("nome_provincia") ,rs.getString("path"),rs.getString("laurea"), rs.getDate("inizio_carriera"),rs.getBoolean("medico_attivo"));
+                    }
                     /*
                     DA COMPLETARE
-                    else if(rs.getString("ruolo").equals("medico_spec")){
-                        ret = new MedicoSpecialista(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                           rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
-                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
-                    }
                     else if(rs.getString("ruolo").equals("ssp")){
                         ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
                                            rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
@@ -464,5 +463,23 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         catch (SQLException ex) {
             System.out.println("Log time execption : \n" + ex.getMessage());
         }
+    }
+
+    @Override
+    public Visita getVisita(int id_paziente, int id_visita) throws DaoException {
+        if(id_visita <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        Visita ret = null;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.* FROM visita v inner join prescrizione p on p.id = v.id_prescrizione WHERE p.id_paziente = ? AND p.id = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_visita);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                 ret = new Visita(rs.getString("anamnesi"),rs.getInt("id"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+            }    
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }  
+        return ret;
     }
 }

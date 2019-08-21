@@ -146,7 +146,7 @@
         <url-pattern>/app/paziente/visite_specialistiche</url-pattern>
         <url-pattern>/app/ssp/visite_specialistiche</url-pattern>
         <url-pattern>/app/medico/visite_specialistiche</url-pattern>
-        <url-pattern>/app/medicoS-pec/visite_specialistiche</url-pattern>
+        <url-pattern>/app/medico_spec/visite_specialistiche</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteServlet</servlet-name>
@@ -158,6 +158,7 @@
     <servlet-mapping>
         <servlet-name>VisiteServlet</servlet-name>
         <url-pattern>/app/medico/new_visite</url-pattern>
+        <url-pattern>/app/medico_spec/new_visite</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>

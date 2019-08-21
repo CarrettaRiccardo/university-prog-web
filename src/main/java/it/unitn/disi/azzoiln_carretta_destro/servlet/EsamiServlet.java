@@ -132,6 +132,7 @@ public class EsamiServlet extends HttpServlet {
         
         boolean inserito;
         try {
+            if(u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
             inserito = userDao.Medico().addEsame(v);
         } catch (DaoException ex) {
             System.out.println("Errore addEsame (EsamiServlet) -->\n" + ex.getMessage() + "\n\n");

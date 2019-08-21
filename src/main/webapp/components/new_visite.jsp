@@ -22,9 +22,11 @@
   <div class="form-group">
     <label for="anamnesi">Anamnesi</label>
     <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
-    <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px"><c:choose><c:when test="${empty i_anamnesi}">Il paziente presenta ...</c:when><c:when test="${! empty i_anamnesi}">${i_anamnesi}</c:when></c:choose></textarea>
+    <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px" <c:if test="${! empty i_visita}">readonly</c:if>><c:choose><c:when test="${empty i_visita}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>
   </div>
-  <button type="submit" class="btn btn-primary">Conferma</button>
+  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC}">
+    <button type="submit" class="btn btn-primary">Conferma</button>
+  </c:if>
 </form>
   
 <c:if test="${errore ne null}">
