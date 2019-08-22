@@ -1,11 +1,11 @@
 <%@ include file="../global/common.jsp" %>
 
-<div class=" text-center my-4">
-    <p class="font-weight-bold" style="float: left; font-size: 17px">Seleziona la data per la visita:</p>
-    <input id="datepicker" class="text-center mb-3" style="float: left" width="276" />
-    <button id="loadDate" class="btn btn-gradient btn-block rounded-pill ml-3 mb-3" <c:if test="${empty medico || medico.getId() == 0}"><c:out value="disabled"></c:out></c:if> style="width: 236px; float: left">Visualizza disponibilita'</button>
+<div class="text-center my-4">
+    <p class="font-weight-bold float-left" style="font-size: 17px">Seleziona la data per la visita:</p>
+    <input id="datepicker" class="text-center mb-3 float-left" width="276" />
+    <button id="loadDate" class="btn btn-gradient btn-block rounded-pill ml-3 mb-3 float-left" <c:if test="${empty medico || medico.getId() == 0}"><c:out value="disabled"></c:out></c:if> style="width: 236px">Visualizza disponibilita'</button>
     
-    <p class="position-absolute" style="right: 20px; top: 20px; position: absolute; font-size: 17px">Medico di base:</p>
+    <p class="position-absolute" style="right: 20px; top: 20px; font-size: 17px">Medico di base:</p>
     <p class="font-weight-bold position-absolute" style="right: 20px; top: 50px; font-size: 17px">
         <c:if test="${empty medico || medico.getId() == 0}">
             <c:out value="-"></c:out>
@@ -42,8 +42,8 @@
                                 </c:when>
                                 <c:otherwise>
                                     <div class="alert alert-danger text-center my-3" style="width: 550px">
-                                        <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
-                                        <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                                        <p class="font-italic position-absolute" style="left: 5px; top: 2px"><c:out value="${day}"></c:out></p>
+                                        <p class="font-weight-bold position-absolute" style="right: 5px; top: 2px;"><c:out value="${i}:00"></c:out></p>
                                         <p><c:out value="Prenotazione non disponibile"></c:out></p>
                                     </div>
                                 </c:otherwise>
@@ -54,9 +54,9 @@
                 <c:if test="${not contains}">
                     <div class="alert alert-dark text-center my-3" style="width: 550px">
                         <form action="app/paziente/prenotazioni" method="post">
-                            <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${date}"></c:out></p>
+                            <p class="font-italic position-absolute" style="left: 5px; top: 2px"><c:out value="${date}"></c:out></p>
                             <input type="hidden" name="date" value="<c:out value="${date}"/>"/>
-                            <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                            <p class="font-italic position-absolute" style="right: 5px; top: 2px;"><c:out value="${i}:00"></c:out></p>
                             <input type="hidden" name="orario" value="<c:out value="${i}"/>"/>
                             <p><c:out value="Nessuna prenotazione"></c:out></p>
                             <jsp:useBean id="now" class="java.util.Date"/>
