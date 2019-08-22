@@ -33,6 +33,43 @@
 
 
 <script>
+function getCookie(c_name) {
+    var c_value = document.cookie,
+        c_start = c_value.indexOf(" " + c_name + "=");
+    if (c_start == -1) c_start = c_value.indexOf(c_name + "=");
+    if (c_start == -1) {
+        c_value = null;
+    } else {
+        c_start = c_value.indexOf("=", c_start) + 1;
+        var c_end = c_value.indexOf(";", c_start);
+        if (c_end == -1) {
+            c_end = c_value.length;
+        }
+        c_value = unescape(c_value.substring(c_start, c_end));
+    }
+    return c_value;
+}
+
+$(document).ready(function () {
+    var tokenCookie = getCookie("acceptCookies");
+    if (tokenCookie) {
+        document.getElementById("bannerCookies").style.display = "none";
+    }
+    else{
+        document.getElementById("bannerCookies").style.display = "block";
+    }
+});
+
+$(document).ready(function () {
+    $('#closeCookies').click(function () {
+        document.getElementById("bannerCookies").style.display = "none";
+
+        var now = new Date();
+        document.cookie = "acceptCookies=true; expires=" + now.setYear(now.getYear() + 1).toString() + "; path=/";
+    });
+});
+
+
 jQuery(document).ready(function($) {
     $(".clickable-row").click(function() {
         window.location = $(this).data("href");
@@ -56,3 +93,12 @@ jQuery(document).ready(function($) {
 </c:if>
 });
 </script>
+    
+<div id="bannerCookies" style="display: none" class="alert alert-dismissible my-0 bg-secondary fixed-bottom text-center" role="alert">
+  <div>
+      <b>Ti piacciono i cookies?</b> &#x1F36A; Se utilizzi il nostro sito accetti l'utilizzo di cookie per migliorare la navigazione. <a href="http://www.whatarecookies.com/" class="text-light mx-2" target="_blank">Per saperne di piu'</a>
+      <button id="closeCookies" type="button" class="btn bg-dark text-light btn-sm">
+          Chiudi
+      </button>
+  </div>
+</div>

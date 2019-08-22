@@ -11,7 +11,7 @@
         $(document).ready(function () {
             $('#btnLogin').click(function () {
                 window.location.href = "login"
-            })
+            });
         });
     </script>
 </head>
@@ -55,7 +55,7 @@
         <div class="col-12 h-25"></div>
     </div>
 </div>
+    
 
 </body>
-
 </html>
