@@ -6,6 +6,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
+import java.io.File;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Steve
@@ -123,16 +125,26 @@ public class LoginServlet extends HttpServlet {
                 default: where = "login?login_error=service"; break;
             }
             
-            if(u.getRes() >= 0 && request.getParameter("remember_me") != null)
-            {
-                String hash = "";
-                do{
-                    hash = it.unitn.disi.azzoiln_carretta_destro.utility.Common.randomAlphaNumeric();
-                } while(hashRememberMe.containsKey(hash) || hash.compareTo("") == 0);// controllo di sicurezza
-                hashRememberMe.put(hash, u.getId());
-                Cookie c = new Cookie("user_token", hash);
-                c.setMaxAge(30*24*60*60);// 30 giorni
-                response.addCookie(c);
+            if(u.getRes() >= 0){
+                // caricamento del percorso della foto profilo
+                String relativePath = getServletContext().getAttribute("PHOTOS_DIR").toString();
+                String userPath = u.getUsername();
+                // constructs path of the directory to save uploaded file
+                String uploadFilePath = relativePath + File.separator + userPath + File.separator;
+                HttpSession session = request.getSession(false);
+                session.setAttribute("foto_profilo", uploadFilePath + "foto.jpg");
+                
+                if (request.getParameter("remember_me") != null)
+                {
+                    String hash = "";
+                    do{
+                        hash = it.unitn.disi.azzoiln_carretta_destro.utility.Common.randomAlphaNumeric();
+                    } while(hashRememberMe.containsKey(hash) || hash.compareTo("") == 0);// controllo di sicurezza
+                    hashRememberMe.put(hash, u.getId());
+                    Cookie c = new Cookie("user_token", hash);
+                    c.setMaxAge(30*24*60*60);// 30 giorni
+                    response.addCookie(c);
+                }
             }
 
             response.sendRedirect(response.encodeRedirectURL(contextPath + where));

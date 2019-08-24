@@ -14,7 +14,8 @@
             <a class="btn bg-white btn-light dropdown-toggle py-1" href="#" role="button" id="userDropdownMenu"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img width="30" height="28" class="rounded-circle d-inline-block align-top mr-1 "
-                     src="https://images.vexels.com/media/users/3/145908/preview2/52eabf633ca6414e60a7677b0b917d92-male-avatar-maker.jpg">
+                     onerror="this.onerror=null; this.src='assets/uploads/profilo/default.jpg'"
+                     src="<c:out value="${foto_profilo}" />">
                 <span class="d-none d-sm-inline-block">
                     <jsp:getProperty name="utente" property="username"/>
                 </span>

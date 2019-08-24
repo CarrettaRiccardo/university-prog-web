@@ -16,8 +16,13 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.rmi.ServerException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,16 +33,21 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author Steve
  */
+@MultipartConfig
 public class SettingsServlet extends HttpServlet {
     
     private UtenteDao userDao;
@@ -123,6 +133,7 @@ public class SettingsServlet extends HttpServlet {
         response.sendRedirect(response.encodeRedirectURL(contextPath + "app/settings"));
     }
     
+    
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -136,6 +147,32 @@ public class SettingsServlet extends HttpServlet {
             throws ServletException, IOException {
         // se sono lasciati nulli dovrebbe dare errore "invalid_selection"
         try {
+            HttpSession session = request.getSession(false);
+            Utente u = (Utente) session.getAttribute("utente");
+            Utente newUtente = null;
+            Boolean updateFoto = request.getPart("file").getSize() > 0;
+            String updateFotoPath = "";
+            
+            // se è un aggiornemento della foto...
+            if (updateFoto) {
+                // gets absolute path of the web application
+                String applicationPath = request.getServletContext().getRealPath("");
+                String relativePath = getServletContext().getAttribute("PHOTOS_DIR").toString();//getServletContext().getAttribute("PHOTOS_DIR").toString();
+                String userPath = u.getUsername();
+                // constructs path of the directory to save uploaded file
+                String uploadFilePath = applicationPath + relativePath + File.separator + userPath;
+                File file = new File(uploadFilePath);
+                if(!file.exists()) file.mkdirs();
+                
+                Part filePart = request.getPart("file");
+                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix. (to get only filename)
+                updateFotoPath = uploadFilePath + File.separator + "foto.jpg";
+                
+                filePart.write(updateFotoPath);
+            }
+            
+            
+            // se è un aggiornamento dei dati...
             Integer idMed = null;
             String idM = request.getParameter("medico");
             String nomeProv = request.getParameter("provincia");
@@ -143,23 +180,18 @@ public class SettingsServlet extends HttpServlet {
                 idMed = Integer.parseInt(idM);
             else
                 throw new NullPointerException();
-            
-            HttpSession session = request.getSession(false);
-        
-            Utente u = (Utente) session.getAttribute("utente");
-            Utente newUtente = null;
-            
+
             // creo l'oggetto Utente con i nuovi valori
             if (u.getType() == UtenteType.PAZIENTE){
                 Paziente p = (Paziente) u;
                 
                 newUtente = new Paziente(p.getId(), p.getUsername(), 
                         p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
-                        idMed, userDao.Ssp().getIdProvincia(nomeProv), p.getId_Comune(), true, nomeProv, p.getFoto());
+                        idMed, userDao.Ssp().getIdProvincia(nomeProv), p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto());
             } else { // il medico non credo debba modificare niente (?)
                 /*if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
                     Medico m = (Medico) u;
-                    
+
                     newUtente = new Medico(m.getId(), m.getUsername(), 
                         m.getNome(), m.getCognome(), m.getCf(), m.getData_nascita(),
                         true, userDao.Ssp().getIdProvincia(nomeProv), m.getId_Comune(), m.getLaurea(), m.getInizioCarriera(), nomeProv, m.getFoto());

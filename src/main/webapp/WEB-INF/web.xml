@@ -265,6 +265,10 @@
         <param-name>url_esami_rest</param-name>
         <param-value>app/services/esami/</param-value>
     </context-param>
+    <context-param>
+      <param-name>photo_dir_name</param-name>
+      <param-value>profile_photos</param-value>
+    </context-param>
     <!-- ERROR PAGES -->
     <error-page>
         <location>/error.jsp</location>

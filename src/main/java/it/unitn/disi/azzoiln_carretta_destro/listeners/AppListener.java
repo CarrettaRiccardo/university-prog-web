@@ -8,6 +8,7 @@ package it.unitn.disi.azzoiln_carretta_destro.listeners;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDaoFactory;
+import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
@@ -26,6 +27,10 @@ public class AppListener implements ServletContextListener{
      */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+    	String relativePath = sce.getServletContext().getInitParameter("photo_dir_name");
+    	sce.getServletContext().setAttribute("PHOTOS_DIR", relativePath);
+        
+        
         String dburl = sce.getServletContext().getInitParameter("dburl");
         String user = sce.getServletContext().getInitParameter("username");
         String password = sce.getServletContext().getInitParameter("password");

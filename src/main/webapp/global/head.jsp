@@ -65,7 +65,7 @@ $(document).ready(function () {
         document.getElementById("bannerCookies").style.display = "none";
 
         var now = new Date();
-        document.cookie = "acceptCookies=true; expires=" + now.setYear(now.getYear() + 1).toString() + "; path=/";
+        document.cookie = "acceptCookies=true; max-age=" + 60*60*24*90 + "; path=/";// valido per 90 giorni
     });
 });
 
