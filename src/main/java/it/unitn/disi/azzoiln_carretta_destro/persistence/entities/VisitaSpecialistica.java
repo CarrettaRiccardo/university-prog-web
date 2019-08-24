@@ -76,15 +76,19 @@ public class VisitaSpecialistica extends Prescrizione{
         return nome_medico_specialista;
     }
     
+    public boolean isNew(){
+        return time_visita == null;
+    }
+    
     
     /**
-     * Esegue tutta la logica di gestione parametri e controllo valori non validi
+     * Esegue tutta la logica di gestione parametri e controllo valori non validi per la creazione di una visita da parte del medico
      * @param req 
      * @param u Utente di sessione per prelevare id_medico
      * @return  Oggetto VisitaSpecialistica
      * @throws javax.servlet.ServletException 
      */
-    public static VisitaSpecialistica loadFromHttpRequest(final HttpServletRequest request, final Utente u) throws ServletException{
+    public static VisitaSpecialistica loadFromHttpRequestNew(final HttpServletRequest request, final Utente u) throws ServletException{
         int id_paziente = -1;
         Integer id_visita = -1;
 
@@ -102,6 +106,36 @@ public class VisitaSpecialistica extends Prescrizione{
         }
         
         return new VisitaSpecialistica(id_visita,id_paziente,u.getId());
+    }
+    
+    
+    /**
+     * Esegue tutta la logica di gestione parametri e controllo valori non validi per la compilazione della visita da parte del medico_spec
+     * @param req 
+     * @param u Utente di sessione per prelevare id_medico
+     * @return  Oggetto VisitaSpecialistica
+     * @throws javax.servlet.ServletException 
+     */
+    public static VisitaSpecialistica loadFromHttpRequestCompila(final HttpServletRequest request, final Utente u) throws ServletException{
+        int id_paziente = -1;
+        Integer id_visita = -1;
+        String anamnesi = "";
+
+        if (request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null || request.getParameter("anamnesi") == null)
+            throw new ServletException("bad_request");
+        try {
+            id_visita = Integer.parseInt(request.getParameter("id_visita"));
+            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            anamnesi = request.getParameter("anamnesi");
+            if (id_paziente <= 0) throw new NumberFormatException("id_paziente_not_valid");
+            if (id_visita <= 0) throw new NumberFormatException("id_visita_not_valid");
+        } catch (NumberFormatException e) {
+            throw new ServletException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServletException();
+        }
+        
+        return new VisitaSpecialistica(u.getId(), -1,id_visita, -1,anamnesi, null, "", "", id_paziente,-1, null);  //TODO: Costruttore apposito per questa situazione
     }
     
     

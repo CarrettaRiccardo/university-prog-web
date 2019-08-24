@@ -160,4 +160,12 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * @return I dati di una singola visita
      */
     public Visita getVisita(int id_paziente, int id_visita) throws DaoException;
+    
+    /**
+     * 
+     * @param id_paziente
+     * @param id_visita
+     * @return I dati di una singola visita
+     */
+    public VisitaSpecialistica getVisitaSpecialistica(int id_paziente, int id_visita) throws DaoException;
 }

@@ -1,15 +1,20 @@
 <%-- 
-    Document   : Pagina con interfaccia per creare una nuova visita. Vista usata anche da riepilogo visita con modalità
-                 di accesso MEDICO_SPEC
-    Created on : 8 ago 2019, 17:20:32
+    Document   : Pagina utilizzata da MEDICO_SPEC per inserire anamnesi della sua visita e da altre entità per visualizzare riepilogo visita
+    Created on : 24 ago 2019, 21:09:27
     Author     : Steve
 --%>
 
+
 <%@ include file="../global/common.jsp" %>
 <jsp:useBean id="now" class="java.util.Date" />
-<fmt:formatDate var="data" value="${now}"/>
 
-<form action="app/${u_url}/new_visite" method="POST">
+
+<c:choose>
+    <c:when test="${empty i_visita}">  <fmt:formatDate var="data" value="${now}"/>  </c:when>
+    <c:when test="${! empty i_visita}"> <fmt:formatDate var="data" value="${i_visita.getTime_visita()}"/> </c:when>
+</c:choose>
+
+<form action="app/${u_url}/compila_visita_spec" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>

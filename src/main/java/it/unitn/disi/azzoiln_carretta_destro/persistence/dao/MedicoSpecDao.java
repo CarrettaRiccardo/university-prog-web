@@ -47,10 +47,20 @@ public interface MedicoSpecDao {
 
     
     /**
-     * Ottiene l'elenco dei pazienti che può visitare in un determinato giorno
-     * @param id
+     * Ottiene l'elenco di tutti i pazienti tranne se stesso
+     * @param id Id medico loggato
      * @return 
      */
-    public List<Paziente> getPazienti(Integer id) throws DaoException;
+    public List<Paziente> getPazienti(Integer id_medico) throws DaoException;
+    
+    
+    
+    /**
+     * Aggiunge i dettagli di compilazione alla tupla creata dal MEDICO
+     * @param v
+     * @return T on success
+     * @throws DaoException 
+     */
+    public boolean compileVisitaSpecialistica(VisitaSpecialistica v) throws DaoException;
     
 }
