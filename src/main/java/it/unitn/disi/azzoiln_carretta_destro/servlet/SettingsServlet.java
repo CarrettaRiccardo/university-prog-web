@@ -16,6 +16,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,7 +48,9 @@ import javax.servlet.http.Part;
  *
  * @author Steve
  */
-@MultipartConfig
+@MultipartConfig(fileSizeThreshold=1024*1024*5, 	// 5 MB 
+                 maxFileSize=1024*1024*10,      	// 10 MB
+                 maxRequestSize=1024*1024*20)   	// 20 MB
 public class SettingsServlet extends HttpServlet {
     
     private UtenteDao userDao;
@@ -133,6 +136,30 @@ public class SettingsServlet extends HttpServlet {
         response.sendRedirect(response.encodeRedirectURL(contextPath + "app/settings"));
     }
     
+     public static void resize(String inputImagePath,
+            String outputImagePath, int scaledWidth, int scaledHeight)
+            throws IOException {
+        // reads input image
+        File inputFile = new File(inputImagePath);
+        BufferedImage inputImage = ImageIO.read(inputFile);
+ 
+        // creates output image
+        BufferedImage outputImage = new BufferedImage(scaledWidth,
+                scaledHeight, inputImage.getType());
+ 
+        // scales the input image to the output image
+        Graphics2D g2d = outputImage.createGraphics();
+        g2d.drawImage(inputImage, 0, 0, scaledWidth, scaledHeight, null);
+        g2d.dispose();
+ 
+        // extracts extension of output file
+        String formatName = outputImagePath.substring(outputImagePath
+                .lastIndexOf(".") + 1);
+ 
+        // writes to output file
+        ImageIO.write(outputImage, formatName, new File(outputImagePath));
+    }
+    
     
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -169,6 +196,9 @@ public class SettingsServlet extends HttpServlet {
                 updateFotoPath = uploadFilePath + File.separator + "foto.jpg";
                 
                 filePart.write(updateFotoPath);
+                
+                // per creare una copia più piccola da mostrare nella barra di navigazione
+                resize(updateFotoPath, uploadFilePath + File.separator + "foto_small.jpg", 50, 50);
             }
             
             
@@ -202,7 +232,9 @@ public class SettingsServlet extends HttpServlet {
             session.setAttribute("utente", newUtente);
         } catch (NullPointerException ex) {
             throw new ServletException("invalid_selection");
-        } catch (Exception ex) {
+        } catch (IllegalStateException ex) {
+            throw new ServletException("max_file_size");
+        }  catch (Exception ex) {
             throw new ServletException("update_error");
         } 
         

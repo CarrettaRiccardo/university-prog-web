@@ -133,6 +133,7 @@ public class LoginServlet extends HttpServlet {
                 String uploadFilePath = relativePath + File.separator + userPath + File.separator;
                 HttpSession session = request.getSession(false);
                 session.setAttribute("foto_profilo", uploadFilePath + "foto.jpg");
+                session.setAttribute("foto_profilo_small", uploadFilePath + "foto_small.jpg");
                 
                 if (request.getParameter("remember_me") != null)
                 {
