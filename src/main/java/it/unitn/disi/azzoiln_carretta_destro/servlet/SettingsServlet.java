@@ -111,9 +111,9 @@ public class SettingsServlet extends HttpServlet {
                 session.setAttribute("medici", md);
 
             } else {
-                if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
+                if (u.getType() == UtenteType.MEDICO){
                     Medico m = (Medico) u;
-                    session.setAttribute("tipo", "medico");
+                    session.setAttribute("tipo", "medicospec");
 
                     String date = m.getData_nascita().toString();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -126,6 +126,22 @@ public class SettingsServlet extends HttpServlet {
                     session.setAttribute("data_nascita", date);
                     session.setAttribute("laurea", m.getLaurea());
                     session.setAttribute("carriera", m.getInizioCarriera());
+                }
+                else if (u.getType() == UtenteType.MEDICO_SPEC) {
+                    MedicoSpecialista m = (MedicoSpecialista) u;
+                    session.setAttribute("tipo", "medico");
+
+                    String date = m.getData_nascita().toString();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    sdf.setLenient(false);
+                    sdf.parse(date);
+
+                    session.setAttribute("nome", m.getNome());
+                    session.setAttribute("cognome", m.getCognome());
+                    session.setAttribute("codice_fiscale", m.getCf());
+                    session.setAttribute("data_nascita", date);
+                    //session.setAttribute("laurea", m.get());
+                    //session.setAttribute("carriera", m.getInizioCarriera());
                 }
             }
         } catch (ParseException ex){
