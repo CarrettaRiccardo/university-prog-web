@@ -227,7 +227,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         
         
         if (inserito){
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_paziente/visite_specialistiche?id_paziente=" + v.getId_paziente() + "&r"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_paziente/visite_specialistiche?id_paziente=" + vs.getId_paziente() + "&r"));
             return;
         }
         

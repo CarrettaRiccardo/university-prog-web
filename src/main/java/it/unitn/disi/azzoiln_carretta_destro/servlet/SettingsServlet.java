@@ -176,7 +176,7 @@ public class SettingsServlet extends HttpServlet {
         try {
             HttpSession session = request.getSession(false);
             Utente u = (Utente) session.getAttribute("utente");
-            Utente newUtente = null;
+            Utente newUtente = u;
             Boolean updateFoto = request.getPart("file").getSize() > 0;
             String updateFotoPath = "";
             
@@ -203,21 +203,25 @@ public class SettingsServlet extends HttpServlet {
             
             
             // se è un aggiornamento dei dati...
-            Integer idMed = null;
-            String idM = request.getParameter("medico");
-            String nomeProv = request.getParameter("provincia");
-            if (idM != null && nomeProv != null)
-                idMed = Integer.parseInt(idM);
-            else
-                throw new NullPointerException();
-
-            // creo l'oggetto Utente con i nuovi valori
             if (u.getType() == UtenteType.PAZIENTE){
+                Integer idMed = null;
+                String idM = request.getParameter("medico");
+                String nomeProv = request.getParameter("provincia");
+                if (idM != null && nomeProv != null)
+                    idMed = Integer.parseInt(idM);
+                else
+                    throw new NullPointerException();
+
+                // creo l'oggetto Utente con i nuovi valori
                 Paziente p = (Paziente) u;
                 
                 newUtente = new Paziente(p.getId(), p.getUsername(), 
                         p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
                         idMed, userDao.Ssp().getIdProvincia(nomeProv), p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto());
+            
+                // aggiorno l'utente
+                userDao.update(newUtente);
+                session.setAttribute("utente", newUtente);
             } else { // il medico non credo debba modificare niente (?)
                 /*if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
                     Medico m = (Medico) u;
@@ -227,9 +231,6 @@ public class SettingsServlet extends HttpServlet {
                         true, userDao.Ssp().getIdProvincia(nomeProv), m.getId_Comune(), m.getLaurea(), m.getInizioCarriera(), nomeProv, m.getFoto());
                 }*/
             }
-            // aggiorno l'utente
-            userDao.update(newUtente);
-            session.setAttribute("utente", newUtente);
         } catch (NullPointerException ex) {
             throw new ServletException("invalid_selection");
         } catch (IllegalStateException ex) {

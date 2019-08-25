@@ -75,5 +75,10 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista,Integer> implem
         }        
         return ret;
     }
+
+    @Override
+    public boolean compileVisitaSpecialistica(VisitaSpecialistica arg0) throws DaoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

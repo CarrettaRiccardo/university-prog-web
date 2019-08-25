@@ -85,7 +85,6 @@
                     </c:if>
 
                     <button type="submit"
-                            <c:if test="${tipo == 'medico'}"><c:out value="disabled"></c:out></c:if>
                             class="btn btn-primary float-right my-3">Salva</button>
             </div>
         </div>
