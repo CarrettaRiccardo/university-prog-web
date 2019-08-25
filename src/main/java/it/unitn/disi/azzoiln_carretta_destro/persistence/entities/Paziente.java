@@ -11,6 +11,7 @@ public class Paziente extends Persona{
     
     private int id_medico;
     private boolean attivo;
+    private Date ultima_visita, ultima_ricetta;
 
     
     public Paziente(int id, String username, String nome, String cognome,Date data_nascita,String cf, int id_medico, int provincia, int comune, boolean paziente_attivo,String nome_provincia,String foto) {
@@ -53,6 +54,25 @@ public class Paziente extends Persona{
         return id_medico;
     }
     
+    public void setLastVisita(Date data){
+        this.ultima_visita = data;
+    }
+    
+    public void setLastRicetta(Date data){
+        this.ultima_ricetta = data;
+    }
+
+    public boolean isAttivo() {
+        return attivo;
+    }
+
+    public Date getLastVisita() {
+        return ultima_visita;
+    }
+
+    public Date getLastRicetta() {
+        return ultima_ricetta;
+    }
     
     
 }

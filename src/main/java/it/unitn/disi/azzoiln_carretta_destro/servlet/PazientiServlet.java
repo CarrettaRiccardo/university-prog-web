@@ -66,6 +66,7 @@ public class PazientiServlet extends HttpServlet {
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "home"));
                 return;
             }
+            
 
             
             request.setAttribute("page", "pazienti");

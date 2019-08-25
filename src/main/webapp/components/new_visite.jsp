@@ -25,7 +25,7 @@
     <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
     <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px" <c:if test="${! empty i_visita}">readonly</c:if>><c:choose><c:when test="${empty i_visita}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>
   </div>
-  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC}">
+  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO and empty i_visita}">
     <button type="submit" class="btn btn-primary">Conferma</button>
   </c:if>
 </form>

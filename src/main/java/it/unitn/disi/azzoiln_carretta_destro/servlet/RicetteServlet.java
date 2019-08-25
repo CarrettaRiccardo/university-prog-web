@@ -15,6 +15,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 
 import java.io.IOException;
@@ -33,10 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-/**
- * 
- * @author Steve
- */
+
 public class RicetteServlet extends HttpServlet {
 
     private UtenteDao userDao;
@@ -63,9 +61,13 @@ public class RicetteServlet extends HttpServlet {
             manageNewRicetta(request, response);
             return;
         }
+        else if (request.getRequestURI().indexOf("compila_ricetta") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
+            manageCompilaRicetta(request, response);
+            return;
+        }
 
-        request.setAttribute("page", "ricette");
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
+        
         List<Ricetta> ricette;
 
         String contextPath = getServletContext().getContextPath();
@@ -76,14 +78,11 @@ public class RicetteServlet extends HttpServlet {
             if (u.getType() == UtenteType.PAZIENTE) {
                 request.setAttribute("title", "Ricette_paziente"); //per personalizzare il titolo che viene mostrato
                 ricette = userDao.getRicette(u.getId());
-            } else if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC) {
+            } else if (u.getType() == UtenteType.MEDICO) {
                 request.setAttribute("title", "Ricette_medico");
                 request.setAttribute("nome", ((Medico)u).getNome() + ((Medico)u).getCognome());  //per mostrare il nome del medico loggato
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 ricette = userDao.getRicette(id_paziente);
-                for(Ricetta v : ricette){
-                    System.out.println("Ricetta: " + v.getId());
-                }
             }
             else{ //sono SSP, non posso vedere le visite delle persone
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
@@ -91,6 +90,8 @@ public class RicetteServlet extends HttpServlet {
             }
 
             request.setAttribute("ricette", ricette);
+            request.setAttribute("page", "ricette");
+            request.setAttribute("id_paziente", request.getParameter("id_paziente"));
             RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/ricette.jsp" : "/base.jsp");
             rd.include(request, response);
         } catch (IdNotFoundException e) {
@@ -102,6 +103,62 @@ public class RicetteServlet extends HttpServlet {
         } catch (Exception e) {
             throw new ServletException();
         }
+    }
+    
+    
+    /**
+     * Metodo per gestire la richiesta per visualizzare il riassunto della ricetta. Si chiama 'compila'
+     * semplicemente per seguire lo "standard" delle altre pagine, per avere una struttura un pochino più uniforme
+     * @param request
+     * @param response
+     * @param u
+     * @throws ServletException
+     * @throws IOException 
+     */
+    private void manageCompilaRicetta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id_paziente = -1, id_ricetta = -1;
+        String contextPath = getServletContext().getContextPath();
+        if (!contextPath.endsWith("/"))
+            contextPath += "/";
+        if (request.getParameter("id_paziente") == null || request.getParameter("id_ricetta") == null)
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
+
+        try {
+            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if (id_paziente <= 0) throw new NumberFormatException();
+            id_ricetta = Integer.parseInt(request.getParameter("id_ricetta"));
+            if (id_ricetta <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            throw new ServletException("id_paziente_not_valid");
+        } catch (Exception e) {
+            throw new ServletException();
+        }
+        
+        Ricetta r = null;
+        try {
+            r = userDao.getRicetta(id_paziente, id_ricetta);
+        } catch (DaoException ex) {
+            System.out.println(ex.getMessage());
+            throw new ServletException(ex.getMessage());
+        }
+        finally{
+            if(r == null) throw new ServletException("visita_spec_not_found");
+        }
+        
+        request.setAttribute("i_ricetta", r);
+        request.setAttribute("title", "view_visita_specialistica"); 
+        request.setAttribute("page", "compila_visita_spec");
+        request.setAttribute("id_visita", request.getParameter("id_visita"));
+        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+
+        Paziente paz = null;
+        try {
+            paz = (Paziente) userDao.getByPrimaryKey(id_paziente, "paziente");
+        } catch (DaoException ex) {
+            throw new ServletException(ex.getMessage());
+        }
+        request.setAttribute("paziente", paz);
+        rd.forward(request, response);
     }
     
     
@@ -139,8 +196,7 @@ public class RicetteServlet extends HttpServlet {
         } catch (DaoException ex) {
             throw new ServletException(ex.getMessage());
         }
-            
-        
+          
         request.setAttribute("paziente", paz);
         request.setAttribute("url_rest",Common.getDomain(request) + getServletContext().getInitParameter("url_farmaci_rest"));  //per url WB per autocompletamento
         rd.forward(request, response);
@@ -168,7 +224,7 @@ public class RicetteServlet extends HttpServlet {
             return;
         }
         
-        request.setAttribute("i_qta", r.getQuantita());
+        request.setAttribute("i_ricetta", r);
         request.setAttribute("errore", "errore");  //setto parametro per mostrare popup-errore
             
         manageNewRicetta(request, response);  //uso il metodo già definire per gestire il redirect a new_ricetta settando dei parametri aggiuntivi        

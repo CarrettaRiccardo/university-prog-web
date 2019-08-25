@@ -51,6 +51,7 @@
             >
             <span class="font-weight-bolder">+</span>
             <span class="text-capitalize"> 
+                <fmt:message key="aggiungi"/>
                 <%--<c:choose>
                     <c:when test="${sessionScope.utente.getType() == UtenteType.MEDICO}">  <fmt:message key="aggiungi"/> </c:when>
                     <c:otherwise> <fmt:message key="compila_visita_spec"/> </c:otherwise>

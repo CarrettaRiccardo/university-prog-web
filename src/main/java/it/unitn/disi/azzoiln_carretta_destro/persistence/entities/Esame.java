@@ -57,6 +57,10 @@ public class Esame extends Prescrizione{
         return time_esame;
     }
     
+    public boolean isNew(){
+        return time_esame == null;
+    }
+    
     /**
      * Esegue tutta la logica di gestione parametri e controllo valori non validi
      * @param req 

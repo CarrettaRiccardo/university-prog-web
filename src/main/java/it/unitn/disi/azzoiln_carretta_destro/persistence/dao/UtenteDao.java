@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
@@ -168,4 +163,20 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * @return I dati di una singola visita
      */
     public VisitaSpecialistica getVisitaSpecialistica(int id_paziente, int id_visita) throws DaoException;
+    
+    /**
+     * 
+     * @param id_paziente
+     * @param id_esame
+     * @return I dati di un singolo esame
+     */
+    public Esame getEsame(int id_paziente, int id_esame) throws DaoException;
+    
+    /**
+     * 
+     * @param id_paziente
+     * @param id_ricetta
+     * @return I dati di una singola ricetta
+     */
+    public Ricetta getRicetta(int id_paziente, int id_ricetta) throws DaoException;
 }

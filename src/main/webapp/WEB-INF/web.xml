@@ -163,6 +163,10 @@
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>
         <url-pattern>/app/medico/new_ricette</url-pattern>
+        <url-pattern>/app/medico/compila_ricetta</url-pattern>
+        <url-pattern>/app/medico_spec/compila_ricetta</url-pattern>
+        <url-pattern>/app/paziente/compila_ricetta</url-pattern>
+        <url-pattern>/app/ssp/compila_ricetta</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteSpecialisticheServlet</servlet-name>
@@ -174,6 +178,9 @@
     <servlet-mapping>
         <servlet-name>EsamiServlet</servlet-name>
         <url-pattern>/app/medico/new_esami</url-pattern>
+        <url-pattern>/app/medico/compila_esame</url-pattern>
+        <url-pattern>/app/medico_spec/compila_esame</url-pattern>
+        <url-pattern>/app/paziente/compila_esame</url-pattern>
     </servlet-mapping>
     
     

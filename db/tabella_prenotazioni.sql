@@ -1,8 +1,8 @@
 create table prenotazione(
     id_paziente int not null,
     id_medico int not null,
-    data timestamp not null,
-    PRIMARY KEY(id_paziente, id_medico, data_visita),
+    time timestamp not null,
+    PRIMARY KEY(id_paziente, id_medico, time),
     FOREIGN KEY fk_prescrizione_to_paziente(id_paziente) REFERENCES utenti(id)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,

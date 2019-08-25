@@ -58,9 +58,10 @@ public interface MedicoSpecDao {
     /**
      * Aggiunge i dettagli di compilazione alla tupla creata dal MEDICO
      * @param v
+     * @param id_medico_spec Id medico che fa la visita spec
      * @return T on success
      * @throws DaoException 
      */
-    public boolean compileVisitaSpecialistica(VisitaSpecialistica v) throws DaoException;
+    public boolean compileVisitaSpecialistica(VisitaSpecialistica v, Integer id_medico_spec) throws DaoException;
     
 }

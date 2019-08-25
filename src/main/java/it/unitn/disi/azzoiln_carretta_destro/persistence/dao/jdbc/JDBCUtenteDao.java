@@ -503,4 +503,28 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         }
         return ret;
     }
+
+    @Override
+    public Esame getEsame(int id_paziente, int id_esame) throws DaoException {
+        if(id_esame <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        Esame ret = null;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,e.nome as nome_esame FROM esame v inner join prescrizione p on p.id = v.id_prescrizione inner join esami_prescrivibili e on e.id = v.id_esame WHERE p.id_paziente = ? AND id_prescrizione = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_esame);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()) {  
+                 ret = new Esame(rs.getInt("id_esame"), rs.getInt("id_ticket"), rs.getInt("id_ssp"), rs.getString("risultato"), rs.getDate("time_esame"), rs.getInt("id_prescrizione"),rs.getInt("id_paziente"),rs.getInt("id_medico"),rs.getDate("time"), rs.getString("nome_esame"));
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+
+    @Override
+    public Ricetta getRicetta(int arg0, int arg1) throws DaoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

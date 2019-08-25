@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
@@ -131,6 +126,7 @@ public class SettingsServlet extends HttpServlet {
         } catch (ParseException ex){
                 throw new ServletException("invalid_date_exception");
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
             throw new ServletException("retrieving_doctors_error");
         } 
         response.sendRedirect(response.encodeRedirectURL(contextPath + "app/settings"));
