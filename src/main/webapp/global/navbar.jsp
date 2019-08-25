@@ -14,7 +14,7 @@
             <a class="btn bg-white btn-light dropdown-toggle py-1" href="#" role="button" id="userDropdownMenu"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img width="30" height="28" class="rounded-circle d-inline-block align-top mr-1 "
-                     onerror="this.onerror=null; this.src='assets/uploads/profilo/default.jpg'"
+                     onerror="this.onerror=null; this.src='assets/default.jpg'"
                      src="<c:out value="${foto_profilo_small}" />">
                 <span class="d-none d-sm-inline-block">
                     <jsp:getProperty name="utente" property="username"/>
@@ -35,5 +35,4 @@
             </button>
         </c:if>
     </div>
-
 </nav>

@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col col-12 col-md-auto text-center">
                 <img id="profile_photo" width="256" height="256" class="rounded-circle shadow mb-2"
-                     onerror="this.onerror=null; this.src='assets/uploads/profilo/default.jpg'"
+                     onerror="this.onerror=null; this.src='assets/default.jpg'"
                      src="<c:out value="${foto_profilo}" /> " >
                 <input type="file" name="file" accept=".jpg" class="btn btn-block btn-outline-primary mt-3"></input>
             </div>
