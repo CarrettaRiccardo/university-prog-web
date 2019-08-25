@@ -10,7 +10,7 @@
     </thead>
     <tbody>
     <c:forEach items="${visite}" var="visita">
-        <tr>
+        <tr class='clickable-row' data-href='app/${u_url}/compila_visita_spec?id_paziente=${id_paziente}&id_visita=${visita.getId()}'>
             <th scope="row"><c:out value="${visita.getNome_visita()}"/></th>
             <th scope="row">
                 <c:choose>

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
@@ -33,9 +28,7 @@ public class MedicoSpecFilter implements Filter {
     
     private static final boolean debug = true;
 
-    // The filter configuration object we are associated with.  If
-    // this value is null, this filter instance is not currently
-    // configured. 
+   
     private FilterConfig filterConfig = null;
     private UtenteDao userDao;
     

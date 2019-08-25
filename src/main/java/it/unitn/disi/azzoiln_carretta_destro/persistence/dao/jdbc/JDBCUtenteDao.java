@@ -30,6 +30,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -481,6 +482,25 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
         }  
+        return ret;
+    }
+    
+    @Override
+    public VisitaSpecialistica getVisitaSpecialistica(int id_paziente, int id_visita) throws DaoException {
+        if(id_visita <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        VisitaSpecialistica ret = null;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec FROM visita_specialistica v inner join prescrizione p on p.id = v.id_prescrizione inner join visite_specialistiche v2 on v2.id = v.id_visita_spec WHERE p.id_paziente = ? AND id_prescrizione = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_visita);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 ret = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+            }            
+        } catch (SQLException ex) {
+            //throw new DaoException("db_error", ex);
+            System.out.println(ex.getMessage() + "\n\n");
+        }
         return ret;
     }
 }
