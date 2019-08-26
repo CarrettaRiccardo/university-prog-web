@@ -1,34 +1,4 @@
-Estrazione di dente deciduo (gratuita fino a 14 anni)
-Estrazione di dente permanente (gratuita fino a 14 anni)
-Altra estrazione chirurgica dente (gratuita fino a 14 anni)
-Ricostruzione dente con otturazione (gratuita fino a 14 anni solo in caso di evento traumatico)
-Ricostruzione dente mediante otturazione a tre o più superfici
-Ricostruzione dente mediante intarsio
-Applicazione di corona
-Applicazione di corona in lega aurea
-Altra applicazione corona
-Applicazione corona e perno
-Altra applicazione corona e perno
-Inserzione di ponte fisso
-Inserzione di protesi rimovibile
-Altra inserzione di protesi
-Inserzione di protesi provvisoria
-Altra riparazione dentaria
-Impianto di dente (gratuita fino a 14 anni)
-Impianto di protesi dentaria
-Terapia canalare in monoradicolato
-Terapia canalare in pluriradicolato
-Apicectomia
-Gengivoplastica
-Asportazione di tessuto della gengiva (gratuita fino a 14 anni)
-Levigatura delle radici
-Intervento chirurgico preprotesico
-Asportazione di lesione dentaria della mandibola (gratuita fino a 14 anni)
-Trattamento ortodontico con apparecchi mobili
-Trattamento con apparecchi fissi
-Trattamento con apparecchi funzionali
-Riparazione di apparecchio ortodontico
-Radiologia diagnostica
+﻿Radiologia diagnostica
 Tomografia computerizzata del rachide
 Tomografia computerizzata con contrasto
 Tomografia computerizzata dell’arto superiore (solo con patologia traumatica acuta)
@@ -81,8 +51,6 @@ Antigene carboidratico15.3
 Antigene carboidratico 19.9
 Antigene carcino embrionario
 Antigeni HLA
-beta tromboglobulina
-cyfra
 Eparina
 Fenotipo RH
 Glicoproteina
@@ -183,17 +151,7 @@ Tomoscintigrafia miocardica (PET)
 Tomoscintigrafia Cerebrale (PET)
 Radioterapia stereotassica
 Irradiazione cutanea
-Terapie e riabilitazioni
-Esercizi respiratori per seduta collettiva
-Esercizi respiratori per seduta individuale
-Tomoscintigrafia globale
-Irradiazione cutanea
 Terapia del dolore da metastasi ossee
 Ablazione tartaro
 Sigillatura solchi e fossette
 Rimozione protesi dentarie
-Immunizzazione allergia
-Immunizzazione malattia autoimmune
-Terapia luce ultravioletta
-Splintaggio per gruppi di 4 denti
-Trattamento applicazioni protesi semovibili
