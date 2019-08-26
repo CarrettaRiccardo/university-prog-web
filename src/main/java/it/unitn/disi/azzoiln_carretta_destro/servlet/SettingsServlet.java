@@ -108,7 +108,7 @@ public class SettingsServlet extends HttpServlet {
             } else {
                 if (u.getType() == UtenteType.MEDICO){
                     Medico m = (Medico) u;
-                    session.setAttribute("tipo", "medicospec");
+                    session.setAttribute("tipo", "medico");
 
                     String date = m.getData_nascita().toString();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -124,7 +124,7 @@ public class SettingsServlet extends HttpServlet {
                 }
                 else if (u.getType() == UtenteType.MEDICO_SPEC) {
                     MedicoSpecialista m = (MedicoSpecialista) u;
-                    session.setAttribute("tipo", "medico");
+                    session.setAttribute("tipo", "medicospec");
 
                     String date = m.getData_nascita().toString();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
