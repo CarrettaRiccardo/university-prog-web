@@ -8,6 +8,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
@@ -86,7 +87,6 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             throw new ServletException("id_paziente_not_valid");
         } catch (Exception e) {
             System.out.println(e.getMessage() +  "\n\n\n");
-            //throw new ServletException();
             throw new ServletException(e.getMessage());
         }
     }
@@ -114,18 +114,22 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         }
         
         VisitaSpecialistica vs = null;
+        Double importo_ticket = null;
         try {
             vs = userDao.getVisitaSpecialistica(id_paziente, id_visita);
+            importo_ticket = userDao.getImportoTicket(vs.getId_ticket());
         } catch (DaoException ex) {
             System.out.println(ex.getMessage());
             throw new ServletException(ex.getMessage());
         }
         finally{
             if(vs == null) throw new ServletException("visita_spec_not_found");
+            if(importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
         }
         
         if( !vs.isNew() || u.getType() != UtenteType.MEDICO_SPEC){ //mostro i campi in readonly, altrimenti compilabili
             request.setAttribute("i_visita", vs);
+            request.setAttribute("importo_ticket", importo_ticket);
             request.setAttribute("title", "view_visita_specialistica");
         }
         else{

@@ -98,11 +98,12 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista,Integer> implem
             if(key.next()) id_ticket = key.getInt(1); //prendo l'ID del Ticket appena inserito
             else return false;
             
-            ps = CON.prepareStatement("update visita_specialistica set anamnesi = ?, time_visita = NOW(), id_medico_specialista = ?, id_ticket = ? WHERE id_prescrizione = ?");
+            ps = CON.prepareStatement("update visita_specialistica set anamnesi = ?, time_visita = NOW(), id_medico_specialista = ?, id_ticket = ?, cura = ? WHERE id_prescrizione = ?");
             ps.setString(1, visita.getAnamnesi());
             ps.setInt(2, id_medico_spec);
             ps.setInt(3, id_ticket);
-            ps.setInt(4, visita.getId());
+            ps.setString(4, visita.getCura());
+            ps.setInt(5, visita.getId());
             count = ps.executeUpdate();
             if(count == 0) return false;
         } 

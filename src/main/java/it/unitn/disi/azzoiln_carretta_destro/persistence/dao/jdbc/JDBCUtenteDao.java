@@ -43,10 +43,10 @@ import javax.servlet.http.HttpSession;
  */
 public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     
-    private JDBCMedicoDao medico;
-    private JDBCPazienteDao paziente;
-    private JDBCMedicoSpecDao medicoSpec;
-    private JDBCSspDao ssp;
+    private final JDBCMedicoDao medico;
+    private final JDBCPazienteDao paziente;
+    private final JDBCMedicoSpecDao medicoSpec;
+    private final JDBCSspDao ssp;
 
     public JDBCUtenteDao(Connection con){
         super(con);
@@ -324,7 +324,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+                 VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("cura"));
                  ret.add(r);
             }            
         } catch (SQLException ex) {
@@ -495,7 +495,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             stm.setInt(2, id_visita);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 ret = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+                 ret = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"),rs.getString("cura"));
             }            
         } catch (SQLException ex) {
             //throw new DaoException("db_error", ex);
@@ -526,5 +526,23 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     @Override
     public Ricetta getRicetta(int arg0, int arg1) throws DaoException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Double getImportoTicket(int id_ticket) throws DaoException {
+        if(id_ticket <= 0 ) return null; //non ancora creato
+        Double ret = null;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT costo FROM ticket WHERE id = ?")) {
+            stm.setInt(1, id_ticket);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()) {  
+                 ret = rs.getDouble("costo");
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
     }
 }

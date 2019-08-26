@@ -8,18 +8,20 @@ import javax.servlet.http.HttpServletRequest;
  * @author Steve
  */
 public class VisitaSpecialistica extends Prescrizione{
-    private int id_medico_specialista, id_ticket;
+    private int id_medico_specialista;
+    private Integer id_ticket;
     private int id_visita_spec;  //riferimento alla tabella contenete tutte le possibili visite specialistiche assegnabili
-    private String anamnesi;
+    private String anamnesi, cura;
     private Date time_visita;
     private String nome_visita, nome_medico_specialista;
 
-    public VisitaSpecialistica(int id_medico_specialista, int id_ticket, int id, int id_visita_spec, String anamnesi, Date time_visita, String nome_visita, String nome_medico_specialista, int id_paziente, int id_medico, Date time) {
+    public VisitaSpecialistica(int id_medico_specialista, Integer id_ticket, int id, int id_visita_spec, String anamnesi, Date time_visita, String nome_visita, String nome_medico_specialista, int id_paziente, int id_medico, Date time,String cura) {
         super(id, id_paziente, id_medico, time);
         this.id_medico_specialista = id_medico_specialista;
         this.id_ticket = id_ticket;
         this.id_visita_spec = id_visita_spec;
         this.anamnesi = anamnesi;
+        this.cura = cura;
         this.time_visita = time_visita;
         this.nome_visita = nome_visita;
         this.nome_medico_specialista = nome_medico_specialista;
@@ -48,7 +50,7 @@ public class VisitaSpecialistica extends Prescrizione{
         return id_medico_specialista;
     }
 
-    public int getId_ticket() {
+    public Integer getId_ticket() {
         return id_ticket;
     }
 
@@ -58,6 +60,10 @@ public class VisitaSpecialistica extends Prescrizione{
 
     public String getAnamnesi() {
         return anamnesi;
+    }
+    
+    public String getCura() {
+        return cura;
     }
     
     public String getAnamnesiShort() {
@@ -77,7 +83,7 @@ public class VisitaSpecialistica extends Prescrizione{
     }
     
     public boolean isNew(){
-        return time_visita == null;
+        return id_ticket == null || id_ticket <= 0;
     }
     
     
@@ -119,14 +125,15 @@ public class VisitaSpecialistica extends Prescrizione{
     public static VisitaSpecialistica loadFromHttpRequestCompila(final HttpServletRequest request, final Utente u) throws ServletException{
         int id_paziente = -1;
         Integer id_visita = -1;
-        String anamnesi = "";
+        String anamnesi = "", cura = "";
 
-        if (request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null || request.getParameter("anamnesi") == null)
+        if (request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null || request.getParameter("anamnesi") == null || request.getParameter("cura") == null || request.getParameter("ticket") == null)
             throw new ServletException("bad_request");
         try {
             id_visita = Integer.parseInt(request.getParameter("id_visita"));
             id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             anamnesi = request.getParameter("anamnesi");
+            cura = request.getParameter("cura");
             if (id_paziente <= 0) throw new NumberFormatException("id_paziente_not_valid");
             if (id_visita <= 0) throw new NumberFormatException("id_visita_not_valid");
         } catch (NumberFormatException e) {
@@ -135,7 +142,7 @@ public class VisitaSpecialistica extends Prescrizione{
             throw new ServletException();
         }
         
-        return new VisitaSpecialistica(u.getId(), -1,id_visita, -1,anamnesi, null, "", "", id_paziente,-1, null);  //TODO: Costruttore apposito per questa situazione
+        return new VisitaSpecialistica(u.getId(), -1,id_visita, -1,anamnesi, null, "", "", id_paziente,-1, null, cura);  //TODO: Costruttore apposito per questa situazione
     }
     
     

@@ -179,4 +179,13 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      * @return I dati di una singola ricetta
      */
     public Ricetta getRicetta(int id_paziente, int id_ricetta) throws DaoException;
+
+    
+    /**
+     * Non è sufficiente prendere il vallre dalla classe Ticket perchè il valore potrebbe cambiare nel tempo
+     * @param id_ticket
+     * @return Valore di import del ticket
+     * @throws DaoException 
+     */
+    public Double getImportoTicket(int id_ticket) throws DaoException;
 }

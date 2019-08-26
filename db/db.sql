@@ -194,6 +194,7 @@ create table visita_specialistica(
     id_ticket int DEFAULT NULL,
     id_visita_spec int DEFAULT NULL,
     anamnesi text DEFAULT NULL,
+    cura text DEFAULT NULL,
     time_visita timestamp DEFAULT NULL,
     PRIMARY KEY(id_prescrizione),
     UNIQUE(time_visita),
