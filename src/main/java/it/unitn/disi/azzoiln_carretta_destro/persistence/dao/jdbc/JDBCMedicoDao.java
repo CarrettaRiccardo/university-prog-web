@@ -161,8 +161,9 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         if(id_medico == null || id_medico <= 0) throw new IdNotFoundException("id_medico");
         List<Paziente> ret = new LinkedList<>();
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE id_medico = ? ORDER BY cognome,nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE id_medico = ? AND u.id <> ? ORDER BY cognome,nome")) {
             stm.setInt(1, id_medico);
+            stm.setInt(2, id_medico); //per non avere tra i pazienti se stesso
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                  System.out.println(rs.getInt("id"));
@@ -208,7 +209,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         if(id_paziente <= 0) throw new IdNotFoundException("id_medico");
         Date ret = null;
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT id, MAX(time_visita) as data FROM visita_specialistica v inner join prescrizione p ON v.id_prescrizione = p.id WHERE id_paziente = ? ")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id, MAX(time) as data FROM visita_specialistica v inner join prescrizione p ON v.id_prescrizione = p.id WHERE id_paziente = ? ")) {
             stm.setInt(1, id_paziente); 
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
@@ -232,7 +233,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         if(id_paziente <= 0) throw new IdNotFoundException("id_medico");
         Date ret = null;
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT id, MAX(time_vendita) as data FROM farmaco v inner join prescrizione p ON v.id_prescrizione = p.id WHERE id_paziente = ? ")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id, MAX(time) as data FROM farmaco v inner join prescrizione p ON v.id_prescrizione = p.id WHERE id_paziente = ? ")) {
             stm.setInt(1, id_paziente); 
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {

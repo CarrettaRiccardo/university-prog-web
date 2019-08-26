@@ -1,8 +1,6 @@
-Ambulatorio infermieristico
-Colloquio psicologico clinico
+﻿Colloquio psicologico clinico
 Consigli per adattamento a perdita di vista, uso di aiuti per bassa vista
 Consulenza anatomopatologica per revisione diagnostica di preparati allestiti in altra sede (prescrivibile una sola volta per lo stesso episodio patologico)
-Consultorio
 Controllo e programmazione pace-maker
 Controllo periodico per terapia anticoagulante orale (TAO)
 Controllo protesico elettroacustico
