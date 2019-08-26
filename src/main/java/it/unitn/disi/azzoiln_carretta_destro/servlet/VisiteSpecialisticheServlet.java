@@ -99,11 +99,14 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";
-        if (request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null)
+        if ( request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null)
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
-            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if(u.getType() == UtenteType.PAZIENTE)
+                id_paziente = u.getId();
+            else
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
             id_visita = Integer.parseInt(request.getParameter("id_visita"));
             if (id_visita <= 0) throw new NumberFormatException();

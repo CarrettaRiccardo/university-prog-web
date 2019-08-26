@@ -12,7 +12,7 @@
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
-      <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()}  ${paziente.getCognome()}" readonly>
+      <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
     </div>
     <div class="form-group col-md-6">
       <label for="data">Data</label>

@@ -159,6 +159,7 @@
         <servlet-name>VisiteServlet</servlet-name>
         <url-pattern>/app/medico/new_visite</url-pattern>
         <url-pattern>/app/medico_spec/new_visite</url-pattern>
+        <url-pattern>/app/paziente/new_visite</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>

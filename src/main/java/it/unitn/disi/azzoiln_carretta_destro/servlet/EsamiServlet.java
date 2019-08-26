@@ -101,7 +101,10 @@ public class EsamiServlet extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
-            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if(u.getType() == UtenteType.PAZIENTE) //così il Paziente non vede il suo ID nell'URL
+                id_paziente = u.getId();
+            else
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
             id_esame = Integer.parseInt(request.getParameter("id_esame"));
             if (id_esame <= 0) throw new NumberFormatException();

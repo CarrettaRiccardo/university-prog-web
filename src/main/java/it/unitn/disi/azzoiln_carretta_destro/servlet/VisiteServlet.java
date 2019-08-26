@@ -42,14 +42,15 @@ public class VisiteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().indexOf("new_visite") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
-            manageNewVisita(request, response);
-            return;
-        }
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
+        
+        if (request.getRequestURI().indexOf("new_visite") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
+            manageNewVisita(request, response, u);
+            return;
+        }        
         List<Visita> visite;
-
         String contextPath = getServletContext().getContextPath();
+        
         if (!contextPath.endsWith("/"))
             contextPath += "/";
 
@@ -92,16 +93,19 @@ public class VisiteServlet extends HttpServlet {
      * @throws ServletException
      * @throws IOException 
      */
-    private void manageNewVisita(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void manageNewVisita(HttpServletRequest request, HttpServletResponse response, Utente u) throws ServletException, IOException {
         int id_paziente = -1,id_visita = -1;
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";
-        if (request.getParameter("id_paziente") == null)
+        if (request.getParameter("id_paziente") == null)  
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
-            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if(u.getType() == UtenteType.PAZIENTE) //così il Paziente non vede il suo ID nell'URL
+                id_paziente = u.getId();
+            else
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
             throw new ServletException("id_paziente_not_valid");
@@ -189,7 +193,7 @@ public class VisiteServlet extends HttpServlet {
 
         request.setAttribute("i_visita", v);
         request.setAttribute("errore", "errore");
-        manageNewVisita(request, response);
+        manageNewVisita(request, response, u);
     }
     
 

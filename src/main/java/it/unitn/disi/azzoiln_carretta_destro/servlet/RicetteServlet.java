@@ -57,20 +57,16 @@ public class RicetteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().indexOf("new_ricette") > 0) {  //voglio accedere alla pagina per creare una nuova Ricetta
-            manageNewRicetta(request, response);
-            return;
-        }
-        else if (request.getRequestURI().indexOf("compila_ricetta") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
-            manageCompilaRicetta(request, response);
-            return;
-        }
-
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
         
-        List<Ricetta> ricette;
+        if (request.getRequestURI().indexOf("new_ricette") > 0) {  //voglio accedere alla pagina per creare una nuova Ricetta
+            manageNewRicetta(request, response, u);
+            return;
+        }
 
+        List<Ricetta> ricette;
         String contextPath = getServletContext().getContextPath();
+        
         if (!contextPath.endsWith("/"))
             contextPath += "/";
 
@@ -115,7 +111,7 @@ public class RicetteServlet extends HttpServlet {
      * @throws ServletException
      * @throws IOException 
      */
-    private void manageCompilaRicetta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    /*private void manageCompilaRicetta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_paziente = -1, id_ricetta = -1;
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
@@ -159,7 +155,7 @@ public class RicetteServlet extends HttpServlet {
         }
         request.setAttribute("paziente", paz);
         rd.forward(request, response);
-    }
+    }*/
     
     
     /**
@@ -169,7 +165,7 @@ public class RicetteServlet extends HttpServlet {
      * @throws ServletException
      * @throws IOException 
      */
-    private void manageNewRicetta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    private void manageNewRicetta(HttpServletRequest request, HttpServletResponse response, Utente u) throws ServletException, IOException{
         int id_paziente = -1;
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
@@ -178,7 +174,10 @@ public class RicetteServlet extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
-            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if(u.getType() == UtenteType.PAZIENTE) //così il Paziente non vede il suo ID nell'URL
+                id_paziente = u.getId();
+            else
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
             throw new ServletException("id_paziente_not_valid");
@@ -227,7 +226,7 @@ public class RicetteServlet extends HttpServlet {
         request.setAttribute("i_ricetta", r);
         request.setAttribute("errore", "errore");  //setto parametro per mostrare popup-errore
             
-        manageNewRicetta(request, response);  //uso il metodo già definire per gestire il redirect a new_ricetta settando dei parametri aggiuntivi        
+        manageNewRicetta(request, response,u);  //uso il metodo già definire per gestire il redirect a new_ricetta settando dei parametri aggiuntivi        
     }
 
 
