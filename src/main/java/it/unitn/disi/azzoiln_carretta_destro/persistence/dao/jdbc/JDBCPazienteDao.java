@@ -44,7 +44,7 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
     @Override
     public boolean newPrenotazione(Prenotazione prenotazione) throws DaoException {
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO `prog_web`.`prenotazione` " +
-                "(`id_paziente`,`id_medico`,`data`) VALUES " +
+                "(`id_paziente`,`id_medico`,time) VALUES " +
                 "("+ prenotazione.getIdPaziente() + "," + prenotazione.getIdMedico() + ",'" + prenotazione.getTimestamp() + "')")) {
             stm.execute();
             return true;
@@ -61,9 +61,9 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
                 + " WHERE p.data >= (\"" + data + " 00:00:00\")"
                 + " AND p.data <= (\"" + data + " 23:59:59\")"))*/
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT p.id_paziente as paz, p.id_medico as med, p.data as data, u.nome as pazNome, u.cognome as pazCognome, u2.nome as medNome, u2.cognome as medCognome FROM prenotazione as p inner JOIN utenti as u on p.id_paziente = u.id inner join utenti as u2 on p.id_medico = u2.id"
-                + " WHERE p.data >= (\"" + data + " 00:00:00\")"
-                + " AND p.data <= (\"" + data + " 23:59:59\")"
+        try (PreparedStatement stm = CON.prepareStatement("SELECT p.id_paziente as paz, p.id_medico as med, p.time as data, u.nome as pazNome, u.cognome as pazCognome, u2.nome as medNome, u2.cognome as medCognome FROM prenotazione as p inner JOIN utenti as u on p.id_paziente = u.id inner join utenti as u2 on p.id_medico = u2.id"
+                + " WHERE p.time >= (\"" + data + " 00:00:00\")"
+                + " AND p.time <= (\"" + data + " 23:59:59\")"
                 + " AND p.id_medico = " + idMedico)) {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -79,7 +79,7 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
     public List<Prenotazione> getPrenotazioni(Integer id_paziente) throws DaoException  {
         List<Prenotazione> ret = new LinkedList<Prenotazione>();
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT id_paziente, id_medico, data FROM prenotazione"
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id_paziente, id_medico, time FROM prenotazione"
                 + " WHERE id_paziente = ?")) {
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
