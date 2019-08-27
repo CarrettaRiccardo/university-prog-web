@@ -7,6 +7,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico.Stats;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
@@ -243,6 +244,40 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
                 throw new DaoException("no_data_last_ricetta");
             }
         } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }        
+        return ret;
+    }
+
+    @Override
+    public List<Medico.Stats> getStats(int id_medico)throws DaoException {
+        if(id_medico <= 0) throw new IdNotFoundException("id_medico");
+        List<Medico.Stats> ret = new LinkedList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
+                                                            "FROM \n" +
+                                                            "     (\n" +
+                                                            "      SELECT * FROM\n" +
+                                                            "        (\n" +
+                                                            "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
+                                                            "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
+                                                            "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "      ) AS seq \n" +
+                                                            "LEFT JOIN (prescrizione p  inner join farmaco f ON p.id_medico = ? AND p.id = f.id_prescrizione)  ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
+                                                            "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
+                                                            "GROUP BY seq.anno, seq.mese\n" +
+                                                            "ORDER BY seq.anno, seq.mese")) {
+            stm.setInt(1, id_medico);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                 System.out.println(rs.getInt("tot"));
+                 Medico m = new Medico(-1, "", "", "", "", null, true, -1, -1, "", null, "", ""); //TODO: Crea costruttore vuoto per questa situazione
+                 Medico.Stats s = m.new Stats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret.add(s);
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
         }        
         return ret;

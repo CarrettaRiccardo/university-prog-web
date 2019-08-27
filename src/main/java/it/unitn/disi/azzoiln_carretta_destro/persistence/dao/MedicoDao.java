@@ -71,4 +71,11 @@ public interface MedicoDao{
      * @throws DaoException 
      */
     public boolean isMyPatient(Integer id_paziente, Integer id_medico) throws DaoException;
+
+    
+    /**
+     * 
+     * @param id 
+     */
+    public List<Medico.Stats> getStats(int id_medico) throws DaoException;
 }

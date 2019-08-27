@@ -51,15 +51,15 @@ public class StatisticheServlet extends HttpServlet {
             contextPath += "/";
 
         switch(u.getType()){
-            case PAZIENTE: managePaziente(request, u); break;
-            case MEDICO: manageMedico(request, u); break;
-            case MEDICO_SPEC: manageMedicoSpec(request, u); break;
+            case PAZIENTE: managePaziente(request, u); request.setAttribute("page", "stats/paziente"); break;
+            case MEDICO: manageMedico(request, u); request.setAttribute("page", "stats/medico"); break;
+            case MEDICO_SPEC: manageMedicoSpec(request, u); request.setAttribute("page", "stats/medico_spec"); break;
             case SSP: manageSsp(request, u); break;
         }
         
-        request.setAttribute("page", "ricette");
-        request.setAttribute("id_paziente", request.getParameter("id_paziente"));
-        RequestDispatcher rd = request.getRequestDispatcher("/components/stats/medico.jsp");
+        
+        //request.setAttribute("id_paziente", request.getParameter("id_paziente"));
+        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
         rd.include(request, response);
     }
 
@@ -94,8 +94,17 @@ public class StatisticheServlet extends HttpServlet {
      * @param request
      * @param u 
      */
-    private void manageMedico(HttpServletRequest request, Utente u) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void manageMedico(HttpServletRequest request, Utente u) throws ServletException {
+        try{
+            List<Medico.Stats> list = userDao.Medico().getStats(u.getId());
+            for(Medico.Stats m : list){
+                System.out.println(m.anno + " : " + m.mese + " = " + m.count);
+            }
+            request.setAttribute("ricette", list);
+        }catch(DaoException ex){
+            System.out.println(ex.getMessage());
+            throw new ServletException(ex.getMessage());
+        }
     }
 
     

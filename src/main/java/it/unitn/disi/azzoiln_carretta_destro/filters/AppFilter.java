@@ -71,7 +71,7 @@ public class AppFilter implements Filter {
                     sezioniDettagli = "";
                     break;
                 case MEDICO:
-                    sezioni = "pazienti";
+                    sezioni = "pazienti,stats";
                     sezioniDettagli = "visite,visite_specialistiche,esami,ricette";
                     break;
                 case MEDICO_SPEC:
