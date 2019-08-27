@@ -5,6 +5,10 @@
         <servlet-name>Login</servlet-name>
         <jsp-file>/login.jsp</jsp-file>
     </servlet>
+    <servlet>
+        <servlet-name>StatisticheServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.StatisticheServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -127,7 +131,8 @@
         <url-pattern>/app/paziente/ricette</url-pattern>
         <url-pattern>/app/medico/ricette</url-pattern>
         <url-pattern>/app/medico_spec/ricette</url-pattern>
-        <url-pattern>/app/ssp/ricette</url-pattern><!-- MAGARI PER STATS. -->
+        <url-pattern>/app/ssp/ricette</url-pattern>
+        <!-- MAGARI PER STATS. -->
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EsamiServlet</servlet-name>
@@ -159,10 +164,15 @@
         <servlet-name>VisiteServlet</servlet-name>
         <url-pattern>/app/medico/new_visite</url-pattern>
         <url-pattern>/app/medico_spec/new_visite</url-pattern>
+        <url-pattern>/app/paziente/new_visite</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>
         <url-pattern>/app/medico/new_ricette</url-pattern>
+        <url-pattern>/app/medico/compila_ricetta</url-pattern>
+        <url-pattern>/app/medico_spec/compila_ricetta</url-pattern>
+        <url-pattern>/app/paziente/compila_ricetta</url-pattern>
+        <url-pattern>/app/ssp/compila_ricetta</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteSpecialisticheServlet</servlet-name>
@@ -174,10 +184,15 @@
     <servlet-mapping>
         <servlet-name>EsamiServlet</servlet-name>
         <url-pattern>/app/medico/new_esami</url-pattern>
+        <url-pattern>/app/medico/compila_esame</url-pattern>
+        <url-pattern>/app/medico_spec/compila_esame</url-pattern>
+        <url-pattern>/app/paziente/compila_esame</url-pattern>
     </servlet-mapping>
-    
-    
     <!-- SESSIONE -->
+    <servlet-mapping>
+        <servlet-name>StatisticheServlet</servlet-name>
+        <url-pattern>/app/medico/stats</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -236,12 +251,9 @@
         <filter-name>NoJspFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
-    
     <listener>
         <listener-class>it.unitn.disi.azzoiln_carretta_destro.listeners.AppListener</listener-class>
     </listener>
-    
     <!-- PARAMETRI -->
     <context-param>
         <param-name>dburl</param-name>
@@ -269,8 +281,8 @@
         <param-value>app/services/esami/</param-value>
     </context-param>
     <context-param>
-      <param-name>photo_dir_name</param-name>
-      <param-value>profile_photos</param-value>
+        <param-name>photo_dir_name</param-name>
+        <param-value>profile_photos</param-value>
     </context-param>
     <!-- ERROR PAGES -->
     <error-page>

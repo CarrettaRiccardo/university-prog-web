@@ -12,7 +12,7 @@
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
-      <input type="text" class="form-control" id="paziente" placeholder="${paziente.getNome()}  ${paziente.getCognome()}" readonly>
+      <input type="text" class="form-control" id="paziente" placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
     </div>
     <div class="form-group col-md-6">
       <label for="data">Data</label>
@@ -20,21 +20,35 @@
     </div>
   </div>
   <div class="form-row">
-    <div class="form-group col-md-8">
+    <div  <c:choose><c:when test="${! empty i_ricetta}">class="form-group col-md-6"</c:when><c:when test="${empty i_ricetta}">class="form-group col-md-8"</c:when></c:choose>  >
       <label for="anamnesi">Seleziona farmaco</label>
       <!--<input type="search" id="form-autocomplete" class="form-control mdb-autocomplete">
       <input type="hidden" id="form-autocomplete-value" name="id_farmaco">-->
-      <select id="autocomplete" name="id_farmaco" class="form-control select2-allow-clear" required></select>
+      <select <c:if test="${empty i_ricetta}"> id="autocomplete" </c:if> name="id_farmaco" class="form-control select2-allow-clear" required>
+            <c:if test="${empty i_ricetta}">
+                <option selected> ${i_ricetta.getNomeFarmaco()} </option>
+            </c:if>
+      </select>
       <small class="form-text text-muted">Click the input text or space to start to digit.</small>
     </div>
+            
     <div class="form-group col-md-4">
       <label for="quantita">Quantità</label>
-      <input type="number" class="form-control" id="quantita" name="qta" value="<c:choose><c:when test="${! empty i_qta}">${i_qta}</c:when><c:when test="${empty i_qta}">1</c:when></c:choose>"
+      <input type="number" class="form-control" id="quantita" name="qta" value="<c:choose><c:when test="${! empty i_ricetta}">${i_ricetta.getQuantita()}</c:when><c:when test="${empty i_ricetta}">1</c:when></c:choose>"
              placeholder="1" required min='1' max='300'>
     </div>
+    
+    <c:if test="${empty i_ricetta}">
+        <div class="form-group col-md-2">
+          <label for="ticket">Costo Ticket</label>
+          <input type="text" class="form-control" id="ticket" value="${i_ticket.getCosto()}  >
+        </div>
+    </c:if>
   </div>
   <input type="hidden" name="id_paziente" value="${paziente.getId()}"> 
-  <button type="submit" class="btn btn-primary">Conferma</button>
+  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_ricetta}">
+    <button type="submit" class="btn btn-primary">Conferma</button>
+  </c:if>
 </form>
   
 <c:if test="${errore ne null}">

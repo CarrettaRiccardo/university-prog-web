@@ -5,7 +5,11 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import java.io.File;
 
 import javax.servlet.ServletException;
@@ -14,7 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 

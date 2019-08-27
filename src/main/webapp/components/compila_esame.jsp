@@ -1,15 +1,20 @@
 <%-- 
-    Document   : Pagina con interfaccia per creare una nuova visita. Vista usata anche da riepilogo visita con modalità
-                 di accesso MEDICO_SPEC
-    Created on : 8 ago 2019, 17:20:32
+    Document   : Pagina utilizzata da SSP per inserire risultati esame e da tutti gli altri per vedeere il suo esito
+    Created on : 24 ago 2019, 21:09:27
     Author     : Steve
 --%>
 
+
 <%@ include file="../global/common.jsp" %>
 <jsp:useBean id="now" class="java.util.Date" />
-<fmt:formatDate var="data" value="${now}"/>
 
-<form action="app/${u_url}/new_visite" method="POST">
+
+<c:choose>
+    <c:when test="${empty i_esame}">  <fmt:formatDate var="data" value="${now}"/>  </c:when>
+    <c:when test="${! empty i_esame}"> <fmt:formatDate var="data" value="${i_visita.getTime_esame()}"/> </c:when>
+</c:choose>
+
+<form action="app/${u_url}/compila_esame" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
@@ -21,11 +26,12 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="anamnesi">Anamnesi</label>
+    <label for="esito">Anamnesi</label>
     <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
-    <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px" <c:if test="${! empty i_visita}">readonly</c:if>><c:choose><c:when test="${empty i_visita}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>
+    <input type="hidden" class="form-control" name="id_esame" value="${id_esame}"> 
+    <textarea class="form-control" id="esito" name="esito" style="height: 150px" <c:if test="${! empty i_esame}">readonly</c:if>><c:choose><c:when test="${empty i_esame}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getRisultato()}</c:when></c:choose></textarea>
   </div>
-  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO and empty i_visita}">
+  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_esame}">
     <button type="submit" class="btn btn-primary">Conferma</button>
   </c:if>
 </form>

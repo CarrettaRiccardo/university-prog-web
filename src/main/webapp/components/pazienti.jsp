@@ -11,6 +11,8 @@
         <th scope="col">Cognome</th>
         <th scope="col">Nome</th>
         <th scope="col">Data Nascita</th>
+        <th scope="col">Ultima visita</th>
+        <th scope="col">Ultima Ricetta</th>
     </tr>
     </thead>
     <tbody>
@@ -20,6 +22,18 @@
                 <td><c:out value="${paz.getCognome()}"/></td>
                 <td><c:out value="${paz.getNome()}"/></td>
                 <td><c:out value="${paz.getData_nascita()}"/></td>
+                <td>
+                    <c:choose>
+                        <c:when test="${empty paz.getLastVisita()}">  -  </c:when>
+                        <c:when test="${! empty paz.getLastVisita()}"> <c:out value="${paz.getLastVisita()}"/> </c:when>
+                    </c:choose>
+                </td>
+                <td>
+                    <c:choose>
+                        <c:when test="${empty paz.getLastRicetta()}">  -  </c:when>
+                        <c:when test="${! empty paz.getLastRicetta()}"> <c:out value="${paz.getLastRicetta()}"/> </c:when>
+                    </c:choose>
+                </td>
             </tr>
     </c:forEach>
     </tbody>

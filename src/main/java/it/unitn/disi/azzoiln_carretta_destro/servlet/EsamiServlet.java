@@ -43,7 +43,13 @@ public class EsamiServlet extends HttpServlet {
             manageNewEsame(request, response);
             return;
         }
+        
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
+        
+        if (request.getRequestURI().indexOf("compila_esame") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
+            manageCompilaEsame(request, response, u);
+            return;
+        }
         List<Esame> esami;
 
         String contextPath = getServletContext().getContextPath();
@@ -67,6 +73,7 @@ public class EsamiServlet extends HttpServlet {
 
             request.setAttribute("esami", esami);
             request.setAttribute("page", "esami");
+            request.setAttribute("id_paziente", request.getParameter("id_paziente"));
             RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/esami.jsp" : "/base.jsp");
             rd.include(request, response);
         } catch (IdNotFoundException e) {
@@ -80,6 +87,65 @@ public class EsamiServlet extends HttpServlet {
             //throw new ServletException();
             throw new ServletException(e.getMessage());
         }
+    }
+    
+    
+    
+    
+    private void manageCompilaEsame(HttpServletRequest request, HttpServletResponse response, Utente u) throws ServletException, IOException {
+        int id_paziente = -1, id_esame = -1;
+        String contextPath = getServletContext().getContextPath();
+        if (!contextPath.endsWith("/"))
+            contextPath += "/";
+        if (request.getParameter("id_paziente") == null || request.getParameter("id_esame") == null)
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
+
+        try {
+            if(u.getType() == UtenteType.PAZIENTE) //così il Paziente non vede il suo ID nell'URL
+                id_paziente = u.getId();
+            else
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if (id_paziente <= 0) throw new NumberFormatException();
+            id_esame = Integer.parseInt(request.getParameter("id_esame"));
+            if (id_esame <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            throw new ServletException("id_paziente_not_valid");
+        } catch (Exception e) {
+            throw new ServletException();
+        }
+        
+        Esame e = null;
+        try {
+            e = userDao.getEsame(id_paziente, id_esame);
+        } catch (DaoException ex) {
+            System.out.println(ex.getMessage());
+            throw new ServletException(ex.getMessage());
+        }
+        finally{
+            if(e == null) throw new ServletException("visita_spec_not_found");
+        }
+        
+        if( !e.isNew() || u.getType() != UtenteType.MEDICO_SPEC){ //mostro i campi in readonly, altrimenti compilabili
+            request.setAttribute("i_esame", e);
+            request.setAttribute("title", "view_esame");
+        }
+        else{
+            request.setAttribute("title", "compila_esame");
+        }
+        
+
+        request.setAttribute("page", "compila_esame");
+        request.setAttribute("id_esame", request.getParameter("id_esame"));  //per inserire tale valore come campo nascosto nell' HHTML (per averlo come parametro in POST per la compilazione)
+        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
+
+        Paziente paz = null;
+        try {
+            paz = (Paziente) userDao.getByPrimaryKey(id_paziente, "paziente");
+        } catch (DaoException ex) {
+            throw new ServletException(ex.getMessage());
+        }
+        request.setAttribute("paziente", paz);
+        rd.forward(request, response);
     }
     
     

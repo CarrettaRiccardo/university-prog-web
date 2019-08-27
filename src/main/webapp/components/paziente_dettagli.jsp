@@ -6,22 +6,31 @@
 
         <div class="col col-12 col-md-auto text-center">
             <img width="180" height="180" class="rounded-circle shadow mb-2"
-                 src="https://images.vexels.com/media/users/3/145908/preview2/52eabf633ca6414e60a7677b0b917d92-male-avatar-maker.jpg">
+                 src="${foto_profilo}">
         </div>
 
         <div class="col col-12 col-md pl-md-4">
             <h5 class="text-primary">Dati personali</h5>
-            <div class="pb-1"> Nome: <b>Giuseppe</b></div>
-            <div class="pb-1"> Cognome: <b>Verdi</b></div>
-            <div class="pb-1"> Codice fiscale: <b>CJLASJJKFKLFAFS534</b></div>
-            <div class="pb-1"> Telefono: <b>331 432 4375</b></div>
+            <div class="pb-1"> Nome: <b>${nome}</b></div>
+            <div class="pb-1"> Cognome: <b>${cognome}</b></div>
+            <div class="pb-1"> Codice fiscale: <b>${codice_fiscale}</b></div>
+            <div class="pb-1"> Data nascita: <b>${data_nascita}</b></div>
         </div>
 
-        <div class="col col-12 col-md">
-            <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
-            <div class="pb-1"> Altro1: <b>sfdsd fsdggsdg</b></div>
-            <div class="pb-1"> Altro2: <b>sdfsdf sdgssdgsdg</b></div>
-        </div>
+        <c:if test="${tipo == 'paziente'}">
+            <div class="col col-12 col-md">
+                <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
+                <div class="pb-1"> Medico di base: <b>${medico.getNome()} ${medico.getCognome()} (${medico.getLaurea()}</b></div>
+                <div class="pb-1"> Provincia: <b>${nome_provincia}</b></div>
+            </div>
+        </c:if>
+        <c:if test="${tipo == 'medico'}">
+            <div class="col col-12 col-md">
+                <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
+                <div class="pb-1"> Laurea: <b>${laurea}</b></div>
+                <div class="pb-1"> Carriera: <b>${carriera}</b></div>
+            </div>
+        </c:if>
     </div>
 </div>
 
@@ -51,6 +60,7 @@
             >
             <span class="font-weight-bolder">+</span>
             <span class="text-capitalize"> 
+                <fmt:message key="aggiungi"/>
                 <%--<c:choose>
                     <c:when test="${sessionScope.utente.getType() == UtenteType.MEDICO}">  <fmt:message key="aggiungi"/> </c:when>
                     <c:otherwise> <fmt:message key="compila_visita_spec"/> </c:otherwise>

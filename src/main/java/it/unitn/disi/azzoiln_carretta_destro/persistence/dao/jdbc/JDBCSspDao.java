@@ -38,7 +38,7 @@ public class JDBCSspDao extends JDBCDao<Ssp,Integer> implements SspDao{
     public List<Medico> getMedici(Integer id_provincia) throws DaoException {
         List<Medico> ret = new LinkedList<>();
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente  WHERE u.medico_attivo = 1 ORDER BY u.cognome,u.nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente  WHERE ruolo = 'medico' ORDER BY u.cognome,u.nome")) {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 ret.add(getMedico(rs));

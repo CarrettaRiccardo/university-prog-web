@@ -6,6 +6,7 @@
 
 
 <%@ include file="../global/common.jsp" %>
+<%@ page import="it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket" %>
 <jsp:useBean id="now" class="java.util.Date" />
 
 
@@ -18,19 +19,36 @@
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
-      <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()}  ${paziente.getCognome()}" readonly>
+      <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
     </div>
     <div class="form-group col-md-6">
       <label for="data">Data</label>
       <input type="password" class="form-control" id="data" placeholder="${data}" readonly>
     </div>
   </div>
+    
   <div class="form-group">
     <label for="anamnesi">Anamnesi</label>
     <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
+    <input type="hidden" class="form-control" name="id_visita" value="${id_visita}"> 
     <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px" <c:if test="${! empty i_visita}">readonly</c:if>><c:choose><c:when test="${empty i_visita}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>
   </div>
-  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC}">
+  
+  <div class="form-group">
+    <label for="cura">Cure da seguire</label>
+    <textarea class="form-control" id="cura" name="cura" style="height: 150px" <c:if test="${! empty i_visita}">readonly</c:if>><c:choose><c:when test="${empty i_visita}"></c:when><c:when test="${! empty i_visita}">${i_visita.getCura()}</c:when></c:choose></textarea>
+  </div>
+  
+  <div class="form-group">
+        <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${! empty i_visita}">checked onclick="return false;"</c:if> />Ticket di  <!--Se è già settato le rendo readonly tramite il return false-->
+        <c:choose>
+            <c:when test="${empty i_visita}">  <fmt:formatNumber value = "${Ticket.costo_visite_specialistiche}" type = "currency" />  </c:when>
+            <c:when test="${! empty i_visita}"> <fmt:formatNumber value = "${importo_ticket}" type = "currency" /> </c:when>
+        </c:choose>
+    PAGATO
+  </div>
+  
+  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_visita}">
     <button type="submit" class="btn btn-primary">Conferma</button>
   </c:if>
 </form>

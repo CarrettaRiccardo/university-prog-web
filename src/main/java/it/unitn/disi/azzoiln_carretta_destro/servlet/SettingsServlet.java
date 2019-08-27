@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
@@ -31,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,63 +72,7 @@ public class SettingsServlet extends HttpServlet {
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/")) 
             contextPath += "/";
-        HttpSession session = request.getSession(false);
-         
-        try{
-            Utente u = (Utente) session.getAttribute("utente");
-            if (u.getType() == UtenteType.PAZIENTE){
-                Paziente p = (Paziente) u;
-                session.setAttribute("tipo", "paziente");
-
-                String date = p.getData_nascita().toString();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                sdf.setLenient(false);
-                sdf.parse(date);
-
-                session.setAttribute("nome", p.getNome());
-                session.setAttribute("cognome", p.getCognome());
-                session.setAttribute("codice_fiscale", p.getCf());
-                session.setAttribute("data_nascita", date);
-                session.setAttribute("id_medico", p.getId_medico());
-                session.setAttribute("nome_provincia", userDao.Ssp().getNomeProvincia(u.getProvincia()));
-                List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
-                session.setAttribute("province", pr);
-                List<Medico> md = new ArrayList<>(userDao.Ssp().getMedici(u.getProvincia()));
-                // rimuovo dalla lista se stesso se è anche un medico
-                Integer i = 0;
-                Boolean removed = false;
-                while (!removed && i < md.size()){
-                    if (md.get(i).getId() == p.getId()){
-                        md.remove(md.get(i));
-                        removed = true;
-                    }
-                    i++;
-                }
-                session.setAttribute("medici", md);
-
-            } else {
-                if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
-                    Medico m = (Medico) u;
-                    session.setAttribute("tipo", "medico");
-
-                    String date = m.getData_nascita().toString();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    sdf.setLenient(false);
-                    sdf.parse(date);
-
-                    session.setAttribute("nome", m.getNome());
-                    session.setAttribute("cognome", m.getCognome());
-                    session.setAttribute("codice_fiscale", m.getCf());
-                    session.setAttribute("data_nascita", date);
-                    session.setAttribute("laurea", m.getLaurea());
-                    session.setAttribute("carriera", m.getInizioCarriera());
-                }
-            }
-        } catch (ParseException ex){
-                throw new ServletException("invalid_date_exception");
-        } catch (Exception ex) {
-            throw new ServletException("retrieving_doctors_error");
-        } 
+        
         response.sendRedirect(response.encodeRedirectURL(contextPath + "app/settings"));
     }
     
@@ -199,6 +139,11 @@ public class SettingsServlet extends HttpServlet {
                 
                 // per creare una copia più piccola da mostrare nella barra di navigazione
                 resize(updateFotoPath, uploadFilePath + File.separator + "foto_small.jpg", 50, 50);
+                
+                // force reload aggiungendo una query futile alla fine del nome del file
+                Random r = new Random();
+                session.setAttribute("foto_profilo", ((String) session.getAttribute("foto_profilo")).split("\\?")[0] + "?rand=" + r.nextInt(1000000));
+                session.setAttribute("foto_profilo_small", ((String) session.getAttribute("foto_profilo_small")).split("\\?")[0] + "?rand=" + r.nextInt(1000000));
             }
             
             
@@ -207,21 +152,42 @@ public class SettingsServlet extends HttpServlet {
                 Integer idMed = null;
                 String idM = request.getParameter("medico");
                 String nomeProv = request.getParameter("provincia");
-                if (idM != null && nomeProv != null)
+                if (idM != null)
                     idMed = Integer.parseInt(idM);
-                else
-                    throw new NullPointerException();
 
                 // creo l'oggetto Utente con i nuovi valori
                 Paziente p = (Paziente) u;
                 
                 newUtente = new Paziente(p.getId(), p.getUsername(), 
                         p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
-                        idMed, userDao.Ssp().getIdProvincia(nomeProv), p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto());
+                        idMed, nomeProv != null ? userDao.Ssp().getIdProvincia(nomeProv) : null, p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto());
             
                 // aggiorno l'utente
                 userDao.update(newUtente);
                 session.setAttribute("utente", newUtente);
+                
+                Paziente newPaz = (Paziente) newUtente;
+                
+                session.setAttribute("id_medico", newPaz.getId_medico());
+                session.setAttribute("nome_provincia", userDao.Ssp().getNomeProvincia(newPaz.getProvincia()));
+                List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
+                session.setAttribute("province", pr);
+                List<Medico> md = new ArrayList<>(userDao.Ssp().getMedici(u.getProvincia()));
+                // rimuovo dalla lista se stesso se è anche un medico
+                Integer i = 0;
+                Boolean removed = false;
+                while (!removed && i < md.size()){
+                    if (md.get(i).getId() == newPaz.getId()){
+                        md.remove(md.get(i));
+                        removed = true;
+                    }
+                    i++;
+                }
+                session.setAttribute("medici", md);
+                if (newPaz.getId_medico() != null){
+                    Medico myMedico = (Medico) userDao.getByPrimaryKey(newPaz.getId_medico(), "medico");
+                    session.setAttribute("medico", myMedico);
+                }
             } else { // il medico non credo debba modificare niente (?)
                 /*if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
                     Medico m = (Medico) u;

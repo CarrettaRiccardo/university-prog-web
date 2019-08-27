@@ -8,6 +8,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
@@ -86,7 +87,6 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             throw new ServletException("id_paziente_not_valid");
         } catch (Exception e) {
             System.out.println(e.getMessage() +  "\n\n\n");
-            //throw new ServletException();
             throw new ServletException(e.getMessage());
         }
     }
@@ -99,11 +99,14 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";
-        if (request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null)
+        if ( request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null)
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
-            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if(u.getType() == UtenteType.PAZIENTE)
+                id_paziente = u.getId();
+            else
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
             id_visita = Integer.parseInt(request.getParameter("id_visita"));
             if (id_visita <= 0) throw new NumberFormatException();
@@ -114,26 +117,30 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         }
         
         VisitaSpecialistica vs = null;
+        Double importo_ticket = null;
         try {
             vs = userDao.getVisitaSpecialistica(id_paziente, id_visita);
+            importo_ticket = userDao.getImportoTicket(vs.getId_ticket());
         } catch (DaoException ex) {
             System.out.println(ex.getMessage());
             throw new ServletException(ex.getMessage());
         }
         finally{
             if(vs == null) throw new ServletException("visita_spec_not_found");
+            if(importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
         }
         
         if( !vs.isNew() || u.getType() != UtenteType.MEDICO_SPEC){ //mostro i campi in readonly, altrimenti compilabili
             request.setAttribute("i_visita", vs);
+            request.setAttribute("importo_ticket", importo_ticket);
             request.setAttribute("title", "view_visita_specialistica");
         }
         else{
             request.setAttribute("title", "compila_visita_specialistica");
         }
-        
 
         request.setAttribute("page", "compila_visita_spec");
+        request.setAttribute("id_visita", request.getParameter("id_visita"));
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
 
         Paziente paz = null;
@@ -202,8 +209,6 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         VisitaSpecialistica vs = null;
         boolean inserito = false;
         
-        System.out.println(request.getRequestURI());
-        
         if(request.getRequestURI().indexOf("new_visite_specialistiche") > 0){
             vs = VisitaSpecialistica.loadFromHttpRequestNew(request, u);
             try {
@@ -214,11 +219,11 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
                 inserito = false;
             }
         }
-        else if(request.getRequestURI().indexOf("compila_visita_specialistica") > 0){
+        else if(request.getRequestURI().indexOf("compila_visita_spec") > 0){
             vs = VisitaSpecialistica.loadFromHttpRequestCompila(request, u);
             try {
                 if(u.getType() != UtenteType.MEDICO_SPEC) throw new DaoException("Operazione non ammessa");
-                inserito = userDao.MedicoSpecialista().compileVisitaSpecialistica(vs);
+                inserito = userDao.MedicoSpecialista().compileVisitaSpecialistica(vs, u.getId());
             } catch (DaoException ex) {
                 System.out.println("Errore compileVisitaSpecialistica (VisiteSpecServlet) -->\n" + ex.getMessage() + "\n\n");
                 inserito = false;

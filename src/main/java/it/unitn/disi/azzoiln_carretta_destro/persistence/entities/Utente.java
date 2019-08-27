@@ -7,7 +7,7 @@ public class Utente {
     private int res; //risultato login. Vedi @return di getRes()
     private int id;
     private String username, nome_provincia;
-    private int provincia;
+    private Integer provincia;
 
     public Utente() {
     }
@@ -66,7 +66,7 @@ public class Utente {
         return id;
     }
 
-    public int getProvincia() {
+    public Integer getProvincia() {
         return provincia;
     }
 

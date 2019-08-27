@@ -43,10 +43,10 @@ import javax.servlet.http.HttpSession;
  */
 public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     
-    private JDBCMedicoDao medico;
-    private JDBCPazienteDao paziente;
-    private JDBCMedicoSpecDao medicoSpec;
-    private JDBCSspDao ssp;
+    private final JDBCMedicoDao medico;
+    private final JDBCPazienteDao paziente;
+    private final JDBCMedicoSpecDao medicoSpec;
+    private final JDBCSspDao ssp;
 
     public JDBCUtenteDao(Connection con){
         super(con);
@@ -95,37 +95,39 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     public Utente getByPrimaryKey(Integer id, String s) throws DaoException {
         Utente ret = null;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia,path FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente WHERE u.id = ?")) {
-            stm.setInt(1, id);
-            
-            try (ResultSet rs = stm.executeQuery()) {
-                if (rs.next()) {
-                    if(rs.getString("ruolo").equals("paziente") || (rs.getString("ruolo").equals("medico") && s.equals("paziente")) || (rs.getString("ruolo").equals("medico_spec") && s.equals("paziente")) ){
-                        ret = new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                           rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
-                                           rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                           rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"));
+        if (id != null){
+            try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia,path FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente WHERE u.id = ?")) {
+                stm.setInt(1, id);
+
+                try (ResultSet rs = stm.executeQuery()) {
+                    if (rs.next()) {
+                        if(rs.getString("ruolo").equals("paziente") || (rs.getString("ruolo").equals("medico") && s.equals("paziente")) || (rs.getString("ruolo").equals("medico_spec") && s.equals("paziente")) ){
+                            ret = new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                               rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
+                                               rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
+                                               rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"));
+                        }
+                        else if(rs.getString("ruolo").equals("medico")){
+                            ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                               rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
+                                               rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), 
+                                               rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"),rs.getString("path"));
+                        }
+                        else if(rs.getString("ruolo").equals("medico_spec")){
+                            ret = new MedicoSpecialista(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),rs.getInt("provincia"), rs.getInt("comune"),rs.getString("nome_provincia") ,rs.getString("path"),rs.getString("laurea"), rs.getDate("inizio_carriera"),rs.getBoolean("medico_attivo"));
+                        }
+                        /*
+                        DA COMPLETARE
+                        else if(rs.getString("ruolo").equals("ssp")){
+                            ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                               rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
+                                               rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
+                        }*/
                     }
-                    else if(rs.getString("ruolo").equals("medico")){
-                        ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                           rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
-                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), 
-                                           rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"),rs.getString("path"));
-                    }
-                    else if(rs.getString("ruolo").equals("medico_spec")){
-                        ret = new MedicoSpecialista(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),rs.getInt("provincia"), rs.getInt("comune"),rs.getString("nome_provincia") ,rs.getString("path"),rs.getString("laurea"), rs.getDate("inizio_carriera"),rs.getBoolean("medico_attivo"));
-                    }
-                    /*
-                    DA COMPLETARE
-                    else if(rs.getString("ruolo").equals("ssp")){
-                        ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                           rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
-                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
-                    }*/
                 }
+            } catch (SQLException ex) {
+                throw new DaoException("db_error", ex);
             }
-        } catch (SQLException ex) {
-            throw new DaoException("db_error", ex);
         }
         return ret;
     }
@@ -270,12 +272,13 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         
         if(user instanceof Paziente){
             Paziente p = (Paziente) user;
-            ret = CON.prepareStatement("UPDATE utenti SET provincia = ?, comune = ?,"
-                    + "id_medico = ? WHERE id = ? AND ruolo = 'paziente' ");
-            ret.setInt(1,p.getProvincia());
-            ret.setInt(2,p.getId_Comune());
-            ret.setInt(3,p.getId_medico());
-            ret.setInt(4,p.getId());
+            ret = CON.prepareStatement("UPDATE utenti SET"
+                    + " provincia = " + ((p.getProvincia() != null) ? p.getProvincia() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
+                    + ", comune = ?,"
+                    + "id_medico = " + ((p.getId_medico() != null) ? p.getId_medico() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
+                    + " WHERE id = ? "); //AND ruolo = 'paziente'     rimosso per permettere all'utente medico/paziente di aggiornare
+            ret.setInt(1,p.getId_Comune());
+            ret.setInt(2,p.getId());
         }
         else if(user instanceof Medico){
             throw new DaoException("Ehi, non so cosa deve modificare. Se hai idee dimmelo :)");
@@ -324,7 +327,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+                 VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("cura"));
                  ret.add(r);
             }            
         } catch (SQLException ex) {
@@ -495,11 +498,53 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
             stm.setInt(2, id_visita);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 ret = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+                 ret = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"),rs.getString("cura"));
             }            
         } catch (SQLException ex) {
             //throw new DaoException("db_error", ex);
             System.out.println(ex.getMessage() + "\n\n");
+        }
+        return ret;
+    }
+
+    @Override
+    public Esame getEsame(int id_paziente, int id_esame) throws DaoException {
+        if(id_esame <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        Esame ret = null;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,e.nome as nome_esame FROM esame v inner join prescrizione p on p.id = v.id_prescrizione inner join esami_prescrivibili e on e.id = v.id_esame WHERE p.id_paziente = ? AND id_prescrizione = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_esame);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()) {  
+                 ret = new Esame(rs.getInt("id_esame"), rs.getInt("id_ticket"), rs.getInt("id_ssp"), rs.getString("risultato"), rs.getDate("time_esame"), rs.getInt("id_prescrizione"),rs.getInt("id_paziente"),rs.getInt("id_medico"),rs.getDate("time"), rs.getString("nome_esame"));
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+
+    @Override
+    public Ricetta getRicetta(int arg0, int arg1) throws DaoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Double getImportoTicket(int id_ticket) throws DaoException {
+        if(id_ticket <= 0 ) return null; //non ancora creato
+        Double ret = null;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT costo FROM ticket WHERE id = ?")) {
+            stm.setInt(1, id_ticket);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()) {  
+                 ret = rs.getDouble("costo");
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
         }
         return ret;
     }
