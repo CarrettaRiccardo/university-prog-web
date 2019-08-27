@@ -14,7 +14,7 @@ create table prenotazione(
 INSERT INTO prenotazione
 (id_paziente,
 id_medico,
-data)
+time)
 VALUES 
 (1,2,'2019-08-17 15:00:00'),
 (3,2,'2019-08-18 13:00:00'),

@@ -1,54 +1,35 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.nio.file.Paths;
-import java.rmi.ServerException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 /**
- *
  * @author Steve
  */
-@MultipartConfig(fileSizeThreshold=1024*1024*5, 	// 5 MB 
-                 maxFileSize=1024*1024*10,      	// 10 MB
-                 maxRequestSize=1024*1024*20)   	// 20 MB
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 5,    // 5 MB
+        maxFileSize = 1024 * 1024 * 10,        // 10 MB
+        maxRequestSize = 1024 * 1024 * 20)    // 20 MB
 public class SettingsServlet extends HttpServlet {
-    
+
     private UtenteDao userDao;
 
     @Override
@@ -63,51 +44,50 @@ public class SettingsServlet extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
     }
-    
-    
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String contextPath = getServletContext().getContextPath();
-        if (!contextPath.endsWith("/")) 
+        if (!contextPath.endsWith("/"))
             contextPath += "/";
-        
+
         response.sendRedirect(response.encodeRedirectURL(contextPath + "app/settings"));
     }
-    
-     public static void resize(String inputImagePath,
-            String outputImagePath, int scaledWidth, int scaledHeight)
+
+    public static void resize(String inputImagePath,
+                              String outputImagePath, int scaledWidth, int scaledHeight)
             throws IOException {
         // reads input image
         File inputFile = new File(inputImagePath);
         BufferedImage inputImage = ImageIO.read(inputFile);
- 
+
         // creates output image
         BufferedImage outputImage = new BufferedImage(scaledWidth,
                 scaledHeight, inputImage.getType());
- 
+
         // scales the input image to the output image
         Graphics2D g2d = outputImage.createGraphics();
         g2d.drawImage(inputImage, 0, 0, scaledWidth, scaledHeight, null);
         g2d.dispose();
- 
+
         // extracts extension of output file
         String formatName = outputImagePath.substring(outputImagePath
                 .lastIndexOf(".") + 1);
- 
+
         // writes to output file
         ImageIO.write(outputImage, formatName, new File(outputImagePath));
     }
-    
-    
+
+
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -119,7 +99,7 @@ public class SettingsServlet extends HttpServlet {
             Utente newUtente = u;
             Boolean updateFoto = request.getPart("file").getSize() > 0;
             String updateFotoPath = "";
-            
+
             // se è un aggiornemento della foto...
             if (updateFoto) {
                 // gets absolute path of the web application
@@ -129,26 +109,26 @@ public class SettingsServlet extends HttpServlet {
                 // constructs path of the directory to save uploaded file
                 String uploadFilePath = applicationPath + relativePath + File.separator + userPath;
                 File file = new File(uploadFilePath);
-                if(!file.exists()) file.mkdirs();
-                
+                if (!file.exists()) file.mkdirs();
+
                 Part filePart = request.getPart("file");
                 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix. (to get only filename)
                 updateFotoPath = uploadFilePath + File.separator + "foto.jpg";
-                
+
                 filePart.write(updateFotoPath);
-                
+
                 // per creare una copia più piccola da mostrare nella barra di navigazione
                 resize(updateFotoPath, uploadFilePath + File.separator + "foto_small.jpg", 50, 50);
-                
+
                 // force reload aggiungendo una query futile alla fine del nome del file
                 Random r = new Random();
                 session.setAttribute("foto_profilo", ((String) session.getAttribute("foto_profilo")).split("\\?")[0] + "?rand=" + r.nextInt(1000000));
                 session.setAttribute("foto_profilo_small", ((String) session.getAttribute("foto_profilo_small")).split("\\?")[0] + "?rand=" + r.nextInt(1000000));
             }
-            
-            
+
+
             // se è un aggiornamento dei dati...
-            if (u.getType() == UtenteType.PAZIENTE){
+            if (u.getType() == UtenteType.PAZIENTE) {
                 Integer idMed = null;
                 String idM = request.getParameter("medico");
                 String nomeProv = request.getParameter("provincia");
@@ -157,17 +137,17 @@ public class SettingsServlet extends HttpServlet {
 
                 // creo l'oggetto Utente con i nuovi valori
                 Paziente p = (Paziente) u;
-                
-                newUtente = new Paziente(p.getId(), p.getUsername(), 
+
+                newUtente = new Paziente(p.getId(), p.getUsername(),
                         p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
                         idMed, nomeProv != null ? userDao.Ssp().getIdProvincia(nomeProv) : null, p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto());
-            
+
                 // aggiorno l'utente
                 userDao.update(newUtente);
                 session.setAttribute("utente", newUtente);
-                
+
                 Paziente newPaz = (Paziente) newUtente;
-                
+
                 session.setAttribute("id_medico", newPaz.getId_medico());
                 session.setAttribute("nome_provincia", userDao.Ssp().getNomeProvincia(newPaz.getProvincia()));
                 List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
@@ -176,15 +156,15 @@ public class SettingsServlet extends HttpServlet {
                 // rimuovo dalla lista se stesso se è anche un medico
                 Integer i = 0;
                 Boolean removed = false;
-                while (!removed && i < md.size()){
-                    if (md.get(i).getId() == newPaz.getId()){
+                while (!removed && i < md.size()) {
+                    if (md.get(i).getId() == newPaz.getId()) {
                         md.remove(md.get(i));
                         removed = true;
                     }
                     i++;
                 }
                 session.setAttribute("medici", md);
-                if (newPaz.getId_medico() != null){
+                if (newPaz.getId_medico() != null) {
                     Medico myMedico = (Medico) userDao.getByPrimaryKey(newPaz.getId_medico(), "medico");
                     session.setAttribute("medico", myMedico);
                 }
@@ -201,15 +181,15 @@ public class SettingsServlet extends HttpServlet {
             throw new ServletException("invalid_selection");
         } catch (IllegalStateException ex) {
             throw new ServletException("max_file_size");
-        }  catch (Exception ex) {
+        } catch (Exception ex) {
             throw new ServletException("update_error");
-        } 
-        
+        }
+
         // prende e inserisce i dati modificati
         doGet(request, response);
     }
 
-   
+
     @Override
     public String getServletInfo() {
         return "Short description";
