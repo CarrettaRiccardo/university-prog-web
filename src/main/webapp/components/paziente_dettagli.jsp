@@ -6,31 +6,22 @@
 
         <div class="col col-12 col-md-auto text-center">
             <img width="180" height="180" class="rounded-circle shadow mb-2"
-                 src="${foto_profilo}">
+                 onerror="this.onerror=null; this.src='assets/default.jpg'"
+                 src="${paz_foto_profilo}">
         </div>
 
         <div class="col col-12 col-md pl-md-4">
             <h5 class="text-primary">Dati personali</h5>
-            <div class="pb-1"> Nome: <b>${nome}</b></div>
-            <div class="pb-1"> Cognome: <b>${cognome}</b></div>
-            <div class="pb-1"> Codice fiscale: <b>${codice_fiscale}</b></div>
-            <div class="pb-1"> Data nascita: <b>${data_nascita}</b></div>
+            <div class="pb-1"> Nome: <b>${paz_nome}</b></div>
+            <div class="pb-1"> Cognome: <b>${paz_cognome}</b></div>
+            <div class="pb-1"> Codice fiscale: <b>${paz_codice_fiscale}</b></div>
+            <div class="pb-1"> Data nascita: <b>${paz_data_nascita}</b></div>
         </div>
 
-        <c:if test="${tipo == 'paziente'}">
-            <div class="col col-12 col-md">
-                <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
-                <div class="pb-1"> Medico di base: <b>${medico.getNome()} ${medico.getCognome()} (${medico.getLaurea()}</b></div>
-                <div class="pb-1"> Provincia: <b>${nome_provincia}</b></div>
-            </div>
-        </c:if>
-        <c:if test="${tipo == 'medico'}">
-            <div class="col col-12 col-md">
-                <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
-                <div class="pb-1"> Laurea: <b>${laurea}</b></div>
-                <div class="pb-1"> Carriera: <b>${carriera}</b></div>
-            </div>
-        </c:if>
+        <div class="col col-12 col-md">
+            <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
+            <div class="pb-1"> Provincia: <b>${paz_nome_provincia}</b></div>
+        </div>
     </div>
 </div>
 
