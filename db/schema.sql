@@ -40,15 +40,15 @@ create table utenti
 (
     id              int          not null AUTO_INCREMENT,
     nome            varchar(100) not null,
-    cognome         varchar(100) not null,
-    data_nascita    date         not null,
+    cognome         varchar(100) COMMENT 'NULL solo per SSP',
+    data_nascita    date COMMENT 'NULL solo per SSP',
     username        varchar(255) not null,
     password        varchar(255) not null,
-    cf              varchar(20)  not null,
+    cf              varchar(20)  COMMENT 'NULL solo per SSP',
     ruolo           char(32)     not null DEFAULT 'paziente' COMMENT 'paziente | medico | medico_spec | ssp',
     id_medico       int                   DEFAULT NULL,
     provincia       int          not null,
-    comune          int          not null,
+    comune          int          COMMENT 'NULL solo per SSP',
     paziente_attivo boolean               DEFAULT TRUE COMMENT 'Per indicare account paziente bloccato o meno',
     medico_attivo   boolean               DEFAULT FALSE COMMENT 'Per indicare medico in attività oppure in pensione',
     specialita      text                  DEFAULT NULL,
@@ -125,10 +125,10 @@ create table farmaci
 drop table if exists farmaco;
 create table farmaco
 (
-    id_prescrizione int      not null,
-    id_farmaco      int      not null,
+    id_prescrizione int       not null,
+    id_farmaco      int       not null,
     costo           float, /*NULL <-> non ancora comprata*/
-    quantita        smallint not null,
+    quantita        smallint  not null,
     time_vendita    timestamp NULL DEFAULT NULL,
     PRIMARY KEY (id_prescrizione),
     FOREIGN KEY fk_farmaco_to_prescrizione (id_prescrizione) REFERENCES prescrizione (id)
@@ -210,12 +210,12 @@ create table visite_specialistiche
 drop table if exists visita_specialistica;
 create table visita_specialistica
 (
-    id_prescrizione       int not null,
-    id_medico_specialista int       DEFAULT NULL, /*NULL <-> visita non ancora fatta*/
-    id_ticket             int       DEFAULT NULL,
-    id_visita_spec        int       DEFAULT NULL,
-    anamnesi              text      DEFAULT NULL,
-    cura                  text      DEFAULT NULL,
+    id_prescrizione       int       not null,
+    id_medico_specialista int            DEFAULT NULL, /*NULL <-> visita non ancora fatta*/
+    id_ticket             int            DEFAULT NULL,
+    id_visita_spec        int            DEFAULT NULL,
+    anamnesi              text           DEFAULT NULL,
+    cura                  text           DEFAULT NULL,
     time_visita           timestamp NULL DEFAULT NULL,
     PRIMARY KEY (id_prescrizione),
     UNIQUE (time_visita),
