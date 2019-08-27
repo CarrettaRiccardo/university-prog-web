@@ -95,37 +95,39 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
     public Utente getByPrimaryKey(Integer id, String s) throws DaoException {
         Utente ret = null;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia,path FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente WHERE u.id = ?")) {
-            stm.setInt(1, id);
-            
-            try (ResultSet rs = stm.executeQuery()) {
-                if (rs.next()) {
-                    if(rs.getString("ruolo").equals("paziente") || (rs.getString("ruolo").equals("medico") && s.equals("paziente")) || (rs.getString("ruolo").equals("medico_spec") && s.equals("paziente")) ){
-                        ret = new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                           rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
-                                           rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                           rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"));
+        if (id != null){
+            try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia,path FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente WHERE u.id = ?")) {
+                stm.setInt(1, id);
+
+                try (ResultSet rs = stm.executeQuery()) {
+                    if (rs.next()) {
+                        if(rs.getString("ruolo").equals("paziente") || (rs.getString("ruolo").equals("medico") && s.equals("paziente")) || (rs.getString("ruolo").equals("medico_spec") && s.equals("paziente")) ){
+                            ret = new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                               rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
+                                               rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
+                                               rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"));
+                        }
+                        else if(rs.getString("ruolo").equals("medico")){
+                            ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                               rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
+                                               rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), 
+                                               rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"),rs.getString("path"));
+                        }
+                        else if(rs.getString("ruolo").equals("medico_spec")){
+                            ret = new MedicoSpecialista(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),rs.getInt("provincia"), rs.getInt("comune"),rs.getString("nome_provincia") ,rs.getString("path"),rs.getString("laurea"), rs.getDate("inizio_carriera"),rs.getBoolean("medico_attivo"));
+                        }
+                        /*
+                        DA COMPLETARE
+                        else if(rs.getString("ruolo").equals("ssp")){
+                            ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
+                                               rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
+                                               rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
+                        }*/
                     }
-                    else if(rs.getString("ruolo").equals("medico")){
-                        ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                           rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
-                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), 
-                                           rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"),rs.getString("path"));
-                    }
-                    else if(rs.getString("ruolo").equals("medico_spec")){
-                        ret = new MedicoSpecialista(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),rs.getInt("provincia"), rs.getInt("comune"),rs.getString("nome_provincia") ,rs.getString("path"),rs.getString("laurea"), rs.getDate("inizio_carriera"),rs.getBoolean("medico_attivo"));
-                    }
-                    /*
-                    DA COMPLETARE
-                    else if(rs.getString("ruolo").equals("ssp")){
-                        ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                           rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
-                                           rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"));
-                    }*/
                 }
+            } catch (SQLException ex) {
+                throw new DaoException("db_error", ex);
             }
-        } catch (SQLException ex) {
-            throw new DaoException("db_error", ex);
         }
         return ret;
     }
@@ -270,12 +272,13 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         
         if(user instanceof Paziente){
             Paziente p = (Paziente) user;
-            ret = CON.prepareStatement("UPDATE utenti SET provincia = ?, comune = ?,"
-                    + "id_medico = ? WHERE id = ? AND ruolo = 'paziente' ");
-            ret.setInt(1,p.getProvincia());
-            ret.setInt(2,p.getId_Comune());
-            ret.setInt(3,p.getId_medico());
-            ret.setInt(4,p.getId());
+            ret = CON.prepareStatement("UPDATE utenti SET"
+                    + " provincia = " + ((p.getProvincia() != null) ? p.getProvincia() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
+                    + ", comune = ?,"
+                    + "id_medico = " + ((p.getId_medico() != null) ? p.getId_medico() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
+                    + " WHERE id = ? "); //AND ruolo = 'paziente'     rimosso per permettere all'utente medico/paziente di aggiornare
+            ret.setInt(1,p.getId_Comune());
+            ret.setInt(2,p.getId());
         }
         else if(user instanceof Medico){
             throw new DaoException("Ehi, non so cosa deve modificare. Se hai idee dimmelo :)");
