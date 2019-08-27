@@ -5,7 +5,10 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.*;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class MediciServlet extends HttpServlet {
+public class MediciSpecialistiServlet extends HttpServlet {
 
     private UtenteDao userDao;
 
@@ -39,15 +42,15 @@ public class MediciServlet extends HttpServlet {
         if (!contextPath.endsWith("/")) contextPath += "/";
 
         try {
-            if (u.getType() != UtenteType.SSP)  { // Non sono SSP, non posso vedere la lista di medici
+            if (u.getType() != UtenteType.SSP)  { // Non sono SSP, non posso vedere la lista di medici specialisti
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "home"));
                 return;
             }
 
-            List<Medico> medici = userDao.Ssp().getMedici(u.getProvincia());
-            request.setAttribute("title", "Medici della provincia di " + userDao.Ssp().getNomeProvincia(u.getProvincia()));
-            request.setAttribute("page", "medici");
-            request.setAttribute("medici", medici);
+            List<MedicoSpecialista> mediciSpecialsti = userDao.Ssp().getMediciSpecialisti(u.getProvincia());
+            request.setAttribute("title", "Medici specialisti della provincia di " + userDao.Ssp().getNomeProvincia(u.getProvincia()));
+            request.setAttribute("page", "medici_specialisti");
+            request.setAttribute("mediciSpecialsti", mediciSpecialsti);
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
             rd.include(request, response);
         } catch (IdNotFoundException e) {

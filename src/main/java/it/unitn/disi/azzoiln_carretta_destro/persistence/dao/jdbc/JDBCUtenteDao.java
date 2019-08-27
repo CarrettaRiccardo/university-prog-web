@@ -2,119 +2,111 @@ package it.unitn.disi.azzoiln_carretta_destro.persistence.dao.jdbc;
 
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Farmaci;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.*;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Esami;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Farmaci;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.VisiteSpecialistiche;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.http.HttpSession;
 
 /**
  * Implementazione UtenteDao con driver JDBC
+ *
  * @author Steve
  */
-public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
-    
+public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao {
+
     private final JDBCMedicoDao medico;
     private final JDBCPazienteDao paziente;
     private final JDBCMedicoSpecDao medicoSpec;
     private final JDBCSspDao ssp;
 
-    public JDBCUtenteDao(Connection con){
+    public JDBCUtenteDao(Connection con) {
         super(con);
         medico = new JDBCMedicoDao(con);
         paziente = new JDBCPazienteDao(con);
         medicoSpec = new JDBCMedicoSpecDao(con);
         ssp = new JDBCSspDao(con);
     }
-    
-    
+
+
     /**
      * Da accesso ai metodi dell' interfaccia MedicoDao
-     * @return 
+     *
+     * @return
      */
     @Override
-    public JDBCMedicoDao Medico(){
+    public JDBCMedicoDao Medico() {
         return medico;
-    }    
+    }
+
     /**
      * Da accesso ai metodi dell' interfaccia pazienteDao
-     * @return 
+     *
+     * @return
      */
     @Override
     public JDBCPazienteDao Paziente() {
         return paziente;
     }
+
     /**
      * Da accesso ai metodi dell' interfaccia MedicoSpecDao
-     * @return 
+     *
+     * @return
      */
     @Override
     public JDBCMedicoSpecDao MedicoSpecialista() {
         return medicoSpec;
     }
+
     /**
      * Da accesso ai metodi dell' interfaccia SspDao
-     * @return 
+     *
+     * @return
      */
     @Override
     public JDBCSspDao Ssp() {
         return ssp;
     }
-    
-    
+
+
     @Override
     public Utente getByPrimaryKey(Integer id, String s) throws DaoException {
         Utente ret = null;
 
-        if (id != null){
+        if (id != null) {
             try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia,path FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente WHERE u.id = ?")) {
                 stm.setInt(1, id);
 
                 try (ResultSet rs = stm.executeQuery()) {
                     if (rs.next()) {
-                        if(rs.getString("ruolo").equals("paziente") || (rs.getString("ruolo").equals("medico") && s.equals("paziente")) || (rs.getString("ruolo").equals("medico_spec") && s.equals("paziente")) ){
-                            ret = new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                               rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
-                                               rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                               rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"));
-                        }
-                        else if(rs.getString("ruolo").equals("medico")){
-                            ret = new Medico(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                               rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), 
-                                               rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"), 
-                                               rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"),rs.getString("path"));
-                        }
-                        else if(rs.getString("ruolo").equals("medico_spec")){
-                            ret = new MedicoSpecialista(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),rs.getInt("provincia"), rs.getInt("comune"),rs.getString("nome_provincia") ,rs.getString("path"),rs.getString("laurea"), rs.getDate("inizio_carriera"),rs.getBoolean("medico_attivo"));
+                        if (rs.getString("ruolo").equals("paziente") || (rs.getString("ruolo").equals("medico") && s.equals("paziente")) || (rs.getString("ruolo").equals("medico_spec") && s.equals("paziente"))) {
+                            ret = new Paziente(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
+                                    rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
+                                    rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
+                                    rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"));
+                        } else if (rs.getString("ruolo").equals("medico")) {
+                            ret = new Medico(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
+                                    rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
+                                    rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"),
+                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"));
+                        } else if (rs.getString("ruolo").equals("medico_spec")) {
+                            ret = new MedicoSpecialista(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
+                                    rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
+                                    rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"),
+                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"), rs.getString("specialita"));
                         }
                         /*
                         DA COMPLETARE
@@ -131,32 +123,32 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         }
         return ret;
     }
-    
-    
-     /**
+
+
+    /**
      * Il valore di ritorno -2 non è qui usato
      * Il valore di ritorno -4 indica 'id non trovato'
+     *
      * @param id
      * @return
-     * @throws DaoException 
+     * @throws DaoException
      */
     @Override
     public Utente getByPrimaryKey(Integer id) throws DaoException {
         Utente ret = null;
         int res = -3;
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE id = ?")) {
             stm.setInt(1, id);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
-                    switch(rs.getString("ruolo")){
+                    switch (rs.getString("ruolo")) {
                         case "paziente": ret = getPaziente(rs, 0); break;
                         case "medico": ret = getPersona(rs, 1, "medico"); break;
                         case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
                         case "ssp": ret = getSSP(rs, 2); break;
-                    }                     
-                }
-                else{
+                    }
+                } else {
                     ret = new Utente(-4); //id non trovato
                 }
             } catch (SQLException ex) {
@@ -165,48 +157,43 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
         }
-        
+
         return ret;
     }
-    
-    
-    
 
 
     /**
-     * Verifica se username e password sono corretti. 
+     * Verifica se username e password sono corretti.
      * Se ritorna un SSP la modalità di visualizzazione è SSP
      * Se ritorna Paziente | Medico | Medico.spec. la modalità sarà rispettivamente Paziente | Medico | Medico_spec
      * Se ritorna un oggetto Persona la modalità non è decisa, bisogna farla scegliere (ChooseSevlet)
+     *
      * @param username
      * @param password
-     * @return Un Utente con res = -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo 
-               (scelta tra medico e paziente), 2 successo (SSR)
+     * @return Un Utente con res = -3 errore metodo, -2 password errata, -1 username non trovato, 0 successo (utente paziente), 1 successo
+     * (scelta tra medico e paziente), 2 successo (SSR)
      * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
-     *
-    */
+     */
     @Override
     public Utente login(String username, String password) throws DaoException {
         Utente ret = null;
         int res = -3;
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE username = ?")) {
             stm.setString(1, username);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
-                     if(Common.validatePassword(password, rs.getString("password"))){
-                         switch(rs.getString("ruolo")){
-                             case "paziente": ret = getPaziente(rs, 0); break;
-                             case "medico": ret = getPersona(rs, 1, "medico"); break;
-                             case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
-                             case "ssp": ret = getSSP(rs, 2); break;
-                         }
-                     }
-                     else{
-                         ret = new Utente(-2); //username trovato, password non uguale
-                     }
-                }
-                else{
+                    if (Common.validatePassword(password, rs.getString("password"))) {
+                        switch (rs.getString("ruolo")) {
+                            case "paziente": ret = getPaziente(rs, 0); break;
+                            case "medico": ret = getPersona(rs, 1, "medico"); break;
+                            case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
+                            case "ssp": ret = getSSP(rs, 2); break;
+                        }
+                    } else {
+                        ret = new Utente(-2); //username trovato, password non uguale
+                    }
+                } else {
                     ret = new Utente(-1); //username non trovato
                 }
             } catch (NoSuchAlgorithmException ex) {
@@ -217,289 +204,290 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
         }
-        
+
         return ret;
     }
-    
-    private Ssp getSSP(ResultSet rs, int res) throws SQLException{
-        return new Ssp(rs.getInt("id"),rs.getString("username"), rs.getInt("provincia"),rs.getString("nome_provincia"),res);           
+
+    private Ssp getSSP(ResultSet rs, int res) throws SQLException {
+        return new Ssp(rs.getInt("id"), rs.getString("username"), rs.getInt("provincia"), rs.getString("nome_provincia"), res);
     }
-    
+
     /**
-     * 
      * @param rs
      * @param res
      * @return Oggetto Persona con i dati conuni a tutte le persone. In aggiunta il campo ruolo per distinguere tra medico, medico_spec
-     * @throws SQLException 
+     * @throws SQLException
      */
-    private Persona getPersona(ResultSet rs, int res,String ruolo) throws SQLException{
-        return new Persona(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                           rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
-                                           rs.getInt("provincia"), rs.getInt("comune"), res,ruolo,rs.getString("nome_provincia"));        
+    private Persona getPersona(ResultSet rs, int res, String ruolo) throws SQLException {
+        return new Persona(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
+                rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
+                rs.getInt("provincia"), rs.getInt("comune"), res, ruolo, rs.getString("nome_provincia"));
     }
-    
-    private Paziente getPaziente(ResultSet rs, int res) throws SQLException{
-        return new Paziente(rs.getInt("id"),rs.getString("username"), rs.getString("nome"),
-                                           rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
-                                           rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                           rs.getBoolean("paziente_attivo"), res,rs.getString("nome_provincia"));        
+
+    private Paziente getPaziente(ResultSet rs, int res) throws SQLException {
+        return new Paziente(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
+                rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
+                rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
+                rs.getBoolean("paziente_attivo"), res, rs.getString("nome_provincia"));
     }
-    
+
     /**
      * Permette di modificare dati di un Paziente o di un Medico. Altre classi sollevano DaoException
+     *
      * @param user Nuovi dati da inserire
      * @return T on success
      * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      */
     @Override
-    public boolean update(Utente user) throws DaoException{
-        if(user == null) return false;
-        
+    public boolean update(Utente user) throws DaoException {
+        if (user == null) return false;
+
         try (PreparedStatement ps = getUpdateStatement(user)) {
             int count = ps.executeUpdate();
-            if(count == 0) return false;
+            if (count == 0) return false;
             else if (count > 1) throw new DaoException("Update affected an invalid number of records: " + count);
-            else if(count == 1) return true;
-            
+            else if (count == 1) return true;
+
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
         }
         return false;
     }
-    
-    private PreparedStatement getUpdateStatement(Utente user) throws SQLException, DaoException{
+
+    private PreparedStatement getUpdateStatement(Utente user) throws SQLException, DaoException {
         PreparedStatement ret = null;
-        
-        if(user instanceof Paziente){
+
+        if (user instanceof Paziente) {
             Paziente p = (Paziente) user;
             ret = CON.prepareStatement("UPDATE utenti SET"
                     + " provincia = " + ((p.getProvincia() != null) ? p.getProvincia() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
                     + ", comune = ?,"
                     + "id_medico = " + ((p.getId_medico() != null) ? p.getId_medico() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
                     + " WHERE id = ? "); //AND ruolo = 'paziente'     rimosso per permettere all'utente medico/paziente di aggiornare
-            ret.setInt(1,p.getId_Comune());
-            ret.setInt(2,p.getId());
-        }
-        else if(user instanceof Medico){
+            ret.setInt(1, p.getId_Comune());
+            ret.setInt(2, p.getId());
+        } else if (user instanceof Medico) {
             throw new DaoException("Ehi, non so cosa deve modificare. Se hai idee dimmelo :)");
-        }
-        else throw new DaoException("update_error");
-        
+        } else throw new DaoException("update_error");
+
         return ret;
     }
-    
-    
+
+
     /**
      * Ottiene l' elenco delle visite del paziente ordinate in ordine cronologico inverso
+     *
      * @param id_paziente
      * @return Elenco delle visite del paziente ordinate in ordine cronologico inverso
      */
     @Override
-    public List<Visita> getVisite(Integer id_paziente) throws DaoException{
-        if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+    public List<Visita> getVisite(Integer id_paziente) throws DaoException {
+        if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<Visita> ret = new LinkedList<>();
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.* FROM visita v inner join prescrizione p on p.id = v.id_prescrizione WHERE p.id_paziente = ? ORDER BY time DESC")) {
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 Visita r = new Visita(rs.getString("anamnesi"),rs.getInt("id"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
-                 ret.add(r);
-            }            
+                Visita r = new Visita(rs.getString("anamnesi"), rs.getInt("id"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+                ret.add(r);
+            }
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
-        }  
+        }
         return ret;
     }
-    
+
     /**
      * Ottiene l' elenco delle visite specialistiche del paziente ordinate in ordine cronologico inverso
+     *
      * @param id_paziente
      * @return Elenco delle visite specialistiche del paziente ordinate in ordine cronologico inverso
      * @throws it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException
      */
     @Override
-    public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente) throws DaoException{
-        if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+    public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente) throws DaoException {
+        if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<VisitaSpecialistica> ret = new LinkedList<>();
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec FROM visita_specialistica v inner join prescrizione p on p.id = v.id_prescrizione inner join visite_specialistiche v2 on v2.id = v.id_visita_spec WHERE p.id_paziente = ? ORDER BY time DESC")) {
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("cura"));
-                 ret.add(r);
-            }            
+                VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("cura"));
+                ret.add(r);
+            }
         } catch (SQLException ex) {
             //throw new DaoException("db_error", ex);
             System.out.println(ex.getMessage() + "\n\n");
         }
         return ret;
     }
-    
+
     /**
      * Ottiene l' elenco delle ricette ordinate in ordine cronologico inverso
+     *
      * @param id_paziente
      * @return Elenco delle ricette ordinate in ordine cronologico inverso
      */
     @Override
     public List<Ricetta> getRicette(Integer id_paziente) throws DaoException {
-        if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+        if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         List<Ricetta> ret = new LinkedList<>();
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione WHERE id_paziente = ? ORDER BY time DESC")) {
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 Ricetta r = new Ricetta(rs.getInt("id_prescrizione"),rs.getInt("id_paziente"),rs.getInt("id_medico"),rs.getInt("id_farmaco"),rs.getString("nome"), rs.getFloat("costo"),rs.getShort("quantita"), rs.getDate("time_vendita"), rs.getDate("time"));
-                 ret.add(r);
-            }            
+                Ricetta r = new Ricetta(rs.getInt("id_prescrizione"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getInt("id_farmaco"), rs.getString("nome"), rs.getFloat("costo"), rs.getShort("quantita"), rs.getDate("time_vendita"), rs.getDate("time"));
+                ret.add(r);
+            }
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
-        }        
+        }
         return ret;
     }
-    
-    
+
+
     /**
      * Ottiene l' elenco degli esami del paziente ordinati in ordine cronologico inverso
+     *
      * @param id_paziente
      * @return Elenco degli esami del paziente ordinati in ordine cronologico inverso
      */
     @Override
-    public List<Esame> getEsami(Integer id_paziente) throws DaoException{
-        if(id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+    public List<Esame> getEsami(Integer id_paziente) throws DaoException {
+        if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<Esame> ret = new LinkedList<>();
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM esame r inner join esami_prescrivibili f on f.id = r.id_esame inner join prescrizione p on p.id = r.id_prescrizione WHERE id_paziente = ? ORDER BY time DESC")) {
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                Esame e = new Esame(rs.getInt("id_esame"), rs.getInt("id_ticket"), rs.getInt("id_ssp"), rs.getString("risultato"), rs.getDate("time_esame"), rs.getInt("id_prescrizione"),rs.getInt("id_paziente"),rs.getInt("id_medico"), rs.getDate("time"), rs.getString("nome"));
+                Esame e = new Esame(rs.getInt("id_esame"), rs.getInt("id_ticket"), rs.getInt("id_ssp"), rs.getString("risultato"), rs.getDate("time_esame"), rs.getInt("id_prescrizione"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("nome"));
                 ret.add(e);
-            }            
+            }
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
-        }        
+        }
         return ret;
-    }   
+    }
 
     @Override
     public Farmaci getFarmaci() throws DaoException {
         Farmaci ret = new Farmaci();
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM farmaci ORDER BY nome")) {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 ret.addFarmaco(rs.getInt("id"),rs.getString("nome"));
-                 //ret.add(r);
-            }            
+                ret.addFarmaco(rs.getInt("id"), rs.getString("nome"));
+                //ret.add(r);
+            }
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
-        }        
+        }
         return ret;
     }
-    
+
     @Override
     public Farmaci getFarmaci(String hint) throws DaoException {
         Farmaci ret = new Farmaci();
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM farmaci WHERE nome LIKE ? ORDER BY nome")) {
             stm.setString(1, "%" + hint + "%");
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 ret.addFarmaco(rs.getInt("id"),rs.getString("nome"));
-                 //ret.add(r);
-            }            
+                ret.addFarmaco(rs.getInt("id"), rs.getString("nome"));
+                //ret.add(r);
+            }
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
-        }        
+        }
         return ret;
     }
-    
-    
+
+
     @Override
     public VisiteSpecialistiche getAllVisiteSpec(String hint) throws DaoException {
         VisiteSpecialistiche ret = new VisiteSpecialistiche();
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM visite_specialistiche WHERE nome LIKE ? ORDER BY nome")) {
             stm.setString(1, "%" + hint + "%");
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 ret.addVisitaSpecialistica(rs.getInt("id"),rs.getString("nome"));
-                 //ret.add(r);
-            }            
+                ret.addVisitaSpecialistica(rs.getInt("id"), rs.getString("nome"));
+                //ret.add(r);
+            }
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
-        }        
+        }
         return ret;
     }
-    
+
     @Override
     public Esami getEsami(String hint) throws DaoException {
         Esami ret = new Esami();
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT id,nome FROM esami_prescrivibili WHERE nome LIKE ? ORDER BY nome")) {
             stm.setString(1, "%" + hint + "%");
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 ret.addEsame(rs.getInt("id"),rs.getString("nome"));
-            }            
+                ret.addEsame(rs.getInt("id"), rs.getString("nome"));
+            }
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
-        }        
+        }
         return ret;
     }
-    
+
     @Override
-    public void addLogTime(String url, long time){
-        if(time <= 0) return;
-        
+    public void addLogTime(String url, long time) {
+        if (time <= 0) return;
+
         try {
             Integer new_id = null;
             PreparedStatement ps = CON.prepareStatement("insert into log_time (url,time_took) VALUES (?,?)");
             ps.setString(1, url);
             ps.setLong(2, time);
-            
+
             int count = ps.executeUpdate();
-            if(count == 0)
+            if (count == 0)
                 System.out.println("Log time inserimento fallito");
-        } 
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println("Log time execption : \n" + ex.getMessage());
         }
     }
 
     @Override
     public Visita getVisita(int id_paziente, int id_visita) throws DaoException {
-        if(id_visita <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        if (id_visita <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
         Visita ret = null;
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.* FROM visita v inner join prescrizione p on p.id = v.id_prescrizione WHERE p.id_paziente = ? AND p.id = ? ORDER BY time DESC")) {
             stm.setInt(1, id_paziente);
             stm.setInt(2, id_visita);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                 ret = new Visita(rs.getString("anamnesi"),rs.getInt("id"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
-            }    
+                ret = new Visita(rs.getString("anamnesi"), rs.getInt("id"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"));
+            }
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
-        }  
+        }
         return ret;
     }
-    
+
     @Override
     public VisitaSpecialistica getVisitaSpecialistica(int id_paziente, int id_visita) throws DaoException {
-        if(id_visita <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        if (id_visita <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
         VisitaSpecialistica ret = null;
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec FROM visita_specialistica v inner join prescrizione p on p.id = v.id_prescrizione inner join visite_specialistiche v2 on v2.id = v.id_visita_spec WHERE p.id_paziente = ? AND id_prescrizione = ? ORDER BY time DESC")) {
             stm.setInt(1, id_paziente);
             stm.setInt(2, id_visita);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                 ret = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"),rs.getString("cura"));
-            }            
+                ret = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("cura"));
+            }
         } catch (SQLException ex) {
             //throw new DaoException("db_error", ex);
             System.out.println(ex.getMessage() + "\n\n");
@@ -509,16 +497,16 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
 
     @Override
     public Esame getEsame(int id_paziente, int id_esame) throws DaoException {
-        if(id_esame <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        if (id_esame <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
         Esame ret = null;
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,e.nome as nome_esame FROM esame v inner join prescrizione p on p.id = v.id_prescrizione inner join esami_prescrivibili e on e.id = v.id_esame WHERE p.id_paziente = ? AND id_prescrizione = ? ORDER BY time DESC")) {
             stm.setInt(1, id_paziente);
             stm.setInt(2, id_esame);
             ResultSet rs = stm.executeQuery();
-            if(rs.next()) {  
-                 ret = new Esame(rs.getInt("id_esame"), rs.getInt("id_ticket"), rs.getInt("id_ssp"), rs.getString("risultato"), rs.getDate("time_esame"), rs.getInt("id_prescrizione"),rs.getInt("id_paziente"),rs.getInt("id_medico"),rs.getDate("time"), rs.getString("nome_esame"));
-            }            
+            if (rs.next()) {
+                ret = new Esame(rs.getInt("id_esame"), rs.getInt("id_ticket"), rs.getInt("id_ssp"), rs.getString("risultato"), rs.getDate("time_esame"), rs.getInt("id_prescrizione"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("nome_esame"));
+            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage() + "\n\n");
             throw new DaoException("db_error", ex);
@@ -533,15 +521,15 @@ public class JDBCUtenteDao extends JDBCDao<Utente,Integer> implements UtenteDao{
 
     @Override
     public Double getImportoTicket(int id_ticket) throws DaoException {
-        if(id_ticket <= 0 ) return null; //non ancora creato
+        if (id_ticket <= 0) return null; //non ancora creato
         Double ret = null;
-        
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT costo FROM ticket WHERE id = ?")) {
             stm.setInt(1, id_ticket);
             ResultSet rs = stm.executeQuery();
-            if(rs.next()) {  
-                 ret = rs.getDouble("costo");
-            }            
+            if (rs.next()) {
+                ret = rs.getDouble("costo");
+            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage() + "\n\n");
             throw new DaoException("db_error", ex);

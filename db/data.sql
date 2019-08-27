@@ -6,7 +6,7 @@
 INSERT INTO utenti
 VALUES (2, 'Matteo', 'Destro', '1965-12-12', 'matteo.est@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'SONOILCFDIMATTEO', 'medico_spec', NULL, 20, 20, 1, 0, NULL, 'Medicina generale, UNIPD', '1989-01-01'),
+        'SONOILCFDIMATTEO', 'medico_spec', NULL, 20, 20, 1, 0, 'Radiologo', 'Medicina generale, UNIPD', '1989-01-01'),
        (3, 'Riccardo', 'Carretta', '1998-06-23', 'riccardo.carretta@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
         'ABCDE2FGHIL', 'medico', 2, 15, 15, 1, 1, NULL, NULL, NULL),

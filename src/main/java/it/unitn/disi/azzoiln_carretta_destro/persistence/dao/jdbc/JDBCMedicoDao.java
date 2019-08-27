@@ -161,7 +161,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         if(id_medico == null || id_medico <= 0) throw new IdNotFoundException("id_medico");
         List<Paziente> ret = new LinkedList<>();
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE id_medico = ? AND u.id <> ? ORDER BY cognome,nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE id_medico = ? AND u.id <> ? AND ruolo <> 'ssp' ORDER BY cognome,nome")) {
             stm.setInt(1, id_medico);
             stm.setInt(2, id_medico); //per non avere tra i pazienti se stesso
             ResultSet rs = stm.executeQuery();

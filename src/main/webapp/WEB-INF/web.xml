@@ -106,6 +106,10 @@
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.MediciServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>MediciSpecialistiServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.MediciSpecialistiServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>PazienteDetailsServlet</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.PazienteDettagliServlet</servlet-class>
     </servlet>
@@ -119,6 +123,11 @@
         <servlet-name>MediciServlet</servlet-name>
         <url-pattern>/app/paziente/medici</url-pattern>
         <url-pattern>/app/ssp/medici</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MediciSpecialistiServlet</servlet-name>
+        <url-pattern>/app/paziente/medici_specialisti</url-pattern>
+        <url-pattern>/app/ssp/medici_specialisti</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PazientiServlet</servlet-name>
