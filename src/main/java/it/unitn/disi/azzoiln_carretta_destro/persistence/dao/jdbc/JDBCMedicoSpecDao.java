@@ -59,7 +59,7 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
                                                             "    )\n" +
                                                             "ORDER BY cognome,nome")) {  tengo la versione uguale a MEDICO
         stm.setString(1, now.toString().split("T")[0]);  //ritorna una striga con anche il fuso orario. Alora tengo solo la data*/
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE u.id <> ? ORDER BY cognome,nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE u.id <> ? AND ruolo <> 'ssp' ORDER BY cognome,nome")) {
             stm.setInt(1, id_medico);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
