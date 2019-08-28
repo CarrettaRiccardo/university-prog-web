@@ -24,11 +24,12 @@ public class Utente {
     /**
      * Usato per creare elenco di pazienti/medici..
      *
-     * @param res
-     * @param nulla Campo non considerato. Solo petchè non potevo definire due metodi con la stessa firma
+     * @param id
+     * @param username
      */
-    public Utente(int id, String nulla) {
+    public Utente(int id, String username) {
         this.id = id;
+        this.username = username;
     }
 
     public Utente(int id, String username, int provincia, String nome_provincia) {
@@ -69,6 +70,11 @@ public class Utente {
     public Integer getProvincia() {
         return provincia;
     }
+    
+    public String getProvinciaNome() {
+        return nome_provincia;
+    }
+    
 
     public UtenteType getType() {
         if (this instanceof Paziente) return UtenteType.PAZIENTE;

@@ -104,8 +104,12 @@
         window.location.href = window.location.href.split('?')[0] + '?date=' + $('#datepicker').val(), true;
     });
     
+    var dateToday = new Date();
+    var yesterday = new Date(dateToday);
+    yesterday.setDate(dateToday.getDate() - 1);
     $('#datepicker').datepicker({
-        format: 'yyyy-mm-dd'
+        format: 'yyyy-mm-dd',
+        minDate: yesterday
     });
     
     

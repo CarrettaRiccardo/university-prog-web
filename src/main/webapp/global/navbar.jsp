@@ -15,7 +15,7 @@
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img width="30" height="28" class="rounded-circle d-inline-block align-top mr-1 "
                      onerror="this.onerror=null; this.src='assets/default.jpg'"
-                     src="<c:out value="${foto_profilo_small}" />">
+                     src="<c:out value="${PHOTOS_DIR}${utente.getFotoSmall()}" />">
                 <span class="d-none d-sm-inline-block">
                     <jsp:getProperty name="utente" property="username"/>
                 </span>

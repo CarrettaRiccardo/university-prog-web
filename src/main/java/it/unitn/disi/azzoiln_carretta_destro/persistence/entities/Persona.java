@@ -1,6 +1,9 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.entities;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * @author Steve
@@ -33,8 +36,8 @@ public class Persona extends Utente {
         this.foto = "";
     }
     
-    public Persona(int id, String nome, String cognome, Date data,String ruolo,String foto) {
-        super(id,"");
+    public Persona(int id, String username, String nome, String cognome, Date data,String ruolo,String foto) {
+        super(id,username);
         this.nome = nome;
         this.cognome = cognome;
         this.data_nascita = data;
@@ -69,15 +72,32 @@ public class Persona extends Utente {
     
     /**
      * 
-     * @return Il path originale della foto oppure "images/defaul.jpeg" se trova Stringa vuota | null
+     * @return Il path originale della foto
      */
     public String getFoto() {
-        return (! (foto == null || foto.equals(""))) ? foto : "assets/uploads/profilo/default.jpg" ;
+        Random r = new Random();
+        return getUsername() + File.separator + "foto.jpg" + "?rand=" + r.nextInt(1000000);
+    }
+    
+    public String getFotoSmall() {
+        Random r = new Random();
+        return getUsername() + File.separator + "foto_small.jpg" + "?rand=" + r.nextInt(1000000);
     }
 
     public Date getData_nascita() {
         return data_nascita;
     }
 
-
+    public String getData_nascita_Stringa() {
+        String date = "";
+        try{
+            date = getData_nascita().toString();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false);
+            sdf.parse(date);
+        } catch (Exception ex){
+            // se fa errore nella conversione (In caso la data sia nulla ad esempio)
+        }
+        return date;
+    }
 }

@@ -53,6 +53,8 @@ public class SettingsServlet extends HttpServlet {
         if (!contextPath.endsWith("/"))
             contextPath += "/";
 
+        HttpSession session = request.getSession(false);
+        session.removeAttribute("saved");
         response.sendRedirect(response.encodeRedirectURL(contextPath + "app/settings"));
     }
 
@@ -112,7 +114,7 @@ public class SettingsServlet extends HttpServlet {
                 if (!file.exists()) file.mkdirs();
 
                 Part filePart = request.getPart("file");
-                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix. (to get only filename)
+                //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix. (to get only filename)
                 updateFotoPath = uploadFilePath + File.separator + "foto.jpg";
 
                 filePart.write(updateFotoPath);
@@ -120,10 +122,11 @@ public class SettingsServlet extends HttpServlet {
                 // per creare una copia più piccola da mostrare nella barra di navigazione
                 resize(updateFotoPath, uploadFilePath + File.separator + "foto_small.jpg", 50, 50);
 
-                // force reload aggiungendo una query futile alla fine del nome del file
+                /* force reload aggiungendo una query futile alla fine del nome del file
                 Random r = new Random();
                 session.setAttribute("foto_profilo", ((String) session.getAttribute("foto_profilo")).split("\\?")[0] + "?rand=" + r.nextInt(1000000));
                 session.setAttribute("foto_profilo_small", ((String) session.getAttribute("foto_profilo_small")).split("\\?")[0] + "?rand=" + r.nextInt(1000000));
+                */
             }
 
 
@@ -140,19 +143,17 @@ public class SettingsServlet extends HttpServlet {
 
                 newUtente = new Paziente(p.getId(), p.getUsername(),
                         p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
-                        idMed, nomeProv != null ? userDao.Ssp().getIdProvincia(nomeProv) : null, p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto());
+                        nomeProv != null ? (!nomeProv.equals(u.getProvinciaNome()) ? null : idMed) : null,// controllo che se cambia provincia annulla il medico
+                        nomeProv != null ? userDao.Ssp().getIdProvincia(nomeProv) : null, p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto());
 
                 // aggiorno l'utente
                 userDao.update(newUtente);
                 session.setAttribute("utente", newUtente);
 
                 Paziente newPaz = (Paziente) newUtente;
-
-                session.setAttribute("id_medico", newPaz.getId_medico());
-                session.setAttribute("nome_provincia", userDao.Ssp().getNomeProvincia(newPaz.getProvincia()));
                 List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
                 session.setAttribute("province", pr);
-                List<Medico> md = new ArrayList<>(userDao.Ssp().getMedici(u.getProvincia()));
+                List<Medico> md = new ArrayList<>(userDao.Ssp().getMedici(newUtente.getProvincia()));
                 // rimuovo dalla lista se stesso se è anche un medico
                 Integer i = 0;
                 Boolean removed = false;
@@ -168,6 +169,9 @@ public class SettingsServlet extends HttpServlet {
                     Medico myMedico = (Medico) userDao.getByPrimaryKey(newPaz.getId_medico(), "medico");
                     session.setAttribute("medico", myMedico);
                 }
+                else{
+                    session.removeAttribute("medico");
+                }
             } else { // il medico non credo debba modificare niente (?)
                 /*if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC){
                     Medico m = (Medico) u;
@@ -177,6 +181,7 @@ public class SettingsServlet extends HttpServlet {
                         true, userDao.Ssp().getIdProvincia(nomeProv), m.getId_Comune(), m.getLaurea(), m.getInizioCarriera(), nomeProv, m.getFoto());
                 }*/
             }
+            session.setAttribute("saved", true);
         } catch (NullPointerException ex) {
             throw new ServletException("invalid_selection");
         } catch (IllegalStateException ex) {
@@ -185,8 +190,11 @@ public class SettingsServlet extends HttpServlet {
             throw new ServletException("update_error");
         }
 
-        // prende e inserisce i dati modificati
-        doGet(request, response);
+        String contextPath = getServletContext().getContextPath();
+        if (!contextPath.endsWith("/"))
+            contextPath += "/";
+        
+        response.sendRedirect(response.encodeRedirectURL(contextPath + "app/settings"));
     }
 
 

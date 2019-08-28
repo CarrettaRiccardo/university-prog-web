@@ -18,7 +18,7 @@
             <div class="col col-12 col-md-auto text-center">
                 <img id="profile_photo" width="256" height="256" class="rounded-circle shadow mb-2"
                      onerror="this.onerror=null; this.src='assets/default.jpg'"
-                     src="<c:out value="${foto_profilo}" /> " >
+                     src="<c:out value="${PHOTOS_DIR}${utente.getFoto()}" /> " >
                 <input type="file" name="file" accept=".jpg" class="btn btn-block btn-outline-primary mt-3"></input>
             </div>
 
@@ -28,18 +28,18 @@
                     <h5 class="text-primary">Dati personali</h5>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
-                            <input type="text" class="form-control" disabled value="${nome}" placeholder="Nome"/>
+                            <input type="text" class="form-control" disabled value="${utente.getNome()}" placeholder="Nome"/>
                         </div>
                         <div class="col col-12 col-lg-6 py-1">
-                            <input type="text" class="form-control" disabled value="${cognome}" placeholder="Cognome"/>
+                            <input type="text" class="form-control" disabled value="${utente.getCognome()}" placeholder="Cognome"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
-                            <input type="text" class="form-control" disabled value="${codice_fiscale}" placeholder="Codice fiscale"/>
+                            <input type="text" class="form-control" disabled value="${utente.getCf()}" placeholder="Codice fiscale"/>
                         </div>
                         <div class="col col-12 col-lg-6 py-1">
-                            <input type="text" class="form-control" disabled value="${data_nascita}" placeholder="Data Nascita"/>
+                            <input type="text" class="form-control" disabled value="${utente.getData_nascita_Stringa()}" placeholder="Data Nascita"/>
                         </div>
                     </div>
 
@@ -51,7 +51,7 @@
                                     <option disabled selected value>-- Seleziona un Medico di Base --</option>
                                     <c:if test="${not empty medici}">
                                         <c:forEach items="${medici}" var="med">
-                                            <option value="${med.getId()}" <c:if test="${id_medico == med.getId()}"><c:out value="selected"/></c:if>>
+                                            <option value="${med.getId()}" <c:if test="${utente.getId_medico() == med.getId()}"><c:out value="selected"/></c:if>>
                                                 <c:out value="${med.getNome()} ${med.getCognome()} (${med.getLaurea()})"></c:out>
                                             </option>
                                         </c:forEach>
@@ -63,7 +63,7 @@
                                     <option disabled selected value>-- Seleziona una Provincia --</option>
                                     <c:if test="${not empty province}">
                                         <c:forEach items="${province}" var="prov">
-                                            <option value="${prov}" <c:if test="${nome_provincia == prov}"><c:out value="selected"/></c:if>>
+                                            <option value="${prov}" <c:if test="${utente.getProvinciaNome() == prov}"><c:out value="selected"/></c:if>>
                                                 <c:out value="${prov}"></c:out>
                                             </option>
                                         </c:forEach>
@@ -76,16 +76,24 @@
                         <h5 class="text-primary mt-3">Altro</h5>
                         <div class="row">
                             <div class="col col-12 col-lg-6 py-1">
-                                <input type="text" class="form-control" disabled value="<c:out value="${laurea}"></c:out>" placeholder="Laurea"/>
+                                <input type="text" class="form-control" disabled value="<c:out value="${utente.getLaurea()}"></c:out>" placeholder="Laurea"/>
                             </div>
                             <div class="col col-12 col-lg-6 py-1">
-                                <input type="text" class="form-control" disabled value="<c:out value="${carriera}"></c:out>" placeholder="Inizio Carriera"/>
+                                <input type="text" class="form-control" disabled value="<c:out value="${utente.getInizioCarriera()}"></c:out>" placeholder="Inizio Carriera"/>
                             </div>
                         </div>
                     </c:if>
 
-                    <button type="submit"
-                            class="btn btn-primary float-right my-3">Salva</button>
+                            
+                    <div> 
+                        <c:if test="${not empty saved}">
+                            <div class="alert alert-success float-top text-center my-3">
+                                Modifiche Salvate
+                            </div>
+                        </c:if>
+                        <button type="submit"
+                                class="btn btn-primary float-right my-3">Salva</button>
+                    </div>
             </div>
         </div>
     </form>

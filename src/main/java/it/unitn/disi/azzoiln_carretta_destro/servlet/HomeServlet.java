@@ -58,17 +58,7 @@ public class HomeServlet extends HttpServlet {
                 Paziente pz = (Paziente) u;
                 session.setAttribute("tipo", "paziente");
 
-                String date = pz.getData_nascita().toString();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                sdf.setLenient(false);
-                sdf.parse(date);
-
-                session.setAttribute("nome", pz.getNome());
-                session.setAttribute("cognome", pz.getCognome());
-                session.setAttribute("codice_fiscale", pz.getCf());
-                session.setAttribute("data_nascita", date);
-                session.setAttribute("id_medico", pz.getId_medico());
-                session.setAttribute("nome_provincia", userDao.Ssp().getNomeProvincia(u.getProvincia()));
+                session.setAttribute("utente", pz);
                 List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
                 session.setAttribute("province", pr);
                 List<Medico> md = new ArrayList<>(userDao.Ssp().getMedici(u.getProvincia()));
@@ -87,44 +77,24 @@ public class HomeServlet extends HttpServlet {
                     Medico myMedico = (Medico) userDao.getByPrimaryKey(pz.getId_medico(), "medico");
                     session.setAttribute("medico", myMedico);
                 }
+                else{
+                    session.removeAttribute("medico");
+                }
             } else {
                 if (u.getType() == UtenteType.MEDICO){
                     Medico m = (Medico) u;
                     session.setAttribute("tipo", "medico");
 
-                    String date = m.getData_nascita().toString();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    sdf.setLenient(false);
-                    sdf.parse(date);
-
-                    session.setAttribute("nome", m.getNome());
-                    session.setAttribute("cognome", m.getCognome());
-                    session.setAttribute("codice_fiscale", m.getCf());
-                    session.setAttribute("data_nascita", date);
-                    session.setAttribute("laurea", m.getLaurea());
-                    session.setAttribute("carriera", m.getInizioCarriera());
+                    session.setAttribute("utente", m);
                 }
                 else if (u.getType() == UtenteType.MEDICO_SPEC) {
                     MedicoSpecialista m = (MedicoSpecialista) u;
                     session.setAttribute("tipo", "medicospec");
 
-                    String date = m.getData_nascita().toString();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    sdf.setLenient(false);
-                    sdf.parse(date);
-
-                    session.setAttribute("nome", m.getNome());
-                    session.setAttribute("cognome", m.getCognome());
-                    session.setAttribute("codice_fiscale", m.getCf());
-                    session.setAttribute("data_nascita", date);
-                    //session.setAttribute("laurea", m.get());
-                    //session.setAttribute("carriera", m.getInizioCarriera());
+                    session.setAttribute("utente", m);
                 }
             }
-        } catch (ParseException ex){
-                throw new ServletException("invalid_date_exception");
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
             throw new ServletException("retrieving_doctors_error");
         } 
 

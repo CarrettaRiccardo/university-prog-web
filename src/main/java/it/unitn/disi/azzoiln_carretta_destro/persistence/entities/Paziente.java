@@ -45,8 +45,8 @@ public class Paziente extends Persona{
     /**
      * Per oggetto recuperato per essere mostrato nell'elenco dei pazienti di un medico
      */
-    public Paziente(int id, String nome, String cognome, Date data,String foto) {
-        super(id,nome,cognome,data,"paziente",foto);
+    public Paziente(int id, String username, String nome, String cognome, Date data,String foto) {
+        super(id,username,nome,cognome,data,"paziente",foto);
     }
 
 

@@ -7,20 +7,20 @@
         <div class="col col-12 col-md-auto text-center">
             <img width="180" height="180" class="rounded-circle shadow mb-2"
                  onerror="this.onerror=null; this.src='assets/default.jpg'"
-                 src="${paz_foto_profilo}">
+                 src="${PHOTOS_DIR}${paziente.getFoto()}">
         </div>
 
         <div class="col col-12 col-md pl-md-4">
             <h5 class="text-primary">Dati personali</h5>
-            <div class="pb-1"> Nome: <b>${paz_nome}</b></div>
-            <div class="pb-1"> Cognome: <b>${paz_cognome}</b></div>
-            <div class="pb-1"> Codice fiscale: <b>${paz_codice_fiscale}</b></div>
-            <div class="pb-1"> Data nascita: <b>${paz_data_nascita}</b></div>
+            <div class="pb-1"> Nome: <b>${paziente.getNome()}</b></div>
+            <div class="pb-1"> Cognome: <b>${paziente.getCognome()}</b></div>
+            <div class="pb-1"> Codice fiscale: <b>${paziente.getCf()}</b></div>
+            <div class="pb-1"> Data nascita: <b>${paziente.getData_nascita_Stringa()}</b></div>
         </div>
 
         <div class="col col-12 col-md">
             <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
-            <div class="pb-1"> Provincia: <b>${paz_nome_provincia}</b></div>
+            <div class="pb-1"> Provincia: <b>${paziente.getProvinciaNome()}</b></div>
         </div>
     </div>
 </div>

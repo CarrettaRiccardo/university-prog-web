@@ -6,6 +6,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
+import java.io.File;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -52,21 +53,9 @@ public class PazienteDettagliServlet extends HttpServlet {
             Integer id_paz = Integer.parseInt(request.getParameter("id_paziente"));
             Paziente pz = (Paziente) userDao.getByPrimaryKey(id_paz, "paziente");
 
-            String date = pz.getData_nascita().toString();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            sdf.setLenient(false);
-            sdf.parse(date);
-
-            session.setAttribute("paz_nome", pz.getNome());
-            session.setAttribute("paz_cognome", pz.getCognome());
-            session.setAttribute("paz_codice_fiscale", pz.getCf());
-            session.setAttribute("paz_data_nascita", date);
-            if (pz.getProvincia() != null)
-                session.setAttribute("paz_nome_provincia", userDao.Ssp().getNomeProvincia(pz.getProvincia()));
+            session.setAttribute("paziente", pz);
             //if (pz.getId_medico() != null)// giusto per sicurezza
             //    session.setAttribute("paz_medico", (Medico) userDao.getByPrimaryKey(pz.getId_medico(), "medico"));
-        } catch (ParseException ex) {
-            throw new ServletException("invalid_date_exception");
         } catch (DaoException ex) {
             throw new ServletException("id_paziente_not_valid");
         }

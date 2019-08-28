@@ -79,7 +79,7 @@ public class LoginServlet extends HttpServlet {
         }
         Cookie[] cookies = request.getCookies();     // request is an instance of type 
                                                      //HttpServletRequest
-        
+                                                     
                                                      
         // cerca i cookie di "ricordami"
         for(int i = 0; i < cookies.length && token == null; i++){ 
@@ -137,10 +137,11 @@ public class LoginServlet extends HttpServlet {
             if(u.getRes() >= 0){
                 // caricamento del percorso della foto profilo
                 String relativePath = getServletContext().getAttribute("PHOTOS_DIR").toString();
+                HttpSession session = request.getSession(false);
+                session.setAttribute("PHOTOS_DIR", relativePath + File.separator);
                 String userPath = u.getUsername();
                 // constructs path of the directory to save uploaded file
                 String uploadFilePath = relativePath + File.separator + userPath + File.separator;
-                HttpSession session = request.getSession(false);
                 session.setAttribute("foto_profilo", uploadFilePath + "foto.jpg");
                 session.setAttribute("foto_profilo_small", uploadFilePath + "foto_small.jpg");
                 

@@ -162,13 +162,13 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         if(id_medico == null || id_medico <= 0) throw new IdNotFoundException("id_medico");
         List<Paziente> ret = new LinkedList<>();
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE id_medico = ? AND u.id <> ? AND ruolo <> 'ssp' ORDER BY cognome,nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.id,username,nome,cognome,data_nascita,path FROM utenti u left join foto f on f.id_utente = u.id  WHERE id_medico = ? AND u.id <> ? AND ruolo <> 'ssp' ORDER BY cognome,nome")) {
             stm.setInt(1, id_medico);
             stm.setInt(2, id_medico); //per non avere tra i pazienti se stesso
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                  System.out.println(rs.getInt("id"));
-                 Paziente r = new Paziente(rs.getInt("id"),rs.getString("nome"), rs.getString("cognome"), rs.getDate("data_nascita"),rs.getString("path"));
+                 Paziente r = new Paziente(rs.getInt("id"), rs.getString("username"), rs.getString("nome"), rs.getString("cognome"), rs.getDate("data_nascita"),rs.getString("path"));
                  r.setLastVisita(getLastDataVisita(r.getId()));
                  r.setLastRicetta(getLastDataRicetta(r.getId()));
                  ret.add(r);
