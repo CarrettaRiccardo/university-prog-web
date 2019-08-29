@@ -103,7 +103,7 @@ public class VisitaSpecialistica extends Prescrizione{
         try {
             id_visita = Integer.parseInt(request.getParameter("id_visita"));
             id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
-            if (id_paziente <= 0) throw new NumberFormatException("id_paziente_not_valid");
+            if (id_paziente <= 0) throw new NumberFormatException("id_utente_not_valid");
             if (id_visita <= 0) throw new NumberFormatException("id_visita_not_valid");
         } catch (NumberFormatException e) {
             throw new ServletException(e.getMessage());
@@ -134,7 +134,7 @@ public class VisitaSpecialistica extends Prescrizione{
             id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             anamnesi = request.getParameter("anamnesi");
             cura = request.getParameter("cura");
-            if (id_paziente <= 0) throw new NumberFormatException("id_paziente_not_valid");
+            if (id_paziente <= 0) throw new NumberFormatException("id_utente_not_valid");
             if (id_visita <= 0) throw new NumberFormatException("id_visita_not_valid");
         } catch (NumberFormatException e) {
             throw new ServletException(e.getMessage());

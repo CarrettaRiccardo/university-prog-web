@@ -78,7 +78,7 @@ public class Esame extends Prescrizione{
             System.out.println("ssaasas\n\n");
             id_esame = Integer.parseInt(request.getParameter("id_esame"));
             id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
-            if (id_paziente <= 0) throw new NumberFormatException("id_paziente_not_valid");
+            if (id_paziente <= 0) throw new NumberFormatException("id_utente_not_valid");
             if (id_esame <= 0) throw new NumberFormatException("id_esame_not_valid");
         } catch (NumberFormatException e) {
             throw new ServletException(e.getMessage());

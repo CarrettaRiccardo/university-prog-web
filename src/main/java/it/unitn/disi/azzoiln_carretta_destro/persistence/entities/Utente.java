@@ -75,6 +75,18 @@ public class Utente {
         return nome_provincia;
     }
 
+    public boolean isPaziente() {
+        return getType() == UtenteType.PAZIENTE;
+    }
+
+    public boolean isMedico() {
+        return getType() == UtenteType.MEDICO;
+    }
+
+    public boolean isMedicoSpecialista() {
+        return getType() == UtenteType.MEDICO_SPEC;
+    }
+
     public boolean isSsp() {
         return getType() == UtenteType.SSP;
     }

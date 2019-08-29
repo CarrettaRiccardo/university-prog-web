@@ -97,7 +97,7 @@ public class Ricetta extends Prescrizione{
             id_paziente = Integer.parseInt(req.getParameter("id_paziente"));
             id_farmaco = Integer.parseInt(req.getParameter("id_farmaco"));
             qta = Integer.parseInt(req.getParameter("qta"));
-            if (id_paziente <= 0 ) throw new NumberFormatException("id_paziente_not_valid");
+            if (id_paziente <= 0 ) throw new NumberFormatException("id_utente_not_valid");
             if (id_farmaco <= 0 ) throw new NumberFormatException("id_medico_not_valid");
             if (qta <= 0) throw new NumberFormatException("qta_not_valid");
             if (qta > 200) throw new NumberFormatException("numer_too_big");

@@ -7,20 +7,29 @@
         <div class="col col-12 col-md-auto text-center">
             <img width="180" height="180" class="rounded-circle shadow mb-2"
                  onerror="this.onerror=null; this.src='assets/default.jpg'"
-                 src="${PHOTOS_DIR}${paziente.getFoto()}">
+                 src="${PHOTOS_DIR}${dettagli_utente.getFoto()}">
         </div>
 
         <div class="col col-12 col-md pl-md-4">
             <h5 class="text-primary">Dati personali</h5>
-            <div class="pb-1"> Nome: <b>${paziente.getNome()}</b></div>
-            <div class="pb-1"> Cognome: <b>${paziente.getCognome()}</b></div>
-            <div class="pb-1"> Codice fiscale: <b>${paziente.getCf()}</b></div>
-            <div class="pb-1"> Data nascita: <b>${paziente.getData_nascita_Stringa()}</b></div>
+            <div class="pb-1"> Nome: <b>${dettagli_utente.getNome()}</b></div>
+            <div class="pb-1"> Cognome: <b>${dettagli_utente.getCognome()}</b></div>
+            <div class="pb-1"> Codice fiscale: <b>${dettagli_utente.getCf()}</b></div>
+            <div class="pb-1"> Data nascita: <b>${dettagli_utente.getData_nascita_Stringa()}</b></div>
         </div>
 
         <div class="col col-12 col-md">
             <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
-            <div class="pb-1"> Provincia: <b>${paziente.getProvinciaNome()}</b></div>
+            <div class="pb-1"> Provincia: <b>${dettagli_utente.getProvinciaNome()}</b></div>
+            <span>is medico: ${utente.isMedico()}, medico specialista: ${utente.isMedicoSpecialista()}</span>
+            <c:if test="${ utente.isMedico() || utente.isMedicoSpecialista() }">
+                <div class="pb-1"> Laurea: <b> <c:out value="${dettagli_utente.getLaurea()}" default="-"/></b></div>
+                <div class="pb-1"> Inizio carriera: <b> <c:out value="${dettagli_utente.getInizioCarriera()}" default="-"/></b></div>
+                </div>
+            </c:if>
+            <c:if test="${ utente.isMedicoSpecialista() }">
+                <div class="pb-1"> Specialità: <b> <c:out value="${dettagli_utente.getSpecialita()}" default="-"/></b>
+            </c:if>
         </div>
     </div>
 </div>
@@ -33,22 +42,37 @@
                 <c:if test="${sezione == subpage}">
                     <c:set var="activeIndex" value="${s.index}"/>
                 </c:if>
+                <!-- Creazione url subpage -->
+                <c:url var="subpageUrl" value="app/${u_url}/dettagli_utente/${sezione}">
+                    <c:choose>
+                        <c:when test="${ not empty param.id_paziente }">
+                            <c:param name="id_paziente" value="${param.id_paziente}"/>
+                        </c:when>
+                        <c:when test="${ not empty param.id_medico }">
+                            <c:param name="id_medico" value="${param.id_medico}"/>
+                        </c:when>
+                        <c:when test="${ not empty param.id_medico_spec }">
+                            <c:param name="id_medico_spec" value="${param.id_medico_spec}"/>
+                        </c:when>
+                    </c:choose>
+                </c:url>
+
                 <a class="nav-link ${(sezione == subpage ? "active " : "text-gradient-".concat(s.index + 2))}"
-                   href="app/${u_url}/dettagli_paziente/${sezione}?id_paziente=${param.id_paziente}">
+                   href="${ subpageUrl }">
                     <span class="h6 text-capitalize">${sezioni_dettagli_titles[s.index]}</span>
                 </a>
             </li>
         </c:forTokens>
     </ul>
-        
+
     <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO}">
         <a class="btn btn-gradient-${activeIndex + 2} text-white h6 position-absolute" style="top:0; right:0;"
-            href="app/${u_url}/new_${subpage}?id_paziente=${param.id_paziente}"
+           href="app/${u_url}/new_${subpage}?id_paziente=${param.id_paziente}"
             <%--<c:choose>
                 <c:when test="${sessionScope.utente.getType() == UtenteType.MEDICO}">  href="app/${u_url}/new_${subpage}?id_paziente=${param.id_paziente}" </c:when>
                 <c:when test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC}">  href="app/${u_url}/compile_visite_specialistiche?id_paziente=${param.id_paziente}" </c:when>
             </c:choose>--%>
-            >
+        >
             <span class="font-weight-bolder">+</span>
             <span class="text-capitalize"> 
                 <fmt:message key="aggiungi"/>

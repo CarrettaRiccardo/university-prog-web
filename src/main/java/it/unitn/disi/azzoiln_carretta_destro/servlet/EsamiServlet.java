@@ -74,14 +74,14 @@ public class EsamiServlet extends HttpServlet {
             request.setAttribute("esami", esami);
             request.setAttribute("page", "esami");
             request.setAttribute("id_paziente", request.getParameter("id_paziente"));
-            RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/esami.jsp" : "/base.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_utente") ? "/components/esami.jsp" : "/base.jsp");
             rd.include(request, response);
         } catch (IdNotFoundException e) {
-            throw new ServletException("paziente_not_found");
+            throw new ServletException("utente_not_found");
         } catch (DaoException e) {
             throw new ServletException(e.getMessage());
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             System.out.println(e.getMessage() +  "\n\n\n");
             //throw new ServletException();
@@ -109,7 +109,7 @@ public class EsamiServlet extends HttpServlet {
             id_esame = Integer.parseInt(request.getParameter("id_esame"));
             if (id_esame <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             throw new ServletException();
         }
@@ -169,7 +169,7 @@ public class EsamiServlet extends HttpServlet {
             id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             throw new ServletException();
         }
@@ -207,7 +207,7 @@ public class EsamiServlet extends HttpServlet {
         }
         
         if (inserito){
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_paziente/esami?id_paziente=" + v.getId_paziente() + "&r"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/esami?id_paziente=" + v.getId_paziente() + "&r"));
             return;
         }
         

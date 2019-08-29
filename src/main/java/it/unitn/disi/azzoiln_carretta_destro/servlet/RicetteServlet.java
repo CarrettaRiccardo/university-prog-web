@@ -88,14 +88,14 @@ public class RicetteServlet extends HttpServlet {
             request.setAttribute("ricette", ricette);
             request.setAttribute("page", "ricette");
             request.setAttribute("id_paziente", request.getParameter("id_paziente"));
-            RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/ricette.jsp" : "/base.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_utente") ? "/components/ricette.jsp" : "/base.jsp");
             rd.include(request, response);
         } catch (IdNotFoundException e) {
-            throw new ServletException("paziente_not_found");
+            throw new ServletException("utente_not_found");
         } catch (DaoException e) {
             throw new ServletException(e.getMessage());
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             throw new ServletException();
         }
@@ -125,7 +125,7 @@ public class RicetteServlet extends HttpServlet {
             id_ricetta = Integer.parseInt(request.getParameter("id_ricetta"));
             if (id_ricetta <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             throw new ServletException();
         }
@@ -180,7 +180,7 @@ public class RicetteServlet extends HttpServlet {
                 id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
            throw new ServletException();
         }
@@ -219,7 +219,7 @@ public class RicetteServlet extends HttpServlet {
         }
         
         if (inserito){
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_paziente/ricette?id_paziente=" + r.getId_paziente() + "&r"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/ricette?id_paziente=" + r.getId_paziente() + "&r"));
             return;
         }
         
