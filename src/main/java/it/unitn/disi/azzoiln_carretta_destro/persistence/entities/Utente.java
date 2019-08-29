@@ -20,7 +20,7 @@ public class Utente {
     public Utente(int res) {
         this.res = res;
     }
-    
+
     /**
      * Usato per creare elenco di pazienti/medici..
      *
@@ -70,11 +70,14 @@ public class Utente {
     public Integer getProvincia() {
         return provincia;
     }
-    
+
     public String getProvinciaNome() {
         return nome_provincia;
     }
-    
+
+    public boolean isSsp() {
+        return getType() == UtenteType.SSP;
+    }
 
     public UtenteType getType() {
         if (this instanceof Paziente) return UtenteType.PAZIENTE;
