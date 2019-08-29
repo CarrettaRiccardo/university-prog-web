@@ -8,6 +8,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -77,5 +78,9 @@ public interface MedicoDao{
      * 
      * @param id 
      */
-    public List<Medico.Stats> getStats(int id_medico) throws DaoException;
+    public ArrayList< ArrayList<Integer> > getStats(int id_medico) throws DaoException;
+
+    public ArrayList<ArrayList<Integer>> getVisite(int id_medico) throws DaoException;
+
+    public ArrayList<ArrayList<Integer>> getVisiteSpecialistiche(int id_medico) throws DaoException;
 }

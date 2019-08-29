@@ -11,6 +11,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -96,11 +97,14 @@ public class StatisticheServlet extends HttpServlet {
      */
     private void manageMedico(HttpServletRequest request, Utente u) throws ServletException {
         try{
-            List<Medico.Stats> list = userDao.Medico().getStats(u.getId());
-            for(Medico.Stats m : list){
-                System.out.println(m.anno + " : " + m.mese + " = " + m.count);
-            }
-            request.setAttribute("ricette", list);
+            ArrayList< ArrayList<Integer> > ricette = userDao.Medico().getStats(u.getId());
+            request.setAttribute("ricette", ricette);
+            
+            ArrayList< ArrayList<Integer> > visite = userDao.Medico().getVisite(u.getId());
+            request.setAttribute("visite", visite);
+            
+            ArrayList< ArrayList<Integer> > vs = userDao.Medico().getVisiteSpecialistiche(u.getId());
+            request.setAttribute("visite_spec", vs);
         }catch(DaoException ex){
             System.out.println(ex.getMessage());
             throw new ServletException(ex.getMessage());

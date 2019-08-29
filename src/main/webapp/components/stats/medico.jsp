@@ -6,14 +6,29 @@
 
 <%@ include file="../../global/common.jsp" %>
 <jsp:useBean id="now" class="java.util.Date" />
-<fmt:formatDate var="data" value="${now}" pattern="y"/>
+<fmt:formatDate var="time" value="${now}" pattern="y"/>
 <jsp:useBean id="monthNames" class="java.text.DateFormatSymbols" />
 <c:set value="${monthNames.months}" var="months" />
 
 
 <div class="container">
     <div class="row">
-        <div class="col-4 text-center">
+        <div class="col-6 text-center">
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <div id="chart_div_ricette"></div>
+        </div>
+        <div class="col-6 text-center">
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <div id="chart_div_visite"></div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-6 text-center">
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <div id="chart_div_visite_spec"></div>
+        </div>
+        <div class="col-6 text-center">
             <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
             <div id="chart_div"></div>
         </div>
@@ -23,40 +38,80 @@
 
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+<script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
-        /*var data = google.visualization.arrayToDataTable([
-          ['Mese', '2017', '2016', '2015'],
-          ['Gennaio', 0,0,0],
-          ['Febbraio', 3,3,4 ],
-          ['Marzo', 15,7,15 ],
-          ['Aprile', 19,22,7],
-          ['Maggio', 23,24,25],
-          ['Giugno', 22,22,22 ],
-          ['Luglio', 20,15,14 ],
-          ['Agosto', 7,9,6],
-          ['Settembre', 16,14,13],
-          ['Ottobre', 11,13,14 ],
-          ['Novembre', 5,7,4 ],
-          ['Dicembre', 0,3,7]
-        ]);*/
         var data = google.visualization.arrayToDataTable([
-            ['Mese', ${now}, ${now}, ${now}],
-            <c:forEach items="${ricette}" var="paz" varStatus="status">
-                [${months[ status.getIndex() ]} ,1,2,3],
+            ['Mese',2018,2019 /*${now}, ${now}, ${now}*/],
+            <c:forEach items="${ricette}" var="r" varStatus="status">
+                ['${months[ status.getIndex() ]}' 
+                    <c:forEach items="${r}" var="v">
+                        ,${v}
+                    </c:forEach>
+                ],
             </c:forEach>
         ]);
 
         var options = {
-          title: 'Fatturato annuale ricambistica',
+            title: ' <fmt:message key="stats_ricette" /> ',
           hAxis: {title: 'Mese',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
-
-        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div_ricette'));
         chart.draw(data, options);
       }
-    </script>
+</script>
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Mese',2018,2019 /*${now}, ${now}, ${now}*/],
+            <c:forEach items="${visite}" var="r" varStatus="status">
+                ['${months[ status.getIndex() ]}' 
+                    <c:forEach items="${r}" var="v">
+                        ,${v}
+                    </c:forEach>
+                ],
+            </c:forEach>
+        ]);
+
+        var options = {
+            title: ' <fmt:message key="stats_visite" /> ',
+          hAxis: {title: 'Mese',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div_visite'));
+        chart.draw(data, options);
+      }
+</script>
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Mese',2018,2019 /*${now}, ${now}, ${now}*/],
+            <c:forEach items="${visite_spec}" var="r" varStatus="status">
+                ['${months[ status.getIndex() ]}' 
+                    <c:forEach items="${r}" var="v">
+                        ,${v}
+                    </c:forEach>
+                ],
+            </c:forEach>
+        ]);
+
+        var options = {
+            title: ' <fmt:message key="stats_visite_spec" /> ',
+          hAxis: {title: 'Mese',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div_visite_spec'));
+        chart.draw(data, options);
+      }
+</script>

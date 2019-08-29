@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -250,9 +251,9 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
     }
 
     @Override
-    public List<Medico.Stats> getStats(int id_medico)throws DaoException {
+    public ArrayList< ArrayList<Integer> > getStats(int id_medico)throws DaoException {
         if(id_medico <= 0) throw new IdNotFoundException("id_medico");
-        List<Medico.Stats> ret = new LinkedList<>();
+        ArrayList< ArrayList<Integer> > ret2 = new ArrayList<>();
         
         try (PreparedStatement stm = CON.prepareStatement(  "SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
                                                             "FROM \n" +
@@ -270,17 +271,108 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
                                                             "ORDER BY seq.anno, seq.mese")) {
             stm.setInt(1, id_medico);
             ResultSet rs = stm.executeQuery();
+            for (int i = 0; i < 12; i++) {
+                ret2.add(new ArrayList<Integer>());
+            }
+            
             while (rs.next()) {
                  System.out.println(rs.getInt("tot"));
                  Medico m = new Medico(-1, "", "", "", "", null, true, -1, -1, "", null, "", ""); //TODO: Crea costruttore vuoto per questa situazione
                  Medico.Stats s = m.new Stats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
-                 ret.add(s);
+                 ret2.get(s.mese-1).add(s.count);
+                    
             }            
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
-        }        
-        return ret;
+        }    
+        int i = 0;
+        for(ArrayList<Integer> m : ret2){
+            int j = 0;
+            for(Integer m2 : m){
+                System.out.println(i + " -> " + j + " --> " + m2);
+            }
+            i++;
+        }
+        return ret2;
+    }
+
+    @Override
+    public ArrayList<ArrayList<Integer>> getVisite(int id_medico) throws DaoException {
+        if(id_medico <= 0) throw new IdNotFoundException("id_medico");
+        ArrayList< ArrayList<Integer> > ret2 = new ArrayList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
+                                                            "FROM \n" +
+                                                            "     (\n" +
+                                                            "      SELECT * FROM\n" +
+                                                            "        (\n" +
+                                                            "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
+                                                            "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
+                                                            "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "      ) AS seq \n" +
+                                                            "LEFT JOIN (prescrizione p  inner join visita f ON p.id_medico = ? AND p.id = f.id_prescrizione)  ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
+                                                            "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
+                                                            "GROUP BY seq.anno, seq.mese\n" +
+                                                            "ORDER BY seq.anno, seq.mese")) {
+            stm.setInt(1, id_medico);
+            ResultSet rs = stm.executeQuery();
+            for (int i = 0; i < 12; i++) {
+                ret2.add(new ArrayList<Integer>());
+            }
+            
+            while (rs.next()) {
+                 System.out.println(rs.getInt("tot"));
+                 Medico m = new Medico(-1, "", "", "", "", null, true, -1, -1, "", null, "", ""); //TODO: Crea costruttore vuoto per questa situazione
+                 Medico.Stats s = m.new Stats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);
+                    
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            throw new DaoException("db_error", ex);
+        }    
+        return ret2;
+    }
+
+    @Override
+    public ArrayList<ArrayList<Integer>> getVisiteSpecialistiche(int id_medico) throws DaoException {
+        if(id_medico <= 0) throw new IdNotFoundException("id_medico");
+        ArrayList< ArrayList<Integer> > ret2 = new ArrayList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
+                                                            "FROM \n" +
+                                                            "     (\n" +
+                                                            "      SELECT * FROM\n" +
+                                                            "        (\n" +
+                                                            "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
+                                                            "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
+                                                            "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "      ) AS seq \n" +
+                                                            "LEFT JOIN (prescrizione p  inner join visita_specialistica f ON p.id_medico = ? AND p.id = f.id_prescrizione) ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
+                                                            "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
+                                                            "GROUP BY seq.anno, seq.mese\n" +
+                                                            "ORDER BY seq.anno, seq.mese")) {
+            stm.setInt(1, id_medico);
+            ResultSet rs = stm.executeQuery();
+            for (int i = 0; i < 12; i++) {
+                ret2.add(new ArrayList<Integer>());
+            }
+            
+            while (rs.next()) {
+                 System.out.println(rs.getInt("tot"));
+                 Medico m = new Medico(-1, "", "", "", "", null, true, -1, -1, "", null, "", ""); //TODO: Crea costruttore vuoto per questa situazione
+                 Medico.Stats s = m.new Stats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);
+                    
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            throw new DaoException("db_error", ex);
+        }    
+        return ret2;
     }
     
     
