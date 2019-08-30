@@ -263,20 +263,20 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
                                                             "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
                                                             "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
                                                             "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
-                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE id_medico = ? AND YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
                                                             "      ) AS seq \n" +
                                                             "LEFT JOIN (prescrizione p  inner join farmaco f ON p.id_medico = ? AND p.id = f.id_prescrizione)  ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
                                                             "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
                                                             "GROUP BY seq.anno, seq.mese\n" +
                                                             "ORDER BY seq.anno, seq.mese")) {
             stm.setInt(1, id_medico);
+            stm.setInt(2, id_medico);
             ResultSet rs = stm.executeQuery();
             for (int i = 0; i < 12; i++) {
                 ret2.add(new ArrayList<Integer>());
             }
             
             while (rs.next()) {
-                 System.out.println(rs.getInt("tot"));
                  Medico m = new Medico(-1, "", "", "", "", null, true, -1, -1, "", null, "", ""); //TODO: Crea costruttore vuoto per questa situazione
                  Medico.Stats s = m.new Stats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
                  ret2.get(s.mese-1).add(s.count);
@@ -287,11 +287,13 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             throw new DaoException("db_error", ex);
         }    
         int i = 0;
+        System.out.println("STAMPO STATS_RICETTE");
         for(ArrayList<Integer> m : ret2){
-            int j = 0;
+            System.out.print("Mese:" + i);
             for(Integer m2 : m){
-                System.out.println(i + " -> " + j + " --> " + m2);
+                System.out.print(" -> " + m2);
             }
+            System.out.println("");
             i++;
         }
         return ret2;
@@ -310,13 +312,14 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
                                                             "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
                                                             "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
                                                             "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
-                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE id_medico = ? AND YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
                                                             "      ) AS seq \n" +
                                                             "LEFT JOIN (prescrizione p  inner join visita f ON p.id_medico = ? AND p.id = f.id_prescrizione)  ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
                                                             "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
                                                             "GROUP BY seq.anno, seq.mese\n" +
                                                             "ORDER BY seq.anno, seq.mese")) {
             stm.setInt(1, id_medico);
+            stm.setInt(2, id_medico);
             ResultSet rs = stm.executeQuery();
             for (int i = 0; i < 12; i++) {
                 ret2.add(new ArrayList<Integer>());
@@ -349,13 +352,14 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
                                                             "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
                                                             "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
                                                             "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
-                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE id_medico = ? AND YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
                                                             "      ) AS seq \n" +
                                                             "LEFT JOIN (prescrizione p  inner join visita_specialistica f ON p.id_medico = ? AND p.id = f.id_prescrizione) ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
                                                             "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
                                                             "GROUP BY seq.anno, seq.mese\n" +
                                                             "ORDER BY seq.anno, seq.mese")) {
             stm.setInt(1, id_medico);
+            stm.setInt(2, id_medico);
             ResultSet rs = stm.executeQuery();
             for (int i = 0; i < 12; i++) {
                 ret2.add(new ArrayList<Integer>());
@@ -372,6 +376,16 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
         }    
+        System.out.println("STAMPO STATS_VS");
+        int i = 0;
+        for(ArrayList<Integer> m : ret2){
+            System.out.print("Mese:" + i);
+            for(Integer m2 : m){
+                System.out.print(" -> " + m2);
+            }
+            System.out.println("");
+            i++;
+        }
         return ret2;
     }
     

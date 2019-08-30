@@ -6,53 +6,33 @@
 
 <%@ include file="../../global/common.jsp" %>
 <jsp:useBean id="now" class="java.util.Date" />
-<fmt:formatDate var="time" value="${now}" pattern="y"/>
+<fmt:formatDate var="time" value="${now}" pattern="yyyy"/>
 <jsp:useBean id="monthNames" class="java.text.DateFormatSymbols" />
 <c:set value="${monthNames.months}" var="months" />
 
 
-<div class="container">
-    <div class="row">
-        <div class="col-6 text-center">
-            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-            <div id="chart_div_ricette"></div>
-        </div>
-        <div class="col-6 text-center">
-            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-            <div id="chart_div_visite"></div>
-        </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-6 text-center">
-            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-            <div id="chart_div_visite_spec"></div>
-        </div>
-        <div class="col-6 text-center">
-            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-            <div id="chart_div"></div>
-        </div>
-    </div>
-    
-</div>
+
 
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChartRicette);
-      google.charts.setOnLoadCallback(drawChartVisite);
-      google.charts.setOnLoadCallback(drawChartVS);
+      google.charts.setOnLoadCallback(drawChartRicette);      
 
       function drawChartRicette() {
         var data = google.visualization.arrayToDataTable([
-            ['Mese',2018,2019 /*${now}, ${now}, ${now}*/],
+            ['Mese' 
+                <c:forEach begin="0" end="${ricette.get(0).size() - 1}" varStatus="status">
+                    ,'${time - status.index}'
+                </c:forEach>
+            ],
             <c:forEach items="${ricette}" var="r" varStatus="status">
                 ['${months[ status.getIndex() ]}' 
                     <c:forEach items="${r}" var="v">
                         ,${v}
                     </c:forEach>
-                ],
+                ]
+                <c:if test="${!status.last}"> , </c:if>
             </c:forEach>
         ]);
 
@@ -67,18 +47,22 @@
 </script>
 
 <script type="text/javascript">
-      /*google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);*/
+      google.charts.setOnLoadCallback(drawChartVisite);     
 
       function drawChartVisite() {
         var data = google.visualization.arrayToDataTable([
-            ['Mese',2018,2019 /*${now}, ${now}, ${now}*/],
+            ['Mese'
+                <c:forEach begin="0" end="${visite.get(0).size() - 1}" varStatus="status">
+                    ,'${time - status.index}'
+                </c:forEach>
+             ],
             <c:forEach items="${visite}" var="r" varStatus="status">
                 ['${months[ status.getIndex() ]}' 
                     <c:forEach items="${r}" var="v">
                         ,${v}
                     </c:forEach>
-                ],
+                ]
+                <c:if test="${!status.last}"> , </c:if>
             </c:forEach>
         ]);
 
@@ -93,18 +77,22 @@
 </script>
 
 <script type="text/javascript">
-      /*google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);*/
+      google.charts.setOnLoadCallback(drawChartVS);
 
       function drawChartVS() {
         var data = google.visualization.arrayToDataTable([
-            ['Mese',2018,2019 /*${now}, ${now}, ${now}*/],
+            ['Mese'
+                <c:forEach begin="0" end="${visite_spec.get(0).size() - 1}" varStatus="status">
+                    ,'${time - status.index}'
+                </c:forEach>
+            ],
             <c:forEach items="${visite_spec}" var="r" varStatus="status">
                 ['${months[ status.getIndex() ]}' 
                     <c:forEach items="${r}" var="v">
                         ,${v}
                     </c:forEach>
-                ],
+                ]
+                <c:if test="${!status.last}"> , </c:if>
             </c:forEach>
         ]);
 
