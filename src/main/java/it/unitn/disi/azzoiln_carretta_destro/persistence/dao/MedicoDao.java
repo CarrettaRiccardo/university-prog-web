@@ -78,9 +78,9 @@ public interface MedicoDao{
      * 
      * @param id 
      */
-    public ArrayList< ArrayList<Integer> > getStats(int id_medico) throws DaoException;
+    public ArrayList< ArrayList<Integer> > getStatsRicette(int id_medico) throws DaoException;
 
-    public ArrayList<ArrayList<Integer>> getVisite(int id_medico) throws DaoException;
+    public ArrayList<ArrayList<Integer>> getStatsVisite(int id_medico) throws DaoException;
 
-    public ArrayList<ArrayList<Integer>> getVisiteSpecialistiche(int id_medico) throws DaoException;
+    public ArrayList<ArrayList<Integer>> getStatsVisiteSpecialistiche(int id_medico) throws DaoException;
 }

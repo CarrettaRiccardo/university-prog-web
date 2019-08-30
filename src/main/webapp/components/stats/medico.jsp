@@ -40,9 +40,11 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawChartRicette);
+      google.charts.setOnLoadCallback(drawChartVisite);
+      google.charts.setOnLoadCallback(drawChartVS);
 
-      function drawChart() {
+      function drawChartRicette() {
         var data = google.visualization.arrayToDataTable([
             ['Mese',2018,2019 /*${now}, ${now}, ${now}*/],
             <c:forEach items="${ricette}" var="r" varStatus="status">
@@ -65,10 +67,10 @@
 </script>
 
 <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+      /*google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);*/
 
-      function drawChart() {
+      function drawChartVisite() {
         var data = google.visualization.arrayToDataTable([
             ['Mese',2018,2019 /*${now}, ${now}, ${now}*/],
             <c:forEach items="${visite}" var="r" varStatus="status">
@@ -91,10 +93,10 @@
 </script>
 
 <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+      /*google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);*/
 
-      function drawChart() {
+      function drawChartVS() {
         var data = google.visualization.arrayToDataTable([
             ['Mese',2018,2019 /*${now}, ${now}, ${now}*/],
             <c:forEach items="${visite_spec}" var="r" varStatus="status">

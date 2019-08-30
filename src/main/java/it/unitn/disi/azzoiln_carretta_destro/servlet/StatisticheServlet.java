@@ -97,13 +97,13 @@ public class StatisticheServlet extends HttpServlet {
      */
     private void manageMedico(HttpServletRequest request, Utente u) throws ServletException {
         try{
-            ArrayList< ArrayList<Integer> > ricette = userDao.Medico().getStats(u.getId());
+            ArrayList< ArrayList<Integer> > ricette = userDao.Medico().getStatsRicette(u.getId());
             request.setAttribute("ricette", ricette);
             
-            ArrayList< ArrayList<Integer> > visite = userDao.Medico().getVisite(u.getId());
+            ArrayList< ArrayList<Integer> > visite = userDao.Medico().getStatsVisite(u.getId());
             request.setAttribute("visite", visite);
             
-            ArrayList< ArrayList<Integer> > vs = userDao.Medico().getVisiteSpecialistiche(u.getId());
+            ArrayList< ArrayList<Integer> > vs = userDao.Medico().getStatsVisiteSpecialistiche(u.getId());
             request.setAttribute("visite_spec", vs);
         }catch(DaoException ex){
             System.out.println(ex.getMessage());
