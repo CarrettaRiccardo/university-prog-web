@@ -125,6 +125,7 @@ public class LoginServlet extends HttpServlet {
                 u = (Utente) userDao.login(email, password);  //Non capisco perchè sia necessario il cast, se qualcuno lo sa lo dica a Steve :)
             String where = "";
             switch (u.getRes()) {
+                case -4:  where = "login?login_error=reset"; break;
                 case -2:  where = "login?login_error=pwd"; break;
                 case -1:  where = "login?login_error=user"; break;
                 case 0:   where = "app/home"; request.getSession(true).setAttribute("utente", u); break;

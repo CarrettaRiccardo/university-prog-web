@@ -121,12 +121,6 @@ public class SettingsServlet extends HttpServlet {
 
                 // per creare una copia più piccola da mostrare nella barra di navigazione
                 resize(updateFotoPath, uploadFilePath + File.separator + "foto_small.jpg", 50, 50);
-
-                /* force reload aggiungendo una query futile alla fine del nome del file
-                Random r = new Random();
-                session.setAttribute("foto_profilo", ((String) session.getAttribute("foto_profilo")).split("\\?")[0] + "?rand=" + r.nextInt(1000000));
-                session.setAttribute("foto_profilo_small", ((String) session.getAttribute("foto_profilo_small")).split("\\?")[0] + "?rand=" + r.nextInt(1000000));
-                */
             }
 
 
