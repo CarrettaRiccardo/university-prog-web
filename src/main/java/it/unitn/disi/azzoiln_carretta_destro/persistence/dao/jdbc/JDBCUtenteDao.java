@@ -92,7 +92,9 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
 
                 try (ResultSet rs = stm.executeQuery()) {
                     if (rs.next()) {
-                        if (rs.getString("ruolo").equals("paziente") || (rs.getString("ruolo").equals("medico") && s.equals("paziente")) || (rs.getString("ruolo").equals("medico_spec") && s.equals("paziente"))) {
+                        if (rs.getString("ruolo").equals("paziente") ||
+                                (rs.getString("ruolo").equals("medico") && s.equals("paziente")) ||
+                                (rs.getString("ruolo").equals("medico_spec") && s.equals("paziente"))) {
                             ret = new Paziente(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                                     rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                                     rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),

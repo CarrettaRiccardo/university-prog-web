@@ -110,14 +110,15 @@
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.MediciSpecialistiServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>PazienteDetailsServlet</servlet-name>
-        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.PazienteDettagliServlet</servlet-class>
+        <servlet-name>DettagliUtenteServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.DettagliUtenteServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>PazienteDetailsServlet</servlet-name>
-        <url-pattern>/app/paziente/dettagli_paziente/*</url-pattern>
-        <url-pattern>/app/medico/dettagli_paziente/*</url-pattern>
-        <url-pattern>/app/medico_spec/dettagli_paziente/*</url-pattern>
+        <servlet-name>DettagliUtenteServlet</servlet-name>
+        <url-pattern>/app/paziente/dettagli_utente/*</url-pattern>
+        <url-pattern>/app/medico/dettagli_utente/*</url-pattern>
+        <url-pattern>/app/medico_spec/dettagli_utente/*</url-pattern>
+        <url-pattern>/app/ssp/dettagli_utente/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>MediciServlet</servlet-name>
@@ -201,6 +202,7 @@
     <servlet-mapping>
         <servlet-name>StatisticheServlet</servlet-name>
         <url-pattern>/app/medico/stats</url-pattern>
+        <url-pattern>/app/ssp/stats</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

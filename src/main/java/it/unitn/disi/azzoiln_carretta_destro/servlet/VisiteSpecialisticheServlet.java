@@ -77,14 +77,14 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             request.setAttribute("visite", visite);
             request.setAttribute("page", "visite_specialistiche");
             request.setAttribute("id_paziente", request.getParameter("id_paziente") );
-            RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_paziente") ? "/components/visite_specialistiche.jsp" : "/base.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_utente") ? "/components/visite_specialistiche.jsp" : "/base.jsp");
             rd.include(request, response);
         } catch (IdNotFoundException e) {
-            throw new ServletException("paziente_not_found");
+            throw new ServletException("utente_not_found");
         } catch (DaoException e) {
             throw new ServletException(e.getMessage());
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             System.out.println(e.getMessage() +  "\n\n\n");
             throw new ServletException(e.getMessage());
@@ -111,7 +111,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             id_visita = Integer.parseInt(request.getParameter("id_visita"));
             if (id_visita <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             throw new ServletException();
         }
@@ -177,7 +177,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             throw new ServletException();
         }
@@ -232,7 +232,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         
         
         if (inserito){
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_paziente/visite_specialistiche?id_paziente=" + vs.getId_paziente() + "&r"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/visite_specialistiche?id_paziente=" + vs.getId_paziente() + "&r"));
             return;
         }
         

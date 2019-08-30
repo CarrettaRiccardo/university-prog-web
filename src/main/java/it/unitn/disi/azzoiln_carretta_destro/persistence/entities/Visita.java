@@ -54,7 +54,7 @@ public class Visita extends Prescrizione {
             id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            throw new ServletException("id_paziente_not_valid");
+            throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             throw new ServletException();
         }
