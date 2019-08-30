@@ -32,7 +32,7 @@ public class SendEmail {
     //private static final String EMAIL_SUBJECT = "Prova di Email";
     //private static final String EMAIL_TEXT = "<h1>Prova Java Mail \n ABC123</h1>";
     
-    public static void Invia(String email_to, String email_subject, String email_text_in_html){
+    public static void Invia(String email_to, String email_subject, String email_text_in_html) throws MessagingException{
         Properties prop = System.getProperties();
         prop.setProperty("mail.transport.protocol", "smtp");     
         prop.setProperty("mail.host", "smtp.gmail.com");  
@@ -46,37 +46,32 @@ public class SendEmail {
         Session session = Session.getInstance(prop, null);
         Message msg = new MimeMessage(session);
 
-        try {
+        
+        msg.setFrom(new InternetAddress(EMAIL_FROM));
 
-            msg.setFrom(new InternetAddress(EMAIL_FROM));
+        msg.setRecipients(Message.RecipientType.TO,
+                InternetAddress.parse(email_to, false));
 
-            msg.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(email_to, false));
+        msg.setSubject(email_subject);
 
-            msg.setSubject(email_subject);
-			
-			// TEXT email
-            //msg.setText(EMAIL_TEXT);
+                    // TEXT email
+        //msg.setText(EMAIL_TEXT);
 
-			// HTML email
-            msg.setDataHandler(new DataHandler(new HTMLDataSource(email_text_in_html)));
+                    // HTML email
+        msg.setDataHandler(new DataHandler(new HTMLDataSource(email_text_in_html)));
 
-            
-			SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
-			
-			// connect
-            t.connect(SMTP_SERVER, USERNAME, PASSWORD);
-			
-			// send
-            t.sendMessage(msg, msg.getAllRecipients());
 
-            System.out.println("Response: " + t.getLastServerResponse());
+                    SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
 
-            t.close();
+                    // connect
+        t.connect(SMTP_SERVER, USERNAME, PASSWORD);
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+                    // send
+        t.sendMessage(msg, msg.getAllRecipients());
+
+        System.out.println("Response: " + t.getLastServerResponse());
+
+        t.close();
 
     }
 

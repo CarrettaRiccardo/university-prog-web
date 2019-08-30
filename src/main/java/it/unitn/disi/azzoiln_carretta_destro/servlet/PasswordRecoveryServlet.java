@@ -7,6 +7,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
+import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 import it.unitn.disi.azzoiln_carretta_destro.utility.SendEmail;
 
 import javax.imageio.ImageIO;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import javax.mail.MessagingException;
 
 /**
  * @author Steve
@@ -50,14 +52,49 @@ public class PasswordRecoveryServlet extends HttpServlet {
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";
+        String where = "";
 
-        HttpSession session = request.getSession(false);
-        String email = request.getParameter("email");
-        //if (userDao.)
+        try{
+            String token = request.getParameter("token");
+            String newPassword = request.getParameter("newpassword");
+            if (token != null && newPassword != null){
+                if (userDao.updatePasswordAndRemoveToken(token, newPassword)){
+                    where = "?success=true";
+                }
+                else{
+                    where = "?hasToken=true&recovery_error=invalid_token";
+                }
+            }
+            else{
+                String email = request.getParameter("email");
+                if (userDao.existsUsername(email) != null){
+                    if (userDao.getPasswordToken(email) == null) {
+                        Boolean success = userDao.insertPasswordToken(email);
+                        if (success){
+                            SendEmail.Invia(email, "Reset Password",
+                                "<div style=\"text-align: center\">"
+                                    + "<p style=\"font-size: 20px\">Il token per il reset della password e':</p>"
+                                    + "<br/>"
+                                    + "<b style=\"font-size: 24px\">" + userDao.getPasswordToken(email) + "</b>"
+                                + "</div>");
+                            where = "?hasToken=true";
+                        }
+                    }
+                    else{
+                        where = "?recovery_error=existing_token";
+                    }
+                }
+                else{
+                    where = "?recovery_error=user";
+                }
+            }
+        } catch (MessagingException ex){
+            where = "?recovery_error=sending";
+        } catch (Exception ex){
+            where = "?recovery_error=";// errore del sistema
+        }
         
-        SendEmail.Invia(email, "Reset Password", "<h1>Prova Java Mail \n ABC123</h1>");
-        
-        response.sendRedirect(response.encodeRedirectURL(contextPath + "app/password_recovery"));
+        response.sendRedirect(response.encodeRedirectURL(contextPath + "password_recovery" + where));
     }
 
 
@@ -72,7 +109,7 @@ public class PasswordRecoveryServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        doGet(request, response);
     }
 
 
