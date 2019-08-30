@@ -21,13 +21,14 @@
         <div class="col col-12 col-md">
             <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
             <div class="pb-1"> Provincia: <b>${dettagli_utente.getProvinciaNome()}</b></div>
-            <span>is medico: ${utente.isMedico()}, medico specialista: ${utente.isMedicoSpecialista()}</span>
-            <c:if test="${ utente.isMedico() || utente.isMedicoSpecialista() }">
+            <div class="pb-1"> E' medico: <b>${dettagli_utente.isMedico()}</b></div>
+            <div class="pb-1"> E' medico specialista: <b>${dettagli_utente.isMedicoSpecialista()}</b></div>
+            <c:if test="${ dettagli_utente.isMedico() || dettagli_utente.isMedicoSpecialista() }">
                 <div class="pb-1"> Laurea: <b> <c:out value="${dettagli_utente.getLaurea()}" default="-"/></b></div>
                 <div class="pb-1"> Inizio carriera: <b> <c:out value="${dettagli_utente.getInizioCarriera()}" default="-"/></b></div>
                 </div>
             </c:if>
-            <c:if test="${ utente.isMedicoSpecialista() }">
+            <c:if test="${ dettagli_utente.isMedicoSpecialista() }">
                 <div class="pb-1"> Specialità: <b> <c:out value="${dettagli_utente.getSpecialita()}" default="-"/></b>
             </c:if>
         </div>

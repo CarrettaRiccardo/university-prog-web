@@ -43,7 +43,7 @@
                         </div>
                     </div>
 
-                    <c:if test="${tipo == 'paziente'}">
+                    <c:if test="${utente.isPaziente()}">
                         <h5 class="text-primary mt-3">Altro</h5>
                         <div class="row">
                             <div class="col col-12 col-lg-6 py-1">
@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${tipo == 'medico'}">
+                    <c:if test="${utente.isMedico()}">
                         <h5 class="text-primary mt-3">Altro</h5>
                         <div class="row">
                             <div class="col col-12 col-lg-6 py-1">

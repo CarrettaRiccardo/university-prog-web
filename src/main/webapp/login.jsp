@@ -41,6 +41,7 @@
     <c:if test="${not empty param.login_error}">
         <div class="alert alert-danger" role="alert">          
             <c:choose>
+                <c:when test="${param.login_error == 'reset'}"> <fmt:message key="login_error_recovery"/>  </c:when>
                 <c:when test="${param.login_error == 'pwd'}"> <fmt:message key="login_error_password"/>  </c:when>
                 <c:when test="${param.login_error == 'user'}"> <fmt:message key="login_error_username"/>  </c:when>
                 <c:when test="${param.login_error == 'auth'}"> <fmt:message key="login_error_auth"/>  </c:when>

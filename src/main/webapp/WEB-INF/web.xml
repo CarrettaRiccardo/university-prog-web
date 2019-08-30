@@ -70,6 +70,22 @@
         <url-pattern>/app/settings.handler</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>PasswordRecovery</servlet-name>
+        <jsp-file>/password_recovery.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PasswordRecovery</servlet-name>
+        <url-pattern>/password_recovery</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>PasswordRecoveryServlet</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.PasswordRecoveryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PasswordRecoveryServlet</servlet-name>
+        <url-pattern>/password_recovery.handler</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>Error</servlet-name>
         <jsp-file>/error.jsp</jsp-file>
     </servlet>

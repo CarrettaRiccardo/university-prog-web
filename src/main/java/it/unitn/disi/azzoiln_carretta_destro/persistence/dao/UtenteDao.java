@@ -39,6 +39,8 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      */
     public SspDao Ssp();
     
+    public Boolean existsUsername(String username) throws DaoException;
+    
     /**
      * Da usare se si sa già la modalità con cui si vuole leggere l'utente dal DB
      * @param primaryKey

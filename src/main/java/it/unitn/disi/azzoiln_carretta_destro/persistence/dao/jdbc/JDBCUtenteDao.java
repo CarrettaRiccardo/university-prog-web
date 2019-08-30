@@ -126,7 +126,30 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         return ret;
     }
 
+    
+    @Override
+    public Boolean existsUsername(String username) throws DaoException {
+        Boolean found = false;
 
+        try (PreparedStatement stm = CON.prepareStatement("SELECT username FROM utenti WHERE username = ?")) {
+            stm.setString(1, username);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    found = true;
+                } else {
+                    found = false;
+                }
+            } catch (SQLException ex) {
+                throw new DaoException("db_error", ex);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+
+        return found;
+    }
+    
+    
     /**
      * Il valore di ritorno -2 non è qui usato
      * Il valore di ritorno -4 indica 'id non trovato'
