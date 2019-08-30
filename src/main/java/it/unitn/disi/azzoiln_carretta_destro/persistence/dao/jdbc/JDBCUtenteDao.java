@@ -17,8 +17,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementazione UtenteDao con driver JDBC
@@ -128,16 +132,14 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
 
     
     @Override
-    public Boolean existsUsername(String username) throws DaoException {
-        Boolean found = false;
+    public Integer existsUsername(String username) throws DaoException {
+        Integer id = null;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT username FROM utenti WHERE username = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id FROM utenti WHERE username = ?")) {
             stm.setString(1, username);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
-                    found = true;
-                } else {
-                    found = false;
+                    id = rs.getInt("id");
                 }
             } catch (SQLException ex) {
                 throw new DaoException("db_error", ex);
@@ -146,7 +148,98 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
             throw new DaoException("db_error", ex);
         }
 
+        return id;
+    }
+
+    @Override
+    public String getPasswordToken(String username) throws DaoException {
+        String found = null;
+        
+        Integer id_utente = existsUsername(username);
+        if (id_utente != null){
+            try (PreparedStatement stm = CON.prepareStatement("SELECT hash FROM cambio_password WHERE id_utente = ?")) {
+                stm.setInt(1, id_utente);
+                try (ResultSet rs = stm.executeQuery()) {
+                    if (rs.next()) {
+                        found = rs.getString("hash");
+                    }
+                } catch (SQLException ex) {
+                    throw new DaoException("db_error", ex);
+                }
+            } catch (SQLException ex) {
+                throw new DaoException("db_error", ex);
+            }
+        }
+
         return found;
+    }
+
+    @Override
+    public Boolean insertPasswordToken(String username) throws DaoException, NoSuchAlgorithmException {
+        Boolean success = false;
+
+        Integer id_utente = existsUsername(username);
+        if (id_utente != null){
+            try (PreparedStatement stm = CON.prepareStatement("INSERT INTO cambio_password VALUES (?, ?, ?)")) {
+                stm.setInt(1, id_utente);
+                stm.setString(2, Common.randomAlphaNumeric());
+                stm.setTimestamp(3, new Timestamp(new Date().getTime()));
+                Integer rs = stm.executeUpdate();
+                if (rs > 0) {
+                    success = true;
+                }
+            } catch (SQLException ex) {
+                throw new DaoException("db_error", ex);
+            }
+        }
+        return success;
+    }
+
+    @Override
+    public Boolean updatePasswordAndRemoveToken(String token, String newPassowrd) throws DaoException {
+        Boolean success = false;
+
+        Integer id_utente = null;
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id_utente FROM cambio_password WHERE hash = ?")) {
+            stm.setString(1, token);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    id_utente = rs.getInt("id_utente");
+                }
+            } catch (SQLException ex) {
+                throw new DaoException("db_error", ex);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        
+        if (id_utente != null){
+            // UPDATE PASSWORD
+            try (PreparedStatement stm = CON.prepareStatement("UPDATE utenti SET password = ? WHERE id = ?")) {
+                stm.setString(1, Common.getPasswordHash(newPassowrd));
+                stm.setInt(2, id_utente);
+                Integer rs = stm.executeUpdate();
+                if (rs > 0) {
+                    success = true;
+                }
+            } catch (Exception ex) {// prendo tutti gli errori per semplicità
+                throw new DaoException("db_error", ex);
+            }
+            // DELETE TOKEN (hash)
+            if (success){// se ha fatto l'update della password
+                try (PreparedStatement stm = CON.prepareStatement("DELETE FROM cambio_password WHERE id_utente = ?")) {
+                    stm.setInt(1, id_utente);
+                    Integer rs = stm.executeUpdate();
+                    //if (rs > 0) {
+                    //    success = true;
+                    //}
+                } catch (SQLException ex) {
+                    throw new DaoException("db_error", ex);
+                }
+            }
+        }
+
+        return success;
     }
     
     
@@ -209,11 +302,16 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
                     if (Common.validatePassword(password, rs.getString("password"))) {
-                        switch (rs.getString("ruolo")) {
-                            case "paziente": ret = getPaziente(rs, 0); break;
-                            case "medico": ret = getPersona(rs, 1, "medico"); break;
-                            case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
-                            case "ssp": ret = getSSP(rs, 2); break;
+                        if (getPasswordToken(username) == null){
+                            switch (rs.getString("ruolo")) {
+                                case "paziente": ret = getPaziente(rs, 0); break;
+                                case "medico": ret = getPersona(rs, 1, "medico"); break;
+                                case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
+                                case "ssp": ret = getSSP(rs, 2); break;
+                            }
+                        }
+                        else{
+                            ret = new Utente(-4); //username trovato, token di reset password esistente
                         }
                     } else {
                         ret = new Utente(-2); //username trovato, password non uguale

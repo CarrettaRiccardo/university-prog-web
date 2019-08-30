@@ -10,6 +10,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Esami;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.VisiteSpecialistiche;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -39,7 +40,25 @@ public interface UtenteDao extends Dao<Utente, Integer>{
      */
     public SspDao Ssp();
     
-    public Boolean existsUsername(String username) throws DaoException;
+    /**
+     * 
+     * @param username
+     * @return ritorna l'Id dell'utente se esiste o null
+     * @throws DaoException 
+     */
+    public Integer existsUsername(String username) throws DaoException;
+    
+    /**
+     * 
+     * @param username
+     * @return il token di quell'user
+     * @throws DaoException 
+     */
+    public String getPasswordToken(String username) throws DaoException;
+    
+    public Boolean insertPasswordToken(String username) throws DaoException, NoSuchAlgorithmException;
+    
+    public Boolean updatePasswordAndRemoveToken(String token, String newPassowrd) throws DaoException;
     
     /**
      * Da usare se si sa già la modalità con cui si vuole leggere l'utente dal DB

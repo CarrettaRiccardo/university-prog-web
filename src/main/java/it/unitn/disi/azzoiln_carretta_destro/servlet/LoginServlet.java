@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
@@ -67,7 +69,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Integer id = null;
-        String token = null;
+        String token_remember_me = null;
         String email = null;
         String password = null;
         Utente u = null;
@@ -82,13 +84,13 @@ public class LoginServlet extends HttpServlet {
                                                      
                                                      
         // cerca i cookie di "ricordami"
-        for(int i = 0; i < cookies.length && token == null; i++){ 
+        for(int i = 0; i < cookies.length && token_remember_me == null; i++){ 
             Cookie c = cookies[i];
             if (c.getName().equals("user_token")){
                 ck = c;
-                token = c.getValue();
+                token_remember_me = c.getValue();
                 // cerco l'id corrispondente
-                id = hashRememberMe.get(token);
+                id = hashRememberMe.get(token_remember_me);
                 if (id != null){// c'è nell'Hash; altrimenti se è null probabilmente il server è stato riavviato
                     try{
                         u = (Utente) userDao.getByPrimaryKey(id);
@@ -112,7 +114,7 @@ public class LoginServlet extends HttpServlet {
         
         
         // se non ci sono Cookie o non trova l'utente, prende i parametri
-        if (token == null || id == null){
+        if (token_remember_me == null || id == null){
             email = request.getParameter("username");
             password = request.getParameter("password");
             if (email == null || password == null) {
