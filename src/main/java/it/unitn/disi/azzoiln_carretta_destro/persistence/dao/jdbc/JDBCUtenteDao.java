@@ -13,16 +13,10 @@ import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Implementazione UtenteDao con driver JDBC
@@ -130,7 +124,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         return ret;
     }
 
-    
+
     @Override
     public Integer existsUsername(String username) throws DaoException {
         Integer id = null;
@@ -154,9 +148,9 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
     @Override
     public String getPasswordToken(String username) throws DaoException {
         String found = null;
-        
+
         Integer id_utente = existsUsername(username);
-        if (id_utente != null){
+        if (id_utente != null) {
             try (PreparedStatement stm = CON.prepareStatement("SELECT hash FROM cambio_password WHERE id_utente = ?")) {
                 stm.setInt(1, id_utente);
                 try (ResultSet rs = stm.executeQuery()) {
@@ -179,7 +173,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         Boolean success = false;
 
         Integer id_utente = existsUsername(username);
-        if (id_utente != null){
+        if (id_utente != null) {
             try (PreparedStatement stm = CON.prepareStatement("INSERT INTO cambio_password VALUES (?, ?, ?)")) {
                 stm.setInt(1, id_utente);
                 stm.setString(2, Common.randomAlphaNumeric());
@@ -212,8 +206,8 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         } catch (SQLException ex) {
             throw new DaoException("db_error", ex);
         }
-        
-        if (id_utente != null){
+
+        if (id_utente != null) {
             // UPDATE PASSWORD
             try (PreparedStatement stm = CON.prepareStatement("UPDATE utenti SET password = ? WHERE id = ?")) {
                 stm.setString(1, Common.getPasswordHash(newPassowrd));
@@ -226,7 +220,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
                 throw new DaoException("db_error", ex);
             }
             // DELETE TOKEN (hash)
-            if (success){// se ha fatto l'update della password
+            if (success) {// se ha fatto l'update della password
                 try (PreparedStatement stm = CON.prepareStatement("DELETE FROM cambio_password WHERE id_utente = ?")) {
                     stm.setInt(1, id_utente);
                     Integer rs = stm.executeUpdate();
@@ -241,8 +235,8 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
 
         return success;
     }
-    
-    
+
+
     /**
      * Il valore di ritorno -2 non è qui usato
      * Il valore di ritorno -4 indica 'id non trovato'
@@ -302,15 +296,14 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
                     if (Common.validatePassword(password, rs.getString("password"))) {
-                        if (getPasswordToken(username) == null){
+                        if (getPasswordToken(username) == null) {
                             switch (rs.getString("ruolo")) {
                                 case "paziente": ret = getPaziente(rs, 0); break;
                                 case "medico": ret = getPersona(rs, 1, "medico"); break;
                                 case "medico_spec": ret = getPersona(rs, 1, "medico_spec"); break;  //Ottengo una Persona che indica che la scelta fra Paziente e Medico non è ancora stata fatta
                                 case "ssp": ret = getSSP(rs, 2); break;
                             }
-                        }
-                        else{
+                        } else {
                             ret = new Utente(-4); //username trovato, token di reset password esistente
                         }
                     } else {
@@ -332,7 +325,8 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
     }
 
     private Ssp getSSP(ResultSet rs, int res) throws SQLException {
-        return new Ssp(rs.getInt("id"), rs.getString("username"), rs.getInt("provincia"), rs.getString("nome_provincia"), res);
+        return new Ssp(rs.getInt("id"), rs.getString("username"), rs.getInt("provincia"), rs.getString("nome_provincia"), res,
+                rs.getString("nome"));
     }
 
     /**
