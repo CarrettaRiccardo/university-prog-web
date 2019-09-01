@@ -11,6 +11,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
+import it.unitn.disi.azzoiln_carretta_destro.utility.SendEmail;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -94,7 +95,7 @@ public class VisiteServlet extends HttpServlet {
      * @throws IOException 
      */
     private void manageNewVisita(HttpServletRequest request, HttpServletResponse response, Utente u) throws ServletException, IOException {
-        int id_paziente = -1,id_visita = -1;
+        int id_paziente = -1, id_visita = -1;
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";
@@ -186,6 +187,18 @@ public class VisiteServlet extends HttpServlet {
         }
         
         if (inserito){
+            try {
+                SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Una nuovo rapporto di una visita è stato inserito",
+                        "Gentile utente,"
+                        + "Una visita con data " + (v.getTime() != null ? v.getTime() : "*da definire*") + " è stata completata e il tuo medico di base ha inserito l'anamnesi."
+                        + "<br/>"
+                        + "Controlla le tue visite per visualizzare i dettagli."
+                        + "<br/>" + "<br/>"
+                        + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
+            } catch (Exception ex) {
+                // Ricky; nascondo all'utente se non viene inviata alla mail
+                Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/visite?id_paziente=" + v.getId_paziente() + "&r"));
             return;
         }

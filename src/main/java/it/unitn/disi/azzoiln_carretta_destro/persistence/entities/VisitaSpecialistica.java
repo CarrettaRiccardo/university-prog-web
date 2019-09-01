@@ -59,15 +59,15 @@ public class VisitaSpecialistica extends Prescrizione{
     }
 
     public String getAnamnesi() {
-        return anamnesi;
+        return anamnesi != null ? anamnesi : "";
+    }
+    
+    public String getAnamnesiShort() {
+        return anamnesi != null ? anamnesi.substring(0, 20) + ".." : "";
     }
     
     public String getCura() {
         return cura;
-    }
-    
-    public String getAnamnesiShort() {
-        return (anamnesi == null) ? "" : (anamnesi.substring(0, 20) + "..");
     }
 
     public Date getTime_visita() {
