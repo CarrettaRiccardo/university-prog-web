@@ -6,7 +6,7 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate var="time" value="${now}" pattern="yyyy"/>
 <jsp:useBean id="monthNames" class="java.text.DateFormatSymbols" />      
-<%@ page import="it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Statistiche" %>
+
 <c:set value="${monthNames.months}" var="months" />
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
