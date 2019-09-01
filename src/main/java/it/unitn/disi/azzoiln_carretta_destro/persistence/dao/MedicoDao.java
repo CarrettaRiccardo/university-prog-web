@@ -83,4 +83,8 @@ public interface MedicoDao{
     public ArrayList<ArrayList<Integer>> getStatsVisite(int id_medico) throws DaoException;
 
     public ArrayList<ArrayList<Integer>> getStatsVisiteSpecialistiche(int id_medico) throws DaoException;
+
+    public ArrayList<ArrayList<Integer>> getStatsEsami(int id_medico) throws DaoException;
+
+    public Integer getNumPazienti(int id_medico) throws DaoException;
 }
