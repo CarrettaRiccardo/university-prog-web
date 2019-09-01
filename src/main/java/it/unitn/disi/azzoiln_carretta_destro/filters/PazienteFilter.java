@@ -6,20 +6,16 @@
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 
 /**
- * Filtreo su URL /PAZIENTE/
+ * Filtro su URL /PAZIENTE/
  * @author Steve
  */
 public class PazienteFilter implements Filter {
@@ -31,9 +27,6 @@ public class PazienteFilter implements Filter {
     // configured. 
     private FilterConfig filterConfig = null;
     private UtenteDao userDao;
-    
-    public PazienteFilter() {
-    }    
     
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {

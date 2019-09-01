@@ -13,7 +13,7 @@
 
 <div class="container pt-3">
     <h2 class="mb-4">Impostazioni account</h2>
-    <form action="app/settings.handler" method="POST" enctype="multipart/form-data">
+    <form action="app/${u_url}/settings.handler" method="POST" enctype="multipart/form-data">
         <div class="row">
 
             <c:if test="${ !utente.isSsp() }">
@@ -26,7 +26,7 @@
             </c:if>
 
             <div class="col col-12 col-md">
-                <form action="app/settings.handler" method="POST">
+                <form action="app/${u_url}/settings.handler" method="POST">
 
                     <c:if test="${ !utente.isSsp() }">
                     <h5 class="text-primary">Dati personali</h5>

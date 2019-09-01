@@ -16,11 +16,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author Steve
@@ -55,7 +53,7 @@ public class SettingsServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         session.removeAttribute("saved");
-        response.sendRedirect(response.encodeRedirectURL(contextPath + "app/settings"));
+        response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/settings"));
     }
 
     public static void resize(String inputImagePath,
@@ -162,8 +160,7 @@ public class SettingsServlet extends HttpServlet {
                 if (newPaz.getId_medico() != null) {
                     Medico myMedico = (Medico) userDao.getByPrimaryKey(newPaz.getId_medico(), "medico");
                     session.setAttribute("medico", myMedico);
-                }
-                else{
+                } else {
                     session.removeAttribute("medico");
                 }
             } else { // il medico non credo debba modificare niente (?)
@@ -187,8 +184,8 @@ public class SettingsServlet extends HttpServlet {
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";
-        
-        response.sendRedirect(response.encodeRedirectURL(contextPath + "app/settings"));
+
+        response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/settings"));
     }
 
 

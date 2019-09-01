@@ -36,13 +36,13 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdownMenu">
-                <a class="dropdown-item" href="app/settings.handler">Impostazioni</a>
+                <a class="dropdown-item" href="app/${u_url}/settings.handler">Impostazioni</a>
                 <a class="dropdown-item" href="app/logout.handler">Logout</a>
             </div>
         </div>
 
     </div>
-    
+
     <!-- Menu navigazione -->
     <div class="collapse navbar-collapse float-left" id="navbarMenu">
         <ul class="navbar-nav mr-auto">
