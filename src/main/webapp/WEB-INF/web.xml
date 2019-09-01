@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!-- SERVLET -->
     <servlet>
         <servlet-name>Login</servlet-name>
@@ -59,7 +60,10 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Settings</servlet-name>
-        <url-pattern>/app/settings</url-pattern>
+        <url-pattern>/app/paziente/settings</url-pattern>
+        <url-pattern>/app/medico/settings</url-pattern>
+        <url-pattern>/app/medico_spec/settings</url-pattern>
+        <url-pattern>/app/ssp/settings</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>SettingsServlet</servlet-name>
@@ -67,7 +71,10 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>SettingsServlet</servlet-name>
-        <url-pattern>/app/settings.handler</url-pattern>
+        <url-pattern>/app/paziente/settings.handler</url-pattern>
+        <url-pattern>/app/medico/settings.handler</url-pattern>
+        <url-pattern>/app/medico_spec/settings.handler</url-pattern>
+        <url-pattern>/app/ssp/settings.handler</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>PasswordRecovery</servlet-name>
