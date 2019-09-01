@@ -453,8 +453,8 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
                 ret.add(r);
             }
         } catch (SQLException ex) {
-            //throw new DaoException("db_error", ex);
             System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);            
         }
         return ret;
     }

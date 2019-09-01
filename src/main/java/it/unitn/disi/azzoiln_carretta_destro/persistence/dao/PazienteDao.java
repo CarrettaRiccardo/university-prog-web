@@ -1,17 +1,15 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao;
 
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.dao.Dao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Prenotazione;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import java.util.Calendar;
 import java.util.Date;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Statistiche;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,5 +85,15 @@ public interface PazienteDao{
      * @return Lista ticket pagati/da pagare di un utente
      */
     public List<Ticket> getTickets(Integer id_paziente);
+
+    public ArrayList<ArrayList<Integer>> getStatsRicette(int id) throws DaoException;
+
+    public ArrayList<ArrayList<Integer>> getStatsVisite(int id) throws DaoException;
+
+    public ArrayList<ArrayList<Integer>> getStatsVisiteSpecialistiche(int id) throws DaoException;
+
+    public ArrayList<ArrayList<Integer>> getStatsEsami(int id) throws DaoException;
+
+    public ArrayList< Statistiche.LightStats > getStatsPrenotazioni(int id)  throws DaoException;
     
 }

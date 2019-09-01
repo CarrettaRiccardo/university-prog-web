@@ -37,19 +37,4 @@ public class Medico extends Persona{
     public Date getInizioCarriera() {
         return inizioCarriera;
     }
-    
-    
-    public class Stats{
-        public Integer count;
-        public Integer mese;
-        public Integer anno;
-
-        public Stats(Integer count, Integer mese, Integer anno) {
-            this.count = count;
-            this.mese = mese;
-            this.anno = anno;
-        }
-        
-        
-    }
 }

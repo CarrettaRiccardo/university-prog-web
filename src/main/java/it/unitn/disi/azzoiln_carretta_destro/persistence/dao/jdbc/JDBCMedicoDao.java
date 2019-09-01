@@ -1,23 +1,21 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao.jdbc;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.MedicoDao;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico.Stats;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Statistiche;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Statistiche.LightStats;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -277,10 +275,9 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             }
             
             while (rs.next()) {
-                 Medico m = new Medico(-1, "", "", "", "", null, true, -1, -1, "", null, "", ""); //TODO: Crea costruttore vuoto per questa situazione
-                 Medico.Stats s = m.new Stats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
-                 ret2.get(s.mese-1).add(s.count);
-                    
+                 Statistiche m = new Statistiche();
+                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);                    
             }            
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -327,10 +324,9 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             
             while (rs.next()) {
                  System.out.println(rs.getInt("tot"));
-                 Medico m = new Medico(-1, "", "", "", "", null, true, -1, -1, "", null, "", ""); //TODO: Crea costruttore vuoto per questa situazione
-                 Medico.Stats s = m.new Stats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
-                 ret2.get(s.mese-1).add(s.count);
-                    
+                 Statistiche m = new Statistiche();
+                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);                    
             }            
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -367,10 +363,9 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             
             while (rs.next()) {
                  System.out.println(rs.getInt("tot"));
-                 Medico m = new Medico(-1, "", "", "", "", null, true, -1, -1, "", null, "", ""); //TODO: Crea costruttore vuoto per questa situazione
-                 Medico.Stats s = m.new Stats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
-                 ret2.get(s.mese-1).add(s.count);
-                    
+                 Statistiche m = new Statistiche();
+                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);                    
             }            
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -417,10 +412,9 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             
             while (rs.next()) {
                  System.out.println(rs.getInt("tot"));
-                 Medico m = new Medico(-1, "", "", "", "", null, true, -1, -1, "", null, "", ""); //TODO: Crea costruttore vuoto per questa situazione
-                 Medico.Stats s = m.new Stats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
-                 ret2.get(s.mese-1).add(s.count);
-                    
+                 Statistiche m = new Statistiche();
+                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);                    
             }            
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

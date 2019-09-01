@@ -3,6 +3,9 @@ package it.unitn.disi.azzoiln_carretta_destro.filters;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -43,9 +46,9 @@ public class MedicoSpecFilter implements Filter {
 
         if(request instanceof HttpServletRequest){
             HttpServletRequest req = (HttpServletRequest) request;
+            Integer id_paziente = null;
             
             if(req.getParameter("id_paziente") != null){
-                Integer id_paziente = null;
                 try{
                     id_paziente = Integer.parseInt(req.getParameter("id_paziente"));
                 }catch(NumberFormatException e){
@@ -55,7 +58,14 @@ public class MedicoSpecFilter implements Filter {
                     if(id_paziente == null || id_paziente <= 0)
                         throw new ServletException("id_paziente not valid");
                 }
-            }
+                
+                Utente u = (Utente) ((HttpServletRequest) request).getSession(false).getAttribute("utente");
+                if( ! (u instanceof MedicoSpecialista) ) 
+                  throw new ServletException("not_authorized");
+                if(id_paziente == u.getId())
+                    throw new ServletException("not_my_patient");  //Non posso compilare dati su me stesso
+            }           
+            
             
             req.setAttribute("u_url", "medico_spec");
         }
