@@ -6,6 +6,22 @@
     <title>Impostazioni account</title>
 
     <%@include file="global/head.jsp" %>
+
+    <script>
+        $("document").ready(function () {
+            $("#photo_upload").change(function (e) {
+                let file = e.target.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#profile_photo').attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                    $("#file_name").text(file.name);
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -21,7 +37,12 @@
                     <img id="profile_photo" width="256" height="256" class="rounded-circle shadow mb-2"
                          onerror="this.onerror=null; this.src='assets/default.jpg'"
                          src="<c:out value="${PHOTOS_DIR}${utente.getFoto()}" /> ">
-                    <input type="file" name="file" accept=".jpg" class="btn btn-block btn-outline-primary mt-3"/>
+
+                    <div class="custom-file d-block">
+                        <input id="photo_upload" type="file" name="file" class="custom-file-input" accept=".jpg"/>
+                        <label id="file_name" class="custom-file-label text-left" for="photo_upload">Scegli file</label>
+                    </div>
+
                 </div>
             </c:if>
 

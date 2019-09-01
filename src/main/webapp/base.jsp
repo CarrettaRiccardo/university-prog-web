@@ -62,9 +62,7 @@
     </script>
 </head>
 <body>
-<jsp:include page="/global/navbar.jsp">
-    <jsp:param name="show_navigation" value="true"/>
-</jsp:include>
+<jsp:include page="/global/navbar.jsp"/>
 
 <div class="container pt-2 min-vh-100">
     <div class="row">
