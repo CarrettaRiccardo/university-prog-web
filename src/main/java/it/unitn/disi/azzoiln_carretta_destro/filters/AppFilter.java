@@ -67,7 +67,7 @@ public class AppFilter implements Filter {
             String sezioniDettagli = ""; // Sezioni mostrate nei dettagli dell'utente
             switch (((Utente) ((HttpServletRequest) request).getSession(false).getAttribute("utente")).getType()) {
                 case PAZIENTE:
-                    sezioni = "prenotazioni,visite,visite_specialistiche,esami,ricette";
+                    sezioni = "prenotazioni,visite,visite_specialistiche,esami,ricette,stats";
                     sezioniDettagli = "";
                     break;
                 case MEDICO:
@@ -75,7 +75,7 @@ public class AppFilter implements Filter {
                     sezioniDettagli = "visite,visite_specialistiche,esami,ricette";
                     break;
                 case MEDICO_SPEC:
-                    sezioni = "pazienti";
+                    sezioni = "pazienti,stats";
                     sezioniDettagli = "visite,visite_specialistiche,esami";
                     break;
                 case SSP:

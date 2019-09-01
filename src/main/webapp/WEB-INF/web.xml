@@ -217,6 +217,8 @@
     <!-- SESSIONE -->
     <servlet-mapping>
         <servlet-name>StatisticheServlet</servlet-name>
+        <url-pattern>/app/paziente/stats</url-pattern>
+        <url-pattern>/app/medico_spec/stats</url-pattern>
         <url-pattern>/app/medico/stats</url-pattern>
         <url-pattern>/app/ssp/stats</url-pattern>
     </servlet-mapping>

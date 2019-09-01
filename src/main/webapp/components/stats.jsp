@@ -26,7 +26,7 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
 <c:forEach items="${grafici}" var="g" varStatus="loop">
     <script type="text/javascript">
     <c:if test="${loop.index == 0}">
-        google.charts.load('current', {'packages':['corechart','bar']});
+        google.charts.load('current', {'packages':['corechart','bar','calendar']});
     </c:if>
                   
     <c:choose>
@@ -36,7 +36,8 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
                   var data = google.visualization.arrayToDataTable([
                       ['<fmt:message key="stats_lbl_mese"/>' 
                           <c:forEach begin="0" end="${g.getArrayDati().get(0).size() - 1}" varStatus="status">
-                              ,'${time - status.index}'
+                          
+                              ,'${time - (g.getArrayDati().get(0).size() - 1 - status.index) }'
                           </c:forEach>
                       ],
                       <c:forEach items="${g.getArrayDati()}" var="r" varStatus="status">
@@ -95,7 +96,46 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
                     chart.draw(data, options);
                 }
         </c:when>
-        <c:otherwise>${g.getTipoGrafico()} </c:otherwise>
+        <c:when test="${g.getTipoGrafico() eq 2}">            
+                google.charts.setOnLoadCallback(drawChart${loop.index});   
+                
+                function drawChart${loop.index}() {
+                    var dataTable = new google.visualization.DataTable();
+                    dataTable.addColumn({ type: 'date', id: 'Date' });
+                    dataTable.addColumn({ type: 'number', id: 'Won/Loss' });
+                    dataTable.addRows([
+                       
+                        <c:forEach items="${g.getArrayDati()}" var="r" varStatus="status">
+                          [new Date('${r.getData()}'),${r.getCount()}]                          
+                          <c:if test="${!status.last}"> , </c:if>
+                        </c:forEach>
+                     ]);
+
+                    var chart = new google.visualization.Calendar(document.getElementById('chart_div_${loop.index}'));
+                    var options = {
+                      title: "<fmt:message key="${g.getTitleGraphic()}" />",
+                      height: 350,
+                      calendar: {
+                        dayOfWeekLabel: {
+                          fontName: 'Times-Roman',
+                          fontSize: 12,
+                          color: 'black',
+                          bold: true,
+                          italic: true,
+                        },
+                        monthLabel:{
+                          fontName: 'Times-Roman',
+                          fontSize: 12,
+                          color: 'black',
+                        },
+                        dayOfWeekRightSpace: 10,
+                        daysOfWeek: 'DLMMGVS',
+                      }
+                    };
+
+                    chart.draw(dataTable, options);
+                  }
+        </c:when> 
     </c:choose>
     
     </script>
