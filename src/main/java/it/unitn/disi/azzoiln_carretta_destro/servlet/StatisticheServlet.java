@@ -6,6 +6,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
@@ -63,6 +64,7 @@ public class StatisticheServlet extends HttpServlet {
         }
         
         request.setAttribute("page", "stats");
+        request.setAttribute("title", "stats");
         request.setAttribute("user", u);
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
         rd.include(request, response);
@@ -79,13 +81,32 @@ public class StatisticheServlet extends HttpServlet {
      * Inserisce come param di request stats per :
      * - Andamento numero ricette ultimi 3 anni
      * - Andamento numero visite ultimi 3 anni
+     * - Andamento numero visite_spec ultimi 3 anni
      * - Andamento numero esami ultimi 3 anni
      * - Periodi in cui va dal medico durante l'anno per gli ultimi 3 anni
      * @param request
      * @param u 
      */
-    private void managePaziente(HttpServletRequest request, Utente u) {
-        
+    private void managePaziente(HttpServletRequest request, Utente u) throws ServletException {
+        try{
+            ArrayList< ArrayList<Integer> > ricette = userDao.Paziente().getStatsRicette(u.getId());
+            ArrayList< ArrayList<Integer> > visite = userDao.Paziente().getStatsVisite(u.getId());
+            ArrayList< ArrayList<Integer> > vs = userDao.Paziente().getStatsVisiteSpecialistiche(u.getId());
+            ArrayList< ArrayList<Integer> > esami = userDao.Paziente().getStatsEsami(u.getId());
+            ArrayList<Statistiche.LightStats> pren = userDao.Paziente().getStatsPrenotazioni( ((Paziente)u).getId_medico());            
+            
+            LinkedList<Statistiche> param = new LinkedList<>();
+            param.add(new Statistiche<ArrayList<Integer>>(ricette, "stats_ricette",0));
+            param.add(new Statistiche<ArrayList<Integer>>(visite, "stats_visite",0));
+            param.add(new Statistiche<ArrayList<Integer>>(vs, "stats_visite_spec",0));
+            param.add(new Statistiche<ArrayList<Integer>>(esami, "stats_esami",0));
+            param.add(new Statistiche<Statistiche.LightStats>(pren, "stats_prenotazioni",2));
+            
+            request.setAttribute("grafici", param);
+        }catch(DaoException ex){
+            System.out.println(ex.getMessage());
+            throw new ServletException(ex.getMessage());
+        }
     }
 
     
@@ -129,11 +150,11 @@ public class StatisticheServlet extends HttpServlet {
      * @param request
      * @param u 
      */
-    private void manageMedicoSpec(HttpServletRequest request, Utente u) {
+    private void manageMedicoSpec(HttpServletRequest request, Utente u) throws ServletException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void manageSsp(HttpServletRequest request, Utente u) {
+    private void manageSsp(HttpServletRequest request, Utente u) throws ServletException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

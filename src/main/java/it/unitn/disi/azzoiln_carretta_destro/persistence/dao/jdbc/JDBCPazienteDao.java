@@ -1,23 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao.jdbc;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.PazienteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.jdbc.JDBCDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Prenotazione;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Statistiche;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -96,5 +94,225 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
     @Override
     public List<Ticket> getTickets(Integer id_paziente) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ArrayList< ArrayList<Integer> > getStatsRicette(int id_paziente)throws DaoException {
+        if(id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+        ArrayList< ArrayList<Integer> > ret2 = new ArrayList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
+                                                            "FROM \n" +
+                                                            "     (\n" +
+                                                            "      SELECT * FROM\n" +
+                                                            "        (\n" +
+                                                            "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
+                                                            "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
+                                                            "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE id_paziente = ? AND YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "      ) AS seq \n" +
+                                                            "LEFT JOIN (prescrizione p  inner join farmaco f ON p.id_paziente = ? AND p.id = f.id_prescrizione)  ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
+                                                            "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
+                                                            "GROUP BY seq.anno, seq.mese\n" +
+                                                            "ORDER BY seq.anno, seq.mese")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            for (int i = 0; i < 12; i++) {
+                ret2.add(new ArrayList<Integer>());
+            }
+            
+            while (rs.next()) {
+                 Statistiche m = new Statistiche();
+                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);                    
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            throw new DaoException("db_error", ex);
+        }    
+        int i = 0;
+        System.out.println("STAMPO STATS_RICETTE");
+        for(ArrayList<Integer> m : ret2){
+            System.out.print("Mese:" + i);
+            for(Integer m2 : m){
+                System.out.print(" -> " + m2);
+            }
+            System.out.println("");
+            i++;
+        }
+        return ret2;
+    }
+
+    @Override
+    public ArrayList<ArrayList<Integer>> getStatsVisite(int id_paziente) throws DaoException {
+        if(id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+        ArrayList< ArrayList<Integer> > ret2 = new ArrayList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
+                                                            "FROM \n" +
+                                                            "     (\n" +
+                                                            "      SELECT * FROM\n" +
+                                                            "        (\n" +
+                                                            "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
+                                                            "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
+                                                            "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE id_paziente = ? AND YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "      ) AS seq \n" +
+                                                            "LEFT JOIN (prescrizione p  inner join visita f ON p.id_paziente = ? AND p.id = f.id_prescrizione)  ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
+                                                            "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
+                                                            "GROUP BY seq.anno, seq.mese\n" +
+                                                            "ORDER BY seq.anno, seq.mese")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            for (int i = 0; i < 12; i++) {
+                ret2.add(new ArrayList<Integer>());
+            }
+            
+            while (rs.next()) {
+                 System.out.println(rs.getInt("tot"));
+                 Statistiche m = new Statistiche();
+                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);                    
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            throw new DaoException("db_error", ex);
+        }    
+        return ret2;
+    }
+
+    @Override
+    public ArrayList<ArrayList<Integer>> getStatsVisiteSpecialistiche(int id_paziente) throws DaoException {
+        if(id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+        ArrayList< ArrayList<Integer> > ret2 = new ArrayList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
+                                                            "FROM \n" +
+                                                            "     (\n" +
+                                                            "      SELECT * FROM\n" +
+                                                            "        (\n" +
+                                                            "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
+                                                            "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
+                                                            "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE id_paziente = ? AND YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "      ) AS seq \n" +
+                                                            "LEFT JOIN (prescrizione p  inner join visita_specialistica f ON p.id_paziente = ? AND p.id = f.id_prescrizione) ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
+                                                            "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
+                                                            "GROUP BY seq.anno, seq.mese\n" +
+                                                            "ORDER BY seq.anno, seq.mese")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            for (int i = 0; i < 12; i++) {
+                ret2.add(new ArrayList<Integer>());
+            }
+            
+            while (rs.next()) {
+                 System.out.println(rs.getInt("tot"));
+                 Statistiche m = new Statistiche();
+                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);                    
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            throw new DaoException("db_error", ex);
+        }    
+        System.out.println("STAMPO STATS_VS");
+        int i = 0;
+        for(ArrayList<Integer> m : ret2){
+            System.out.print("Mese:" + i);
+            for(Integer m2 : m){
+                System.out.print(" -> " + m2);
+            }
+            System.out.println("");
+            i++;
+        }
+        return ret2;
+    }
+
+    @Override
+    public ArrayList<ArrayList<Integer>> getStatsEsami(int id_paziente) throws DaoException {
+        if(id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+        ArrayList< ArrayList<Integer> > ret2 = new ArrayList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
+                                                            "FROM \n" +
+                                                            "     (\n" +
+                                                            "      SELECT * FROM\n" +
+                                                            "        (\n" +
+                                                            "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
+                                                            "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
+                                                            "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
+                                                            "		) as tmp , (SELECT DISTINCT YEAR(time) as anno FROM prescrizione WHERE id_paziente = ? AND YEAR(time) >= YEAR(NOW()) - 2) as tmp2\n" +
+                                                            "      ) AS seq \n" +
+                                                            "LEFT JOIN (prescrizione p  inner join esame f ON p.id_paziente = ? AND p.id = f.id_prescrizione) ON seq.mese = MONTH(p.time) AND seq.anno = YEAR(p.time)\n" +
+                                                            "WHERE YEAR(time) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
+                                                            "GROUP BY seq.anno, seq.mese\n" +
+                                                            "ORDER BY seq.anno, seq.mese")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            for (int i = 0; i < 12; i++) {
+                ret2.add(new ArrayList<Integer>());
+            }
+            
+            while (rs.next()) {
+                 System.out.println(rs.getInt("tot"));
+                 Statistiche m = new Statistiche();
+                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                 ret2.get(s.mese-1).add(s.count);                    
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            throw new DaoException("db_error", ex);
+        }    
+        System.out.println("STAMPO STATS_ESAMI");
+        int i = 0;
+        for(ArrayList<Integer> m : ret2){
+            System.out.print("Mese:" + i);
+            for(Integer m2 : m){
+                System.out.print(" -> " + m2);
+            }
+            System.out.println("");
+            i++;
+        }
+        return ret2;
+    }
+    
+    @Override
+    public ArrayList<Statistiche.LightStats> getStatsPrenotazioni(int id_medico) throws DaoException {
+        if(id_medico <= 0) throw new IdNotFoundException("id_medico");
+        ArrayList<Statistiche.LightStats> ret2 = new ArrayList<>();
+        
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT CAST(time as DATE) as time, COUNT(*) as tot\n" +
+                                                            "FROM prenotazione\n" +
+                                                            "WHERE id_medico = ? AND YEAR(time) = YEAR(NOW()) \n" +
+                                                            "GROUP BY time\n" +
+                                                            "ORDER BY time")) {
+            stm.setInt(1, id_medico);
+            ResultSet rs = stm.executeQuery();
+                        
+            while (rs.next()) {
+                 Statistiche m = new Statistiche();
+                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getDate("time"));
+                 ret2.add(s);   
+            }            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            throw new DaoException("db_error", ex);
+        }    
+        /*System.out.println("STAMPO STATS_ESAMI");
+        int i = 0;
+        for(ArrayList<Integer> m : ret2){
+            System.out.print("Mese:" + i);
+            for(Integer m2 : m){
+                System.out.print(" -> " + m2);
+            }
+            System.out.println("");
+            i++;
+        }*/
+        return ret2;
     }
 }
