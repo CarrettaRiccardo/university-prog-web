@@ -63,16 +63,13 @@
 </head>
 <body>
 <jsp:include page="/global/navbar.jsp">
-    <jsp:param name="showMenu" value="true"/>
+    <jsp:param name="show_navigation" value="true"/>
 </jsp:include>
 
 <div class="container pt-2 min-vh-100">
     <div class="row">
-        <div class="col-12 col-md-2">
-            <jsp:include page="/components/navigation.jsp"/>
-        </div>
-        <div class="col-12 col-md-10">
-            <h2 class="mt-2 mb-4"><fmt:message key="${title}"/> ${nome} </h2>
+        <div class="col-12">
+            <h2 class="mt-2 mb-4"><fmt:message key="${title}"/>${nome}</h2>
             <jsp:include page="/components/${page}.jsp"/>
         </div>
     </div>
