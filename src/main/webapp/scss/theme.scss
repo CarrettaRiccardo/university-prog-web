@@ -49,6 +49,17 @@ $gradients: #007BFF #001F87,
   }
 }
 
+@include media-breakpoint-down(xs) {
+  .nav-tabs .nav-link.active {
+    border-bottom: 1px solid #dee2e6 !important;
+  }
+}
+
+// Aumeno larghezza campo "Cerca" per datatables
+#table_filter input[type="search"] {
+  width: 100px;
+}
+
 
 
 
