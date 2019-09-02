@@ -7,9 +7,9 @@
 
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page pageEncoding="UTF-8"%>
 <%@ page import="it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setBundle basename="messages"/>
-<fmt:setLocale value="it_IT" />
+<fmt:setLocale value="it_IT"/>

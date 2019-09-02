@@ -443,9 +443,9 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
     @Override
     public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente) throws DaoException {
         if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
-        LinkedList<VisitaSpecialistica> ret = new LinkedList<>();
+        List<VisitaSpecialistica> ret = new LinkedList<>();
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec FROM visita_specialistica v inner join prescrizione p on p.id = v.id_prescrizione inner join visite_specialistiche v2 on v2.id = v.id_visita_spec WHERE p.id_paziente = ? ORDER BY time DESC")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec FROM visita_specialistica v inner join prescrizione p on p.id = v.id_prescrizione inner join visite_specialistiche v2 on v2.id = v.id_visita_spec WHERE p.id_paziente = ? ORDER BY time_visita DESC")) {
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -454,7 +454,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage() + "\n\n");
-            throw new DaoException("db_error", ex);            
+            throw new DaoException("db_error", ex);
         }
         return ret;
     }
@@ -495,7 +495,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<Esame> ret = new LinkedList<>();
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM esame r inner join esami_prescrivibili f on f.id = r.id_esame inner join prescrizione p on p.id = r.id_prescrizione WHERE id_paziente = ? ORDER BY time DESC")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM esame r inner join esami_prescrivibili f on f.id = r.id_esame inner join prescrizione p on p.id = r.id_prescrizione WHERE id_paziente = ? ORDER BY time_esame DESC")) {
             stm.setInt(1, id_paziente);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -616,7 +616,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         if (id_visita <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
         VisitaSpecialistica ret = null;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec FROM visita_specialistica v inner join prescrizione p on p.id = v.id_prescrizione inner join visite_specialistiche v2 on v2.id = v.id_visita_spec WHERE p.id_paziente = ? AND id_prescrizione = ? ORDER BY time DESC")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec FROM visita_specialistica v inner join prescrizione p on p.id = v.id_prescrizione inner join visite_specialistiche v2 on v2.id = v.id_visita_spec WHERE p.id_paziente = ? AND id_prescrizione = ? ORDER BY time_visita DESC")) {
             stm.setInt(1, id_paziente);
             stm.setInt(2, id_visita);
             ResultSet rs = stm.executeQuery();
@@ -635,7 +635,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         if (id_esame <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
         Esame ret = null;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,e.nome as nome_esame FROM esame v inner join prescrizione p on p.id = v.id_prescrizione inner join esami_prescrivibili e on e.id = v.id_esame WHERE p.id_paziente = ? AND id_prescrizione = ? ORDER BY time DESC")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,e.nome as nome_esame FROM esame v inner join prescrizione p on p.id = v.id_prescrizione inner join esami_prescrivibili e on e.id = v.id_esame WHERE p.id_paziente = ? AND id_prescrizione = ? ORDER BY time_esame DESC")) {
             stm.setInt(1, id_paziente);
             stm.setInt(2, id_esame);
             ResultSet rs = stm.executeQuery();

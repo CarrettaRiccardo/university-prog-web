@@ -56,7 +56,9 @@
                             tableClass: 'table'
                         })
                     }
-                }
+                },
+                // Disabilitazione ordinamento automatico
+                order: []
             });
         });
     </script>
