@@ -5,7 +5,7 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
 <%@ include file="../../global/common.jsp" %>
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate var="time" value="${now}" pattern="yyyy"/>
-<jsp:useBean id="monthNames" class="java.text.DateFormatSymbols" />      
+<jsp:useBean id="monthNames" class="java.text.DateFormatSymbols" />
 
 <c:set value="${monthNames.months}" var="months" />
 
@@ -20,7 +20,7 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
         </div>
        </div>
        <br/>
-    </c:forEach>       
+    </c:forEach>
 </div>
 
 <c:forEach items="${grafici}" var="g" varStatus="loop">
@@ -28,20 +28,20 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
     <c:if test="${loop.index == 0}">
         google.charts.load('current', {'packages':['corechart','bar','calendar']});
     </c:if>
-                  
+
     <c:choose>
-        <c:when test="${g.getTipoGrafico() eq 0}">            
-                google.charts.setOnLoadCallback(drawChart${loop.index});   
+        <c:when test="${g.getTipoGrafico() eq 0}">
+                google.charts.setOnLoadCallback(drawChart${loop.index});
                 function drawChart${loop.index}() {
                   var data = google.visualization.arrayToDataTable([
-                      ['<fmt:message key="stats_lbl_mese"/>' 
+                      ['<fmt:message key="stats_lbl_mese"/>'
                           <c:forEach begin="0" end="${g.getArrayDati().get(0).size() - 1}" varStatus="status">
-                          
+
                               ,'${time - (g.getArrayDati().get(0).size() - 1 - status.index) }'
                           </c:forEach>
                       ],
                       <c:forEach items="${g.getArrayDati()}" var="r" varStatus="status">
-                          ['${months[ status.getIndex() ]}' 
+                          ['${months[ status.getIndex() ]}'
                               <c:forEach items="${r}" var="v">
                                   ,${v}
                               </c:forEach>
@@ -52,14 +52,14 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
 
                   var options = {
                     title: ' <fmt:message key="${g.getTitleGraphic()}" /> ',
-                    hAxis: {title: '<fmt:message key="stats_lbl_mese"/>',  
+                    hAxis: {title: '<fmt:message key="stats_lbl_mese"/>',
                     titleTextStyle: {color: '#333'}},
                     vAxis: {minValue: 0}
                   };
                   var chart = new google.visualization.AreaChart(document.getElementById('chart_div_${loop.index}'));
                   chart.draw(data, options);
                 }
-        </c:when>              
+        </c:when>
         <c:when test="${g.getTipoGrafico() eq 1}">
                 google.charts.setOnLoadCallback(drawChart${loop.index});
                 function drawChart${loop.index}() {
@@ -68,7 +68,7 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
                         ['New York City, NY', 8175000]
                       ]);*/
                       var data = google.visualization.arrayToDataTable([
-                      ['' 
+                      [''
                           , '<fmt:message key="${g.getTitleGraphic()}" />'
                       ],
                       <c:forEach items="${g.getArrayDati()}" var="r" varStatus="status">
@@ -96,17 +96,17 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
                     chart.draw(data, options);
                 }
         </c:when>
-        <c:when test="${g.getTipoGrafico() eq 2}">            
-                google.charts.setOnLoadCallback(drawChart${loop.index});   
-                
+        <c:when test="${g.getTipoGrafico() eq 2}">
+                google.charts.setOnLoadCallback(drawChart${loop.index});
+
                 function drawChart${loop.index}() {
                     var dataTable = new google.visualization.DataTable();
                     dataTable.addColumn({ type: 'date', id: 'Date' });
                     dataTable.addColumn({ type: 'number', id: 'Won/Loss' });
                     dataTable.addRows([
-                       
+
                         <c:forEach items="${g.getArrayDati()}" var="r" varStatus="status">
-                          [new Date('${r.getData()}'),${r.getCount()}]                          
+                          [new Date('${r.getData()}'),${r.getCount()}]
                           <c:if test="${!status.last}"> , </c:if>
                         </c:forEach>
                      ]);
@@ -135,9 +135,9 @@ INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
 
                     chart.draw(dataTable, options);
                   }
-        </c:when> 
+        </c:when>
     </c:choose>
-    
+
     </script>
 </c:forEach>
 
