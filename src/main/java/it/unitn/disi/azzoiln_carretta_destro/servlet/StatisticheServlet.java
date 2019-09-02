@@ -151,7 +151,17 @@ public class StatisticheServlet extends HttpServlet {
      * @param u 
      */
     private void manageMedicoSpec(HttpServletRequest request, Utente u) throws ServletException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            ArrayList< ArrayList<Integer> > vs = userDao.MedicoSpecialista().getStatsVisiteSpecialistiche(u.getId());
+            
+            LinkedList<Statistiche> param = new LinkedList<>();
+            param.add(new Statistiche<ArrayList<Integer>>(vs, "stats_visite_spec",0));
+            
+            request.setAttribute("grafici", param);
+        }catch(DaoException ex){
+            System.out.println(ex.getMessage());
+            throw new ServletException(ex.getMessage());
+        }
     }
 
     private void manageSsp(HttpServletRequest request, Utente u) throws ServletException {

@@ -4,6 +4,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public interface MedicoSpecDao {
      * @param id_ticket
      * @return T on success
      */
-    public boolean pagaTicket(Integer id_paziente, Integer id_ticket);
+    public boolean pagaTicket(Integer id_paziente, Integer id_ticket) throws DaoException;
     
     
     /**
@@ -35,7 +36,7 @@ public interface MedicoSpecDao {
      * @param id_paziente
      * @return  Oggetto Paziente o null on failure
      */
-    public Paziente getPaziente(Integer id_paziente);
+    public Paziente getPaziente(Integer id_paziente) throws DaoException;
     
     
     /**
@@ -43,7 +44,7 @@ public interface MedicoSpecDao {
      * @param id_paziente
      * @return 
      */
-    public boolean richiamaPaziente(Integer id_paziente);
+    public boolean richiamaPaziente(Integer id_paziente) throws DaoException;
 
     
     /**
@@ -63,5 +64,8 @@ public interface MedicoSpecDao {
      * @throws DaoException 
      */
     public boolean compileVisitaSpecialistica(VisitaSpecialistica v, Integer id_medico_spec) throws DaoException;
+
+    public ArrayList<ArrayList<Integer>> getStatsVisiteSpecialistiche(int id) throws DaoException;
+
     
 }
