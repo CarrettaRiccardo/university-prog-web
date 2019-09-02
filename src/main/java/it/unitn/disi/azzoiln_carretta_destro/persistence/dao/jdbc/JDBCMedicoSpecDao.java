@@ -188,9 +188,9 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
                 ret2.add(new ArrayList<Integer>());
             }
             
+            Statistiche m = new Statistiche();
             while (rs.next()) {
                  System.out.println(rs.getInt("tot"));
-                 Statistiche m = new Statistiche();
                  Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
                  ret2.get(s.mese-1).add(s.count);                    
             }            
@@ -198,6 +198,12 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
         }    
+        if(ret2.get(0).size() == 0){ //se non c'è nessun elemento meto degli 0 per evitare problemi nel forEach in JSP
+            for (int i = 0; i < 12; i++) {
+                ret2.get(i).add(0);
+            }
+        }
+        
         System.out.println("STAMPO STATS_VS");
         int i = 0;
         for(ArrayList<Integer> m : ret2){

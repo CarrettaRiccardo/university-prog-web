@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>
-        <c:out value="${title}"/>
+        <fmt:message key="${title}"/>
     </title>
     <%@include file="global/head.jsp" %>
     <script type="text/javascript">

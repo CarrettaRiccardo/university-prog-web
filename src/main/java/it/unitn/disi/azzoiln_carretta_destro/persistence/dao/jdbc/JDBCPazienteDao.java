@@ -162,6 +162,14 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
         }    
+        
+        if(ret2.get(0).size() == 0){ //se non c'è nessun elemento meto degli 0 per evitare problemi nel forEach in JSP
+            for (int i = 0; i < 12; i++) {
+                ret2.get(i).add(0);
+            }
+        }
+        
+        
         int i = 0;
         System.out.println("STAMPO STATS_RICETTE");
         for(ArrayList<Integer> m : ret2){
@@ -210,7 +218,14 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
-        }    
+        }   
+        
+        if(ret2.get(0).size() == 0){ //se non c'è nessun elemento meto degli 0 per evitare problemi nel forEach in JSP
+            for (int i = 0; i < 12; i++) {
+                ret2.get(i).add(0);
+            }
+        }
+        
         return ret2;
     }
 
@@ -249,7 +264,14 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
-        }    
+        }  
+        
+        if(ret2.get(0).size() == 0){ //se non c'è nessun elemento meto degli 0 per evitare problemi nel forEach in JSP
+            for (int i = 0; i < 12; i++) {
+                ret2.get(i).add(0);
+            }
+        }
+        
         System.out.println("STAMPO STATS_VS");
         int i = 0;
         for(ArrayList<Integer> m : ret2){
@@ -299,6 +321,13 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
         }    
+        
+        if(ret2.get(0).size() == 0){ //se non c'è nessun elemento meto degli 0 per evitare problemi nel forEach in JSP
+            for (int i = 0; i < 12; i++) {
+                ret2.get(i).add(0);
+            }
+        }
+        
         System.out.println("STAMPO STATS_ESAMI");
         int i = 0;
         for(ArrayList<Integer> m : ret2){
@@ -333,7 +362,8 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
-        }    
+        }  
+        
         /*System.out.println("STAMPO STATS_ESAMI");
         int i = 0;
         for(ArrayList<Integer> m : ret2){
