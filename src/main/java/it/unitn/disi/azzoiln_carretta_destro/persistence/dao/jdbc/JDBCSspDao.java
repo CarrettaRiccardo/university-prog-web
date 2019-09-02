@@ -68,21 +68,21 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
     private Medico getMedico(ResultSet rs) throws SQLException {
         return new Medico(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                 rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), rs.getBoolean("medico_attivo"),
-                rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"));
+                rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"),rs.getString("sesso").charAt(0));
     }
 
     private MedicoSpecialista getMedicoSpecialista(ResultSet rs) throws SQLException {
         return new MedicoSpecialista(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                 rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), rs.getBoolean("medico_attivo"),
                 rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"),
-                rs.getString("nome_provincia"), rs.getString("path"), rs.getString("specialita"));
+                rs.getString("nome_provincia"), rs.getString("path"), rs.getString("specialita"),rs.getString("sesso").charAt(0));
     }
 
     private Paziente getPaziente(ResultSet rs) throws SQLException {
         return new Paziente(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                 rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                 rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"));
+                rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"),rs.getString("sesso").charAt(0));
     }
 
     @Override

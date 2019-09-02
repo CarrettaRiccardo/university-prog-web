@@ -134,7 +134,7 @@ public class SettingsServlet extends HttpServlet {
                 newUtente = new Paziente(p.getId(), p.getUsername(),
                         p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
                         nomeProv != null ? (!nomeProv.equals(u.getProvinciaNome()) ? null : idMed) : null,// controllo che se cambia provincia annulla il medico
-                        nomeProv != null ? userDao.Ssp().getIdProvincia(nomeProv) : null, p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto());
+                        nomeProv != null ? userDao.Ssp().getIdProvincia(nomeProv) : null, p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto(),p.getSesso());
 
                 // aggiorno l'utente
                 userDao.update(newUtente);

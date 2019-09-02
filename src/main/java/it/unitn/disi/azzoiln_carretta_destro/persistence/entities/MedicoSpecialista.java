@@ -11,16 +11,16 @@ public class MedicoSpecialista extends Persona {
     private Date inizioCarriera;
     private boolean attivo;
 
-    public MedicoSpecialista(int id, String username, String nome, String cognome, String cf, Date data_nascita, boolean attivo, int provincia, int comune, String laurea, Date inizioCarriera, String nome_prov, String foto, String specialita) {
-        super(id, username, nome, cognome, cf, data_nascita, provincia, comune, "medico_spec", nome_prov, foto);
+    public MedicoSpecialista(int id, String username, String nome, String cognome, String cf, Date data_nascita, boolean attivo, int provincia, int comune, String laurea, Date inizioCarriera, String nome_prov, String foto, String specialita,char sesso) {
+        super(id, username, nome, cognome, cf, data_nascita, provincia, comune, "medico_spec", nome_prov, foto,sesso);
         this.laurea = laurea;
         this.specialita = specialita;
         this.inizioCarriera = inizioCarriera;
         this.attivo = attivo;
     }
 
-    public MedicoSpecialista(Persona p, String laurea, String specialita, Date inizioCarriera, boolean attivo, String foto) {
-        super(p.getId(), p.getUsername(), p.getNome(), p.getCognome(), p.getCf(), p.getData_nascita(), p.getProvincia(), p.getId_Comune(), "medico_spec", p.getNome_comune(), foto);
+    public MedicoSpecialista(Persona p, String laurea, String specialita, Date inizioCarriera, boolean attivo, String foto,char sesso) {
+        super(p.getId(), p.getUsername(), p.getNome(), p.getCognome(), p.getCf(), p.getData_nascita(), p.getProvincia(), p.getId_Comune(), "medico_spec", p.getNome_comune(), foto,sesso);
         this.laurea = laurea;
         this.specialita = specialita;
         this.inizioCarriera = inizioCarriera;

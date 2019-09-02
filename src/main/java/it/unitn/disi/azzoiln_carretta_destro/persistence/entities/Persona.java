@@ -11,10 +11,11 @@ import java.util.Random;
 public class Persona extends Utente {
     private String nome, cognome, cf, ruolo, nome_comune;
     private String foto; //path foto_profilo
+    private char sesso;
     private Date data_nascita;
     private int id_comune;
 
-    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, String ruolo, String nome_provincia,String foto) {
+    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, String ruolo, String nome_provincia,String foto, char sesso) {
         super(id, username, provincia, nome_provincia);
         this.nome = nome;
         this.cognome = cognome;
@@ -23,6 +24,7 @@ public class Persona extends Utente {
         this.ruolo = ruolo;
         this.id_comune = comune;
         this.foto = foto;
+        this.sesso = sesso;
     }
 
     public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, int res, String ruolo, String nome_provincia) {
@@ -43,6 +45,14 @@ public class Persona extends Utente {
         this.data_nascita = data;
         this.ruolo = ruolo;
         this.foto = foto;
+    }
+
+    public char getSesso() {
+        return sesso;
+    }
+
+    public int getId_comune() {
+        return id_comune;
     }
 
 
