@@ -28,11 +28,11 @@ public class Visita extends Prescrizione {
     }
 
     public String getAnamnesi() {
-        return anamnesi;
+        return anamnesi != null ? anamnesi : "";
     }
     
     public String getAnamnesiShort() {
-        return anamnesi.substring(0, 20) + "..";
+        return anamnesi != null ? anamnesi.substring(0, 20) + ".." : "";
     }
     
     

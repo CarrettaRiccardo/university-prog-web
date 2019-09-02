@@ -6,10 +6,34 @@
     <title>Impostazioni account</title>
 
     <%@include file="global/head.jsp" %>
+
+    <script>
+        $("document").ready(function () {
+            $("#photo_upload").change(function (e) {
+                let file = e.target.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#profile_photo').attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                    $("#file_name").text(file.name);
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
 <jsp:include page="/global/navbar.jsp"/>
+
+<script>
+    function disableMedici(){
+        var meds = document.getElementById("selectMedico");
+        meds.disabled = true;
+        document.getElementById("warningProvinciaChanged").style.visibility = "visible";
+    }
+</script>
 
 <div class="container pt-3">
     <h2 class="mb-4">Impostazioni account</h2>
@@ -21,7 +45,12 @@
                     <img id="profile_photo" width="256" height="256" class="rounded-circle shadow mb-2"
                          onerror="this.onerror=null; this.src='assets/default.jpg'"
                          src="<c:out value="${PHOTOS_DIR}${utente.getFoto()}" /> ">
-                    <input type="file" name="file" accept=".jpg" class="btn btn-block btn-outline-primary mt-3"/>
+
+                    <div class="custom-file d-block">
+                        <input id="photo_upload" type="file" name="file" class="custom-file-input" accept=".jpg"/>
+                        <label id="file_name" class="custom-file-label text-left" for="photo_upload">Scegli file</label>
+                    </div>
+
                 </div>
             </c:if>
 
@@ -63,7 +92,7 @@
                     <h5 class="text-primary mt-3">Altro</h5>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
-                            <select class="form-control" name="medico">
+                            <select id="selectMedico" class="form-control" name="medico">
                                 <option disabled selected value>-- Seleziona un Medico di Base --</option>
                                 <c:if test="${not empty medici}">
                                     <c:forEach items="${medici}" var="med">
@@ -76,7 +105,7 @@
                             </select>
                         </div>
                         <div class="col col-12 col-lg-6 py-1">
-                            <select class="form-control" name="provincia">
+                            <select id="selectProvincia" class="form-control" name="provincia" onchange="disableMedici();">
                                 <option disabled selected value>-- Seleziona una Provincia --</option>
                                 <c:if test="${not empty province}">
                                     <c:forEach items="${province}" var="prov">
@@ -90,7 +119,7 @@
                         </div>
                     </div>
                     </c:if>
-                    <c:if test="${utente.isMedico() || utente.isMedicoSpecialista() }">
+                    <c:if test="${utente.isMedico() || utente.isMedicoSpecialista()}">
                     <h5 class="text-primary mt-3">Altro</h5>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
@@ -104,17 +133,25 @@
                         </div>
                     </div>
                     </c:if>
-
-
-                    <div>
-                        <c:if test="${not empty saved}">
-                            <div class="alert alert-success float-top text-center my-3">
-                                Modifiche Salvate
-                            </div>
-                        </c:if>
+                    <div id="warningProvinciaChanged" class="alert alert-warning alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2; visibility: hidden" role="alert">
+                            Salva per selezionare un medico della nuova provincia
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <c:if test="${requestScope.saved}">
+                        <div class="alert alert-success alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2" role="alert">
+                            Modifiche Salvate
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </c:if>
+                    <c:if test="${not utente.isSsp()}">
                         <button type="submit"
                                 class="btn btn-primary float-right my-3">Salva
                         </button>
+                    </c:if>
                     </div>
             </div>
         </div>

@@ -13,13 +13,11 @@
 
     <div class="order-lg-12">
         <!-- Button apertura/chiusura menu per smartphone -->
-        <c:if test="${param.show_navigation}">
-            <button class="btn btn-light ml-2 px-1 py-1 d-lg-none navbar-toggler border-0"
-                    type="button" data-toggle="collapse" data-target="#navbarMenu"
-                    aria-controls="navbarMenu" aria-expanded="false" aria-label="Apri menu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </c:if>
+        <button class="btn btn-light ml-2 px-1 py-1 d-lg-none navbar-toggler border-0"
+                type="button" data-toggle="collapse" data-target="#navbarMenu"
+                aria-controls="navbarMenu" aria-expanded="false" aria-label="Apri menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
         <!-- Menu utente con immmagine profilo -->
         <div class="dropdown top-0 right-0 float-left">
@@ -49,7 +47,7 @@
             <c:forTokens items="${requestScope.sezioni}" var="sezione" varStatus="s" delims=",">
                 <li class="nav-item">
                     <a href="app/${u_url}/${sezione}"
-                       class="nav-link w-100 font-weight-bold ${(sezione == page ? 'text-gradient-'.concat(s.index + 1) : '') }">
+                       class="nav-link font-weight-bold ${(sezione == page ? 'text-gradient-'.concat(s.index + 1) : '') }">
                         <span class="text-capitalize px-2">${sezioni_titles[s.index]}</span>
                     </a>
                 </li>

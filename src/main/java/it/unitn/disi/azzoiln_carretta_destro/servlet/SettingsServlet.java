@@ -51,8 +51,6 @@ public class SettingsServlet extends HttpServlet {
         if (!contextPath.endsWith("/"))
             contextPath += "/";
 
-        HttpSession session = request.getSession(false);
-        session.removeAttribute("saved");
         response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/settings"));
     }
 
@@ -144,7 +142,7 @@ public class SettingsServlet extends HttpServlet {
 
                 Paziente newPaz = (Paziente) newUtente;
                 List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
-                session.setAttribute("province", pr);
+                request.setAttribute("province", pr);
                 List<Medico> md = new ArrayList<>(userDao.Ssp().getMedici(newUtente.getProvincia()));
                 // rimuovo dalla lista se stesso se è anche un medico
                 Integer i = 0;
@@ -172,7 +170,6 @@ public class SettingsServlet extends HttpServlet {
                         true, userDao.Ssp().getIdProvincia(nomeProv), m.getId_Comune(), m.getLaurea(), m.getInizioCarriera(), nomeProv, m.getFoto());
                 }*/
             }
-            session.setAttribute("saved", true);
         } catch (NullPointerException ex) {
             throw new ServletException("invalid_selection");
         } catch (IllegalStateException ex) {

@@ -17,6 +17,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
+import it.unitn.disi.azzoiln_carretta_destro.utility.SendEmail;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -219,6 +220,18 @@ public class RicetteServlet extends HttpServlet {
         }
         
         if (inserito){
+            try {
+                SendEmail.Invia(userDao.getUsername(r.getId_paziente()), "Una nuova ricetta è stata inserita",
+                        "Gentile utente."
+                        + "Una nuova ricetta è stata aggiunta nella tua scheda dal tuo medico di base."
+                        + "<br/>"
+                        + "Controlla le tue ricette per visualizzare i dettagli."
+                        + "<br/>" + "<br/>"
+                        + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
+            } catch (Exception ex) {
+                // Ricky; nascondo all'utente se non viene inviata alla mail
+                Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/ricette?id_paziente=" + r.getId_paziente() + "&r"));
             return;
         }

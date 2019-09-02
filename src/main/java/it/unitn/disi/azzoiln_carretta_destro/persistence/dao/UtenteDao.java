@@ -51,6 +51,15 @@ public interface UtenteDao extends Dao<Utente, Integer>{
     /**
      * 
      * @param username
+     * @return ritorna l'username dell'utente se esiste o null
+     * @throws DaoException 
+     */
+    public String getUsername(Integer id) throws DaoException;
+    
+    
+    /**
+     * 
+     * @param username
      * @return il token di quell'user
      * @throws DaoException 
      */

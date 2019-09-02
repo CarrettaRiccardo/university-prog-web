@@ -14,10 +14,6 @@
       <label for="paziente">Paziente</label>
       <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
     </div>
-    <div class="form-group col-md-6">
-      <label for="data">Data</label>
-      <input type="password" class="form-control" id="data" placeholder="${data}" readonly>
-    </div>
   </div>
   <div class="form-group">
     <label for="autocomplete">Esame</label>

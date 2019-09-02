@@ -79,6 +79,24 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         return ssp;
     }
 
+    public String getUsername(Integer id) throws DaoException {
+        String user = null;
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT username FROM utenti WHERE id = ?")) {
+            stm.setInt(1, id);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    user = rs.getString("username");
+                }
+            } catch (SQLException ex) {
+                throw new DaoException("db_error", ex);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+
+        return user;
+    }
 
     @Override
     public Utente getByPrimaryKey(Integer id, String s) throws DaoException {

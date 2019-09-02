@@ -4,6 +4,10 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Prenotazione;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
+import java.util.Calendar;
+import java.util.Date;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Statistiche;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,24 @@ public interface PazienteDao{
      * @return T on success
      */
     public boolean newPrenotazione(Prenotazione prenotazione) throws DaoException;
+    
+    /**
+     * 
+     * @param id_visita
+     * @param data
+     * @return
+     * @throws DaoException 
+     */
+    public Boolean setDataVisitaSpecialistica(Integer id_visita, String data) throws DaoException;
+    
+    /**
+     * 
+     * @param id_esame
+     * @param data
+     * @return
+     * @throws DaoException 
+     */
+    public Boolean setDataEsame(Integer id_esame, String data) throws DaoException;
     
     /**
      * 

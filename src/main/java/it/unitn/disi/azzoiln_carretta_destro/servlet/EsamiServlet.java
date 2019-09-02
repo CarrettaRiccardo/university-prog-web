@@ -13,13 +13,18 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
+import it.unitn.disi.azzoiln_carretta_destro.utility.SendEmail;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EsamiServlet extends HttpServlet {
     private UtenteDao userDao;
@@ -126,7 +131,7 @@ public class EsamiServlet extends HttpServlet {
         }
         
         if( !e.isNew() || u.getType() != UtenteType.MEDICO_SPEC){ //mostro i campi in readonly, altrimenti compilabili
-            request.setAttribute("i_esame", e);
+            request.setAttribute("i_esame", e); 
             request.setAttribute("title", "view_esame");
         }
         else{
@@ -145,6 +150,7 @@ public class EsamiServlet extends HttpServlet {
             throw new ServletException(ex.getMessage());
         }
         request.setAttribute("paziente", paz);
+        request.setAttribute("data", e.getTime_esame());
         rd.forward(request, response);
     }
     
@@ -197,17 +203,49 @@ public class EsamiServlet extends HttpServlet {
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
         Esame v = Esame.loadFromHttpRequest(request, u);
         
-        boolean inserito;
+        boolean inserito = false, updateData = false;
         try {
-            if(u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
-            inserito = userDao.Medico().addEsame(v);
+            // se un utente sta scegliendo la data della visita specialistica...
+            String data_selez = request.getParameter("datepicker");
+            if (u.getType() == UtenteType.PAZIENTE && data_selez != null){
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    sdf.setLenient(false);
+                    sdf.parse(data_selez);// restituisce una "ParseException" se non e' valida
+                } catch (ParseException ex){
+                    throw new ServletException("invalid_date_exception");
+                }
+                inserito = userDao.Paziente().setDataEsame(v.getId_esame(), data_selez);
+                updateData = true;
+            }
+            else{
+                if(u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
+                inserito = userDao.Medico().addEsame(v);
+            }
         } catch (DaoException ex) {
             System.out.println("Errore addEsame (EsamiServlet) -->\n" + ex.getMessage() + "\n\n");
             inserito = false;
         }
         
         if (inserito){
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/esami?id_paziente=" + v.getId_paziente() + "&r"));
+            if (!updateData){// solo quando il medico modifica mando la mail..
+                try {
+                    SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Un nuovo esame è stato inserito",
+                            "Gentile utente."
+                            + "Un esame con data " + (v.getTime_esame() != null ? v.getTime_esame() : "*da definire*") + " è stato inserito nella tua scheda paziente."
+                            + "<br/>"
+                            + "Controlla i tuoi esami per visualizzare i dettagli."
+                            + "<br/>" + "<br/>"
+                            + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
+                } catch (Exception ex) {
+                    // Ricky; nascondo all'utente se non viene inviata alla mail
+                    Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (updateData)// paziente
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/esami"));
+            else // medico
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/esami?id_paziente=" + v.getId_paziente() + "&r"));
             return;
         }
         

@@ -4,6 +4,7 @@
 
 <%-- Configurazione base path, per non inserire "/project" in ogni link --%>
 <base href="/project/"/>
+<link href="assets/favicon.ico" rel="icon" type="image/x-icon" />
 
 <%-- Bootstrap --%>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

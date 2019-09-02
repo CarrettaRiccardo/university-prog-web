@@ -10,11 +10,14 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Prenotazione;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Statistiche;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +41,7 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
     public Medico getMedico(Integer id_medico) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public boolean newPrenotazione(Prenotazione prenotazione) throws DaoException {
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO `prog_web`.`prenotazione` " +
@@ -96,6 +99,34 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public Boolean setDataVisitaSpecialistica(Integer id_visita, String data) throws DaoException {
+        Boolean success = false;
+        try {
+            PreparedStatement ps = CON.prepareStatement("UPDATE visita_specialistica SET time_visita = ? WHERE id_prescrizione = ?");
+            ps.setString(1, data);
+            ps.setInt(2, id_visita);
+            success = ps.executeUpdate() != 0;
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        return success;
+    }
+    
+    @Override
+    public Boolean setDataEsame(Integer id_esame, String data) throws DaoException {
+        Boolean success = false;
+        try {
+            PreparedStatement ps = CON.prepareStatement("UPDATE esame SET time_esame = ? WHERE id_prescrizione = ?");
+            ps.setString(1, data);
+            ps.setInt(2, id_esame);
+            success = ps.executeUpdate() != 0;
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        return success;
+    }
+    
     @Override
     public ArrayList< ArrayList<Integer> > getStatsRicette(int id_paziente)throws DaoException {
         if(id_paziente <= 0) throw new IdNotFoundException("id_paziente");
