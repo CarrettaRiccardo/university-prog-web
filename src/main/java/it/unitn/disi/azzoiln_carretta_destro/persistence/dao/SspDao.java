@@ -5,6 +5,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,4 +33,6 @@ public interface SspDao{
     public Integer getIdProvincia(String nome_provincia) throws DaoException;
     
     public List<String> getListProvince() throws DaoException;
+
+    public ArrayList<ArrayList<Integer>> getStatsEsami(int id) throws DaoException;
 }

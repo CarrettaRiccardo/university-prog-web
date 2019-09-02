@@ -6,16 +6,16 @@
 INSERT INTO utenti
 VALUES (2, 'Matteo', 'Destro', '1965-12-12', 'matteo.est@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'SONOILCFDIMATTEO', 'medico_spec', NULL, 22, 20, 1, 0, 'Radiologo', 'Medicina generale, UNIPD', '1989-01-01'),
+        'm','SONOILCFDIMATTEO', 'medico_spec', NULL, 22, 20, 1, 0, 'Radiologo', 'Medicina generale, UNIPD', '1989-01-01'),
        (3, 'Riccardo', 'Carretta', '1998-06-23', 'riccardo.carretta@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'ABCDE2FGHIL', 'medico', 3, 22, 15, 1, 1, NULL, 'Medicina, UNITN', '2000-05-13'),
+        'm','ABCDE2FGHIL', 'medico', 3, 22, 15, 1, 1, NULL, 'Medicina, UNITN', '2000-05-13'),
        (1, 'Steve', 'Azzolin', '1998-06-23', 'steve.azzolin1@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'ABCDEFGHIL', 'paziente', 3, 22, 15, 1, 1, NULL, 'Medicina, UNIRM', '2007-07-01'),
+        'm','ABCDEFGHIL', 'paziente', 3, 22, 15, 1, 1, NULL, 'Medicina, UNIRM', '2007-07-01'),
        (4, 'Provincia autonoma di Trento', NULL, NULL, 'trento@gov.it',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        NULL, 'ssp', NULL, 22, NULL, NULL, NULL, NULL, 'Medicina, UNIMI', '2010-12-01');
+        NULL, NULL,'ssp', NULL, 22, NULL, NULL, NULL, NULL, 'Medicina, UNIMI', '2010-12-01');
 
 /*************** TICKETS **************************/
 INSERT INTO ticket

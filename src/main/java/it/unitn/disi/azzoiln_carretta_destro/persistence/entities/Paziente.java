@@ -14,8 +14,8 @@ public class Paziente extends Persona{
     private Date ultima_visita, ultima_ricetta;
 
     
-    public Paziente(int id, String username, String nome, String cognome,Date data_nascita,String cf, Integer id_medico, Integer provincia, int comune, boolean paziente_attivo,String nome_provincia,String foto) {
-        super(id, username, nome, cognome, cf, data_nascita,  provincia, comune, "paziente", nome_provincia,foto);
+    public Paziente(int id, String username, String nome, String cognome,Date data_nascita,String cf, Integer id_medico, Integer provincia, int comune, boolean paziente_attivo,String nome_provincia,String foto,char sesso) {
+        super(id, username, nome, cognome, cf, data_nascita,  provincia, comune, "paziente", nome_provincia,foto,sesso);
         this.id_medico = id_medico;
         this.attivo = paziente_attivo;
     }

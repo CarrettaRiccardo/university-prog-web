@@ -164,8 +164,26 @@ public class StatisticheServlet extends HttpServlet {
         }
     }
 
+    
+    /**
+     * Inserisce come param di request stats per :
+     * - Andamento numero esami
+     * @param request
+     * @param u
+     * @throws ServletException 
+     */
     private void manageSsp(HttpServletRequest request, Utente u) throws ServletException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            ArrayList< ArrayList<Integer> > es = userDao.Ssp().getStatsEsami(u.getId());
+            
+            LinkedList<Statistiche> param = new LinkedList<>();
+            param.add(new Statistiche<ArrayList<Integer>>(es, "stats_esami_ssp",0));
+            
+            request.setAttribute("grafici", param);
+        }catch(DaoException ex){
+            System.out.println(ex.getMessage());
+            throw new ServletException(ex.getMessage());
+        }
     }
 
 

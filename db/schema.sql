@@ -44,6 +44,7 @@ create table utenti
     data_nascita    date COMMENT 'NULL solo per SSP',
     username        varchar(255) not null,
     password        varchar(255) not null,
+    sesso           char(1)   DEFAULT NULL COMMENT 'm|f',
     cf              varchar(20)  COMMENT 'NULL solo per SSP',
     ruolo           char(32)     not null DEFAULT 'paziente' COMMENT 'paziente | medico | medico_spec | ssp',
     id_medico       int                   DEFAULT NULL,
