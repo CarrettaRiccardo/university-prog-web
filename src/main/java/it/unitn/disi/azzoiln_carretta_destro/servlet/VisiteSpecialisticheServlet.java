@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,10 +128,6 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         } finally {
             if (vs == null) throw new ServletException("visita_spec_not_found");
             if (importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
-        }
-        finally{
-            if(vs == null) throw new ServletException("visita_spec_not_found");
-            if(importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
             if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita() == null) throw new ServletException("visita_non_fissata"); //il medico non può accedere ad una visita non fissata
             if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita().compareTo(new Date()) > 0 ) throw new ServletException("visita_futura"); 
         }
