@@ -1,20 +1,14 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
-import java.io.IOException;
-import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+import java.io.IOException;
 
 /**
- *
  * @author Steve
  */
 public class LogoutServlet extends HttpServlet {
@@ -33,8 +27,8 @@ public class LogoutServlet extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
     }
-    
-    
+
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -43,22 +37,22 @@ public class LogoutServlet extends HttpServlet {
         if (!contextPath.endsWith("/")) {
             contextPath += "/";
         }
-        
+
         Cookie[] cookies = request.getCookies();     // request is an instance of type 
-                                                     //HttpServletRequest
+        //HttpServletRequest
         Boolean found = false;
-                                                     
+
         // cerca i cookie di "ricordami"
-        for(int i = 0; i < cookies.length && found == false; i++){ 
+        for (int i = 0; i < cookies.length && found == false; i++) {
             Cookie c = cookies[i];
-            if (c.getName().equals("user_token")){
+            if (c.getName().equals("user_token")) {
                 found = true;
                 c.setMaxAge(0);// cancella
                 response.addCookie(c);
             }
         }
-        
-        
+
+
         HttpSession session = request.getSession(false);
         session.invalidate();
 
@@ -67,14 +61,14 @@ public class LogoutServlet extends HttpServlet {
         }
     }
 
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
-    
+
     @Override
     public String getServletInfo() {
         return "Short description";

@@ -1,10 +1,12 @@
-<%@ include file="global/common.jsp" %> 
+<%@ include file="global/common.jsp" %>
 <html>
 <head>
     <title>Login</title>
 
-    <%@include file="global/head.jsp" %>  <%-- Questo path rimane uguale perchè valutato a compile time--%>
-    <link rel="stylesheet" href="css/login.css">  <%-- La pagina di login è mappata su /app/login. Quindi mettere solo scc/login dà not found perchè cerca in /app/scss e non trova nulla--%>
+    <%@include file="global/head.jsp" %>
+    <%-- Questo path rimane uguale perchè valutato a compile time--%>
+    <link rel="stylesheet" href="css/login.css">
+    <%-- La pagina di login è mappata su /app/login. Quindi mettere solo scc/login dà not found perchè cerca in /app/scss e non trova nulla--%>
 
     <script>
         function getCookie(c_name) {
@@ -24,7 +26,7 @@
             return c_value;
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             var tokenCookie = getCookie("user_token");
             if (tokenCookie) {
                 window.location.href = "login.handler"
@@ -39,17 +41,17 @@
         <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
     </div>
     <c:if test="${not empty param.login_error}">
-        <div class="alert alert-danger" role="alert">          
+        <div class="alert alert-danger" role="alert">
             <c:choose>
-                <c:when test="${param.login_error == 'reset'}"> <fmt:message key="login_error_recovery"/>  </c:when>
-                <c:when test="${param.login_error == 'pwd'}"> <fmt:message key="login_error_password"/>  </c:when>
-                <c:when test="${param.login_error == 'user'}"> <fmt:message key="login_error_username"/>  </c:when>
-                <c:when test="${param.login_error == 'auth'}"> <fmt:message key="login_error_auth"/>  </c:when>
-                <c:otherwise> <fmt:message key="login_error_service"/>  </c:otherwise>
-            </c:choose>                  
+                <c:when test="${param.login_error == 'reset'}"> <fmt:message key="login_error_recovery"/> </c:when>
+                <c:when test="${param.login_error == 'pwd'}"> <fmt:message key="login_error_password"/> </c:when>
+                <c:when test="${param.login_error == 'user'}"> <fmt:message key="login_error_username"/> </c:when>
+                <c:when test="${param.login_error == 'auth'}"> <fmt:message key="login_error_auth"/> </c:when>
+                <c:otherwise> <fmt:message key="login_error_service"/> </c:otherwise>
+            </c:choose>
         </div>
     </c:if>
-    
+
     <input type="email" class="form-control" id="username" name="username" placeholder="Username" required autofocus>
     <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
     <div class="custom-control custom-checkbox secondary text-center mb-3">

@@ -1,37 +1,42 @@
 <%-- 
-    Document   : Pagina con interfaccia per creare una nuova visita. Vista usata anche da riepilogo visita con modalità
+    Document   : Pagina con interfaccia per creare una nuova visita. Vista usata anche da riepilogo visita con modalitï¿½
                  di accesso MEDICO_SPEC
     Created on : 8 ago 2019, 17:20:32
     Author     : Steve
 --%>
 
 <%@ include file="../global/common.jsp" %>
-<jsp:useBean id="now" class="java.util.Date" />
+<jsp:useBean id="now" class="java.util.Date"/>
 <fmt:formatDate var="data" value="${now}"/>
 
 <form action="app/${u_url}/new_visite" method="POST">
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="paziente">Paziente</label>
-      <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="paziente">Paziente</label>
+            <input type="email" class="form-control" id="paziente"
+                   placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="data">Data</label>
+            <input type="password" class="form-control" id="data" placeholder="${data}" readonly>
+        </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="data">Data</label>
-      <input type="password" class="form-control" id="data" placeholder="${data}" readonly>
+    <div class="form-group">
+        <label for="anamnesi">Anamnesi</label>
+        <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}">
+        <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px"
+                  <c:if test="${! empty i_visita}">readonly</c:if>><c:choose><c:when
+                test="${empty i_visita}">Il paziente presenta ...</c:when><c:when
+                test="${! empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>
     </div>
-  </div>
-  <div class="form-group">
-    <label for="anamnesi">Anamnesi</label>
-    <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
-    <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px" <c:if test="${! empty i_visita}">readonly</c:if>><c:choose><c:when test="${empty i_visita}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>
-  </div>
-  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO and empty i_visita}">
-    <button type="submit" class="btn btn-primary">Conferma</button>
-  </c:if>
+    <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO and empty i_visita}">
+        <button type="submit" class="btn btn-primary">Conferma</button>
+    </c:if>
 </form>
-  
+
 <c:if test="${errore ne null}">
-    <div class="alert alert-danger alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show position-fixed"
+         style="right: 20px; bottom: 0; z-index: 2" role="alert">
         <fmt:message key="error_creation_medico"/>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>

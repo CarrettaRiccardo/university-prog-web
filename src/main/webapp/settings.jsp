@@ -28,7 +28,7 @@
 <jsp:include page="/global/navbar.jsp"/>
 
 <script>
-    function disableMedici(){
+    function disableMedici() {
         var meds = document.getElementById("selectMedico");
         meds.disabled = true;
         document.getElementById("warningProvinciaChanged").style.visibility = "visible";
@@ -105,7 +105,8 @@
                             </select>
                         </div>
                         <div class="col col-12 col-lg-6 py-1">
-                            <select id="selectProvincia" class="form-control" name="provincia" onchange="disableMedici();">
+                            <select id="selectProvincia" class="form-control" name="provincia"
+                                    onchange="disableMedici();">
                                 <option disabled selected value>-- Seleziona una Provincia --</option>
                                 <c:if test="${not empty province}">
                                     <c:forEach items="${province}" var="prov">
@@ -133,29 +134,32 @@
                         </div>
                     </div>
                     </c:if>
-                    <div id="warningProvinciaChanged" class="alert alert-warning alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2; visibility: hidden" role="alert">
-                            Salva per selezionare un medico della nuova provincia
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                    <div id="warningProvinciaChanged"
+                         class="alert alert-warning alert-dismissible fade show position-fixed"
+                         style="right: 20px; bottom: 0; z-index: 2; visibility: hidden" role="alert">
+                        Salva per selezionare un medico della nuova provincia
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <c:if test="${requestScope.saved}">
-                        <div class="alert alert-success alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2" role="alert">
-                            Modifiche Salvate
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show position-fixed"
+                         style="right: 20px; bottom: 0; z-index: 2" role="alert">
+                        Modifiche Salvate
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     </c:if>
                     <c:if test="${not utente.isSsp()}">
-                        <button type="submit"
-                                class="btn btn-primary float-right my-3">Salva
-                        </button>
+                    <button type="submit"
+                            class="btn btn-primary float-right my-3">Salva
+                    </button>
                     </c:if>
-                    </div>
             </div>
         </div>
-    </form>
+</div>
+</form>
 </div>
 </body>
 

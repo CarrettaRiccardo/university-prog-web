@@ -1,3 +1,6 @@
+/* Impostzione charset */
+ALTER DATABASE prog_web CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 /* Creazione utente */
 CREATE USER IF NOT EXISTS 'user_prog_web'@'localhost' IDENTIFIED BY 'sampirisi';
 GRANT INSERT, UPDATE, DELETE, SELECT ON prog_web.* TO 'user_prog_web'@'localhost';
@@ -44,12 +47,12 @@ create table utenti
     data_nascita    date COMMENT 'NULL solo per SSP',
     username        varchar(255) not null,
     password        varchar(255) not null,
-    sesso           char(1)   DEFAULT NULL COMMENT 'm|f',
-    cf              varchar(20)  COMMENT 'NULL solo per SSP',
+    sesso           char(1)               DEFAULT NULL COMMENT 'm|f',
+    cf              varchar(20) COMMENT 'NULL solo per SSP',
     ruolo           char(32)     not null DEFAULT 'paziente' COMMENT 'paziente | medico | medico_spec | ssp',
     id_medico       int                   DEFAULT NULL,
     provincia       int          not null,
-    comune          int          COMMENT 'NULL solo per SSP',
+    comune          int COMMENT 'NULL solo per SSP',
     paziente_attivo boolean               DEFAULT TRUE COMMENT 'Per indicare account paziente bloccato o meno',
     medico_attivo   boolean               DEFAULT FALSE COMMENT 'Per indicare medico in attività oppure in pensione',
     specialita      text                  DEFAULT NULL,

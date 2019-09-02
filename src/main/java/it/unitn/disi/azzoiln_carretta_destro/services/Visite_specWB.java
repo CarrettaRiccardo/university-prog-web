@@ -11,16 +11,15 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.VisiteSpecialistiche;
+
 import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * REST Web Service
@@ -34,27 +33,26 @@ public class Visite_specWB {
     private UriInfo context;
     private UtenteDao user;
 
-    
+
     public Visite_specWB(@Context ServletContext sc) throws DaoFactoryException {
         user = ((DaoFactory) sc.getAttribute("daoFactory")).getDAO(UtenteDao.class);
         System.out.println("WB visite_spec()");
     }
 
-    
+
     @GET
     @Path("{hint_nome}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getVisite(@PathParam("hint_nome") String hint) {
         VisiteSpecialistiche f = null;
         Gson gson = new Gson();
-        
-        try{
+
+        try {
             if ((hint == null) || "undefined".equals(hint))
                 f = new VisiteSpecialistiche();
-            else 
+            else
                 f = user.getAllVisiteSpec(hint);
-        }
-        catch(DaoException ex){
+        } catch (DaoException ex) {
             return gson.toJson(new String(""));     //in questo modo se ci sono errori simulo di non aver trovato nulla
         }
         return gson.toJson(f);

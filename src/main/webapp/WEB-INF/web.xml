@@ -293,7 +293,7 @@
     <!-- PARAMETRI -->
     <context-param>
         <param-name>dburl</param-name>
-        <param-value>jdbc:mysql://localhost:3306/prog_web?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</param-value>
+        <param-value>jdbc:mysql://localhost:3306/prog_web?useUnicode=true&amp;characterEncoding=utf8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</param-value>
     </context-param>
     <context-param>
         <param-name>username</param-name>

@@ -3,27 +3,14 @@ package it.unitn.disi.azzoiln_carretta_destro.servlet;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
-import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 import it.unitn.disi.azzoiln_carretta_destro.utility.SendEmail;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
 import javax.mail.MessagingException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author Steve
@@ -54,46 +41,42 @@ public class PasswordRecoveryServlet extends HttpServlet {
             contextPath += "/";
         String where = "";
 
-        try{
+        try {
             String token = request.getParameter("token");
             String newPassword = request.getParameter("newpassword");
-            if (token != null && newPassword != null){
-                if (userDao.updatePasswordAndRemoveToken(token, newPassword)){
+            if (token != null && newPassword != null) {
+                if (userDao.updatePasswordAndRemoveToken(token, newPassword)) {
                     where = "?success=true";
-                }
-                else{
+                } else {
                     where = "?hasToken=true&recovery_error=invalid_token";
                 }
-            }
-            else{
+            } else {
                 String email = request.getParameter("email");
-                if (userDao.existsUsername(email) != null){
+                if (userDao.existsUsername(email) != null) {
                     if (userDao.getPasswordToken(email) == null) {
                         Boolean success = userDao.insertPasswordToken(email);
-                        if (success){
+                        if (success) {
                             SendEmail.Invia(email, "Reset Password",
-                                "<div style=\"text-align: center\">"
-                                    + "<p style=\"font-size: 20px\">Il token per il reset della password e':</p>"
-                                    + "<br/>"
-                                    + "<b style=\"font-size: 24px\">" + userDao.getPasswordToken(email) + "</b>"
-                                + "</div>");
+                                    "<div style=\"text-align: center\">"
+                                            + "<p style=\"font-size: 20px\">Il token per il reset della password e':</p>"
+                                            + "<br/>"
+                                            + "<b style=\"font-size: 24px\">" + userDao.getPasswordToken(email) + "</b>"
+                                            + "</div>");
                             where = "?hasToken=true";
                         }
-                    }
-                    else{
+                    } else {
                         where = "?recovery_error=existing_token";
                     }
-                }
-                else{
+                } else {
                     where = "?recovery_error=user";
                 }
             }
-        } catch (MessagingException ex){
+        } catch (MessagingException ex) {
             where = "?recovery_error=sending";
-        } catch (Exception ex){
+        } catch (Exception ex) {
             where = "?recovery_error=";// errore del sistema
         }
-        
+
         response.sendRedirect(response.encodeRedirectURL(contextPath + "password_recovery" + where));
     }
 
