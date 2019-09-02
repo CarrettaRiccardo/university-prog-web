@@ -2,7 +2,7 @@
 
 <div class="text-center my-4">
     <p class="font-weight-bold float-left" style="font-size: 17px">Seleziona la data per la visita:</p>
-    <input id="datepicker" class="text-center mb-3 float-left" width="276" />
+    <input id="datepicker" class="text-center mb-3 float-left" width="276" autocomplete="off"/>
     <button id="loadDate" class="btn btn-gradient btn-block rounded-pill ml-3 mb-3 float-left" <c:if test="${empty medico || medico.getId() == 0}"><c:out value="disabled"></c:out></c:if> style="width: 236px">Visualizza disponibilita'</button>
     
     <p class="position-absolute" style="right: 20px; top: 20px; font-size: 17px">Medico di base:</p>
