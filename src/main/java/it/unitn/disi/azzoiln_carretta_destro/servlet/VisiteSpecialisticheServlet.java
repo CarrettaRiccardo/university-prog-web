@@ -69,11 +69,17 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             if (u.getType() == UtenteType.PAZIENTE) {
                 request.setAttribute("title", "Visite_spec_paziente"); //per personalizzare il titolo che viene mostrato
                 visite = userDao.getVisiteSpecialistiche(u.getId());
-            } else if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC) {
+            } else if (u.getType() == UtenteType.MEDICO) {
                 request.setAttribute("title", "Visite_spec_medico");
                 request.setAttribute("nome", ((Persona)u).getNome() + ((Persona)u).getCognome());  //per mostrare il nome del medico loggato
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 visite = userDao.getVisiteSpecialistiche(id_paziente);
+            }
+            else if (u.getType() == UtenteType.MEDICO_SPEC) {
+                request.setAttribute("title", "Visite_spec_medico");
+                request.setAttribute("nome", ((Persona)u).getNome() + ((Persona)u).getCognome());  //per mostrare il nome del medico loggato
+                Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+                visite = userDao.MedicoSpecialista().getVisiteSpecialistiche(id_paziente, u.getId());
             }
             else{ //sono SSP, non posso vedere le visite delle persone
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
@@ -134,6 +140,8 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         finally{
             if(vs == null) throw new ServletException("visita_spec_not_found");
             if(importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
+            if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita() == null) throw new ServletException("visita_non_fissata"); //il medico non può accedere ad una visita non fissata
+            if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita().compareTo(new Date()) > 0 ) throw new ServletException("visita_futura"); 
         }
         
         if( !vs.isNew() || u.getType() != UtenteType.MEDICO_SPEC){ //mostro i campi in readonly, altrimenti compilabili

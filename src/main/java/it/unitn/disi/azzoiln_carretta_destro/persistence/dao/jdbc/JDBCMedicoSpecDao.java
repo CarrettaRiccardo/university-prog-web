@@ -216,4 +216,30 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
         }
         return ret2;
     }
+
+    @Override
+    public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente, Integer id_medico_spec) throws DaoException {
+        if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+        LinkedList<VisitaSpecialistica> ret = new LinkedList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec \n" +
+                                                            "FROM visita_specialistica v \n" +
+                                                            "     inner join prescrizione p on p.id = v.id_prescrizione \n" +
+                                                            "	  inner join visite_specialistiche v2 on v2.id = v.id_visita_spec \n" +
+                                                            "WHERE p.id_paziente = ? AND v.time_visita IS NOT NULL AND \n" +
+                                                            "      EXISTS (SELECT id_visita_spec FROM competenze_medico_spec WHERE id_medico_spec = ? AND id_visita_spec = v2.id )\n" +
+                                                            "ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_medico_spec);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                VisitaSpecialistica r = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("cura"));
+                ret.add(r);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);            
+        }
+        return ret;
+    }
 }

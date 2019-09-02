@@ -83,7 +83,7 @@ public class VisitaSpecialistica extends Prescrizione{
     }
     
     public boolean isNew(){
-        return id_ticket == null || id_ticket <= 0;
+        return id_medico_specialista <= 0 || id_ticket <= 0;
     }
     
     

@@ -68,4 +68,10 @@ public interface MedicoSpecDao {
     public ArrayList<ArrayList<Integer>> getStatsVisiteSpecialistiche(int id) throws DaoException;
 
     
+    /**
+     * Ottiene le VS solamente di sua competenza
+     */
+    public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente,Integer id_medico_spec) throws DaoException;
+
+    
 }
