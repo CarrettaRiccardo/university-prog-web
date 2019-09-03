@@ -6,6 +6,8 @@
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,8 @@ import java.io.StringWriter;
 
 /**
  * Filtro su URL /PAZIENTE/
+ * Nonè necessario controllare che id_paziente nell'URL venga modificato per accedere ai dati di altri Pazienti 
+ * perchè id_paziente è letto dalla sessione dell'utente
  * @author Steve
  */
 public class PazienteFilter implements Filter {

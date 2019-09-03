@@ -1,6 +1,7 @@
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
@@ -23,7 +24,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * Controllo che l'utente sia davvero un MEDICO_SPEC e che acceda solo a dati di cui è autorizzato ad avere accesso
  * @author Steve
  */
 @WebFilter(filterName = "MedicoSpecFilter", urlPatterns = {"/app/medico_spec/*"}, dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE})
@@ -39,7 +40,7 @@ public class MedicoSpecFilter implements Filter {
     }    
     
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException,DaoException {
         if (debug) {
             log("MedicoSpecFilter:DoBeforeProcessing");
         }
@@ -64,7 +65,23 @@ public class MedicoSpecFilter implements Filter {
                   throw new ServletException("not_authorized");
                 if(id_paziente == u.getId())
                     throw new ServletException("not_my_patient");  //Non posso compilare dati su me stesso
-            }           
+            }   
+            
+            if(req.getParameter("id_visita") != null){
+                Integer id_visita = null;
+                try{
+                    id_visita = Integer.parseInt(req.getParameter("id_visita"));
+                }catch(NumberFormatException e){
+                    throw  new ServletException("id_visita not valid", e);
+                }
+                finally{
+                    if(id_visita == null || id_visita <= 0) throw new ServletException("id_visita not valid");
+                }
+                
+                Utente u = (Utente) ((HttpServletRequest) request).getSession(false).getAttribute("utente");
+                if(userDao.MedicoSpecialista().inCompetenza(id_visita, u.getId()))  throw new ServletException("not_authorized_visita");
+            }   
+            
             
             
             req.setAttribute("u_url", "medico_spec");
@@ -113,7 +130,11 @@ public class MedicoSpecFilter implements Filter {
             log("MedicoSpecFilter:doFilter()");
         }
         
-        doBeforeProcessing(request, response);
+        try {
+            doBeforeProcessing(request, response);
+        } catch (DaoException ex) {
+            throw new ServletException("codice_di_errore_MSFil");
+        }
         
         Throwable problem = null;
         try {

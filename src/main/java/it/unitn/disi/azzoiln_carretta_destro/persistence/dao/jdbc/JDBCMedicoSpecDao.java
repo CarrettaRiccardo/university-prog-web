@@ -16,9 +16,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Steve
- */
+
 public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> implements MedicoSpecDao {
 
     public JDBCMedicoSpecDao(Connection con) {
@@ -250,6 +248,25 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
             throw new DaoException("db_error", ex);            
         }
         System.out.println("FINITO getVisiteSpecialistiche");
+        return ret;
+    }
+
+    @Override
+    public boolean inCompetenza(Integer id_visita, int id_medico) throws DaoException {
+        if (id_visita == null || id_visita <= 0 || id_medico <= 0) throw new IdNotFoundException("id_visita");
+        boolean ret = false;
+
+        try (PreparedStatement stm = CON.prepareStatement(  "SELECT * FROM competenze_medico_spec WHERE id_medico_spec = ? AND id_visita_spec = ?")) {
+            stm.setInt(2, id_visita);
+            stm.setInt(1, id_medico);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);            
+        }
         return ret;
     }
 }

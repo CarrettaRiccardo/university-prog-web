@@ -79,4 +79,14 @@ public interface MedicoSpecDao {
     public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente,Integer id_medico_spec) throws DaoException;
 
     
+    /**
+     * Verifica che abbia id_visita tra le competenze
+     * @param id_visita
+     * @param id
+     * @return
+     * @throws DaoException 
+     */
+    public boolean inCompetenza(Integer id_visita, int id_medico) throws DaoException;
+
+    
 }

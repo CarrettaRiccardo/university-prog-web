@@ -102,7 +102,10 @@ public class RicetteServlet extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
-            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if (u.getType() == UtenteType.PAZIENTE)
+                id_paziente = u.getId();
+            else
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
             if (id_paziente <= 0) throw new NumberFormatException();
             id_ricetta = Integer.parseInt(request.getParameter("id_ricetta"));
             if (id_ricetta <= 0) throw new NumberFormatException();
