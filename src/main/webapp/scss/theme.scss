@@ -60,6 +60,16 @@ $gradients: #007BFF #001F87,
   width: 100px;
 }
 
+// Pulsante esapnsione in tables centrato
+table.dataTable.dtr-inline.collapsed tr td:first-child:before {
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: auto !important;
+}
+
+.table tr[data-href] {
+  cursor: pointer !important;
+}
 
 
 

@@ -12,7 +12,6 @@
     </tr>
     </thead>
     <tbody>
-    ${"-- è --"}
     <c:forEach items="${visite}" var="visita">
         <tr class='clickable-row'
             data-href='app/${u_url}/compila_visita_spec?id_paziente=${id_paziente}&id_visita=${visita.getId()}'>
