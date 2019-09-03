@@ -15,7 +15,7 @@
     <c:forEach items="${visite}" var="visita">
         <tr 
             <c:if test="${visita.isDaFissare()}"> style=font-weight:bold </c:if> 
-            <c:if test="${not visita.isDaFissare() or utente.isPaziente()}"> class='clickable-row' data-href='app/${u_url}/compila_visita_spec?id_paziente=${id_paziente}&id_visita=${visita.getId()}' </c:if>   <%-- Solo il paziente può aprire una visita_spec non fissata (appunto per fissarla) --%>
+            <c:if test="${not visita.isDaFissare() or utente.isPaziente()}"> data-href='app/${u_url}/compila_visita_spec?id_paziente=${id_paziente}&id_visita=${visita.getId()}' </c:if>   <%-- Solo il paziente puï¿½ aprire una visita_spec non fissata (appunto per fissarla) --%>
         >
             <td scope="row">${visita.getNome_visita()}</th>
             <td scope="row">
