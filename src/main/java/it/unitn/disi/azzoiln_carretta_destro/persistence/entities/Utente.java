@@ -6,8 +6,8 @@ package it.unitn.disi.azzoiln_carretta_destro.persistence.entities;
 public class Utente {
     private int res; //risultato login. Vedi @return di getRes()
     private int id;
-    private String username, nome_provincia;
-    private Integer provincia;
+    private String username, nome_provincia, nome_comune;
+    private Integer provincia, comune;
 
     public Utente() {
     }
@@ -32,22 +32,26 @@ public class Utente {
         this.username = username;
     }
 
-    public Utente(int id, String username, int provincia, String nome_provincia) {
+    public Utente(int id, String username, Integer provincia, String nome_provincia, Integer comune, String nome_comune) {
         this.id = id;
         this.username = username;
         this.provincia = provincia;
         this.nome_provincia = nome_provincia;
+        this.comune = comune;
+        this.nome_comune = nome_comune;
         res = -99; //valore non inizializzato
     }
 
     /**
      * Per oggetto recuperato durante il login. Va aggiunto il campo res per individuare errori al login
      */
-    public Utente(int id, String username, int provincia, String nome_provincia, int res) {
+    public Utente(int id, String username, Integer provincia, String nome_provincia, Integer comune, String nome_comune, int res) {
         this.id = id;
         this.username = username;
         this.provincia = provincia;
         this.nome_provincia = nome_provincia;
+        this.comune = comune;
+        this.nome_comune = nome_comune;
         this.res = res;
     }
 
@@ -73,6 +77,14 @@ public class Utente {
 
     public String getProvinciaNome() {
         return nome_provincia;
+    }
+    
+    public Integer getComune() {
+        return comune;
+    }
+
+    public String getComuneNome() {
+        return nome_comune;
     }
 
     public boolean isPaziente() {

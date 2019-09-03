@@ -41,7 +41,7 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
     public List<Medico> getMedici(Integer id_provincia) throws DaoException {
         List<Medico> ret = new LinkedList<>();
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente  WHERE ruolo = 'medico' AND provincia = ? ORDER BY u.cognome,u.nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia  inner join comuni c on c.id = u.comune left join foto f on u.id = f.id_utente  WHERE ruolo = 'medico' AND provincia = ? ORDER BY u.cognome,u.nome")) {
             stm.setInt(1, id_provincia);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -57,7 +57,7 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
     public List<MedicoSpecialista> getMediciSpecialisti(Integer id_provincia) throws DaoException {
         List<MedicoSpecialista> ret = new LinkedList<>();
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente  WHERE ruolo = 'medico_spec' ORDER BY u.cognome,u.nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia  inner join comuni c on c.id = u.comune left join foto f on u.id = f.id_utente  WHERE ruolo = 'medico_spec' ORDER BY u.cognome,u.nome")) {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 ret.add(getMedicoSpecialista(rs));
@@ -71,21 +71,21 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
     private Medico getMedico(ResultSet rs) throws SQLException {
         return new Medico(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                 rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), rs.getBoolean("medico_attivo"),
-                rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"),rs.getString("sesso").charAt(0));
+                rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("nome_comune"), rs.getString("path"),rs.getString("sesso").charAt(0));
     }
 
     private MedicoSpecialista getMedicoSpecialista(ResultSet rs) throws SQLException {
         return new MedicoSpecialista(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                 rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"), rs.getBoolean("medico_attivo"),
                 rs.getInt("provincia"), rs.getInt("comune"), rs.getString("laurea"), rs.getDate("inizio_carriera"),
-                rs.getString("nome_provincia"), rs.getString("path"), rs.getString("specialita"),rs.getString("sesso").charAt(0));
+                rs.getString("nome_provincia"), rs.getString("nome_comune"), rs.getString("path"), rs.getString("specialita"),rs.getString("sesso").charAt(0));
     }
 
     private Paziente getPaziente(ResultSet rs) throws SQLException {
         return new Paziente(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                 rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                 rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"),rs.getString("sesso").charAt(0));
+                rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("nome_comune"), rs.getString("path"),rs.getString("sesso").charAt(0));
     }
 
     @Override
@@ -125,12 +125,60 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
         }
         return ret;
     }
+    
+    @Override
+    public String getNomeComune(Integer id_comune) throws DaoException {
+        String ret = "";
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM comuni as c WHERE c.id = ?")) {
+            stm.setInt(1, id_comune);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = rs.getString("nome");
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+
+    @Override
+    public Integer getIdComune(String nome_comune) throws DaoException {
+        Integer ret = null;
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id FROM comuni as c WHERE c.nome = ?")) {
+            stm.setString(1, nome_comune);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = rs.getInt("id");
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
 
     @Override
     public List<String> getListProvince() throws DaoException {
         List<String> ret = new LinkedList<>();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM province ORDER BY nome")) {
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                ret.add(rs.getString("nome"));
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+    
+    @Override
+    public List<String> getListComuni(Integer id_prov) throws DaoException {
+        List<String> ret = new LinkedList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM comuni WHERE id_provincia = ? ORDER BY nome")) {
+            stm.setInt(1, id_prov);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 ret.add(rs.getString("nome"));

@@ -244,9 +244,10 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
 
         if (inserito) {
             try {
-                SendEmail.Invia(userDao.getUsername(vs.getId_paziente()), "Una nuovo rapporto di una visita specialistica è stato inserito",
+                SendEmail.Invia(userDao.getUsername(vs.getId_paziente()), "Un nuovo rapporto di una visita specialistica e' stato inserito",
                         "Gentile utente.<br/>"
-                                + "Una visita specialistica con data " + (vs.getTime_visita() != null ? vs.getTime_visita() : "*da definire*") + " è stata inserita o modificata nella tua scheda paziente."
+                                + "Una visita specialistica con data " + (vs.getTime_visita() != null ?  ((new SimpleDateFormat("dd/MM/yyyy")).format(vs.getTime_visita())) 
+                                        : "*da definire*") + " è stata inserita o modificata nella tua scheda paziente."
                                 + "<br/>"
                                 + "Controlla le tue visite specialistiche per visualizzare i dettagli."
                                 + "<br/>" + "<br/>"

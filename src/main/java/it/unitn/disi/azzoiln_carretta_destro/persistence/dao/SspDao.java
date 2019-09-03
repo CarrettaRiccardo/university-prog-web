@@ -32,7 +32,13 @@ public interface SspDao{
     
     public Integer getIdProvincia(String nome_provincia) throws DaoException;
     
+    public String getNomeComune(Integer id_comune) throws DaoException;
+    
+    public Integer getIdComune(String nome_comune) throws DaoException;
+    
     public List<String> getListProvince() throws DaoException;
+    
+    public List<String> getListComuni(Integer id_prov) throws DaoException;
 
     public ArrayList<ArrayList<Integer>> getStatsEsami(int id) throws DaoException;
 }

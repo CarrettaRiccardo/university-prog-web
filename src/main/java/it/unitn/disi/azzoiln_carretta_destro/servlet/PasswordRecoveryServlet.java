@@ -44,11 +44,17 @@ public class PasswordRecoveryServlet extends HttpServlet {
         try {
             String token = request.getParameter("token");
             String newPassword = request.getParameter("newpassword");
+            String newPasswordConfirm = request.getParameter("newpasswordconfirm");
             if (token != null && newPassword != null) {
-                if (userDao.updatePasswordAndRemoveToken(token, newPassword)) {
-                    where = "?success=true";
-                } else {
-                    where = "?hasToken=true&recovery_error=invalid_token";
+                if (newPassword.equals(newPasswordConfirm)){
+                    if (userDao.updatePasswordAndRemoveToken(token, newPassword)) {
+                        where = "?success=true";
+                    } else {
+                        where = "?hasToken=true&recovery_error=invalid_token";
+                    }
+                }
+                else{
+                    where = "?hasToken=true&recovery_error=password";
                 }
             } else {
                 String email = request.getParameter("email");

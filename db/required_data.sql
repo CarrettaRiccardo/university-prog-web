@@ -8415,7 +8415,7 @@ VALUES (1, 'Ambulatorio infermieristico'),
        (131, 'Visita urologica/andrologica di controllo'),
        (132, 'Visita vulnologica'),
        (133, 'Visita vulnologica di controllo');
-s
+
 
 
 

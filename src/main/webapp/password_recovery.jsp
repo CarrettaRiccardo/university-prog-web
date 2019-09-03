@@ -30,6 +30,8 @@
                     </c:when>
                     <c:when test="${param.recovery_error == 'sending'}"> <fmt:message key="recovery_error_mail"/>
                     </c:when>
+                    <c:when test="${param.recovery_error == 'password'}"> <fmt:message key="recovery_error_password"/>
+                    </c:when>
                     <c:when test="${param.recovery_error == 'existing_token'}"> <fmt:message
                             key="recovery_error_existing"/> </c:when>
                     <c:otherwise> <fmt:message key="login_error_service"/> </c:otherwise>
@@ -49,6 +51,8 @@
             <input type="text" class="form-control mb-3" id="token" name="token" placeholder="Token" required autofocus>
             <input type="password" class="form-control mb-3" id="token" minlength="6" name="newpassword"
                    placeholder="Nuova Password" required>
+            <input type="password" class="form-control mb-3" id="token" minlength="6" name="newpasswordconfirm"
+                   placeholder="Conferma Nuova Password" required>
             <button type="submit" class="btn btn-gradient btn-block rounded-pill mb-2">Conferma</button>
         </c:if>
     </c:if>
