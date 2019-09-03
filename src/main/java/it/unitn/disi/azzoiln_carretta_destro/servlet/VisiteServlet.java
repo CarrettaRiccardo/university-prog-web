@@ -189,8 +189,8 @@ public class VisiteServlet extends HttpServlet {
         if (inserito){
             try {
                 SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Una nuovo rapporto di una visita è stato inserito",
-                        "Gentile utente,"
-                        + "Una visita con data " + (v.getTime() != null ? v.getTime() : "*da definire*") + " è stata completata e il tuo medico di base ha inserito l'anamnesi."
+                        "Gentile utente.<br/>"
+                        + "Una visita con data " + (v.getTime() != null ? v.getTime() : "*da definire*") + " è stata inserita o modificata nella tua scheda paziente."
                         + "<br/>"
                         + "Controlla le tue visite per visualizzare i dettagli."
                         + "<br/>" + "<br/>"

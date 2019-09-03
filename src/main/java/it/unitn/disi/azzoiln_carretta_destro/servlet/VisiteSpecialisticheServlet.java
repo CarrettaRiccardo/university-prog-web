@@ -243,19 +243,17 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
 
 
         if (inserito) {
-            if (!updateData) {// solo quando il medico modifica mando la mail..
-                try {
-                    SendEmail.Invia(userDao.getUsername(vs.getId_paziente()), "Una nuovo rapporto di una visita specialistica è stato inserito",
-                            "Gentile utente,"
-                                    + "Una visita specialistica con data " + (vs.getTime_visita() != null ? vs.getTime_visita() : "*da definire*") + " è stata completata e il tuo medico ha inserito l'anamnesi."
-                                    + "<br/>"
-                                    + "Controlla le tue visite specialistiche per visualizzare i dettagli."
-                                    + "<br/>" + "<br/>"
-                                    + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
-                } catch (Exception ex) {
-                    // Ricky; nascondo all'utente se non viene inviata la mail
-                    Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            try {
+                SendEmail.Invia(userDao.getUsername(vs.getId_paziente()), "Una nuovo rapporto di una visita specialistica è stato inserito",
+                        "Gentile utente.<br/>"
+                                + "Una visita specialistica con data " + (vs.getTime_visita() != null ? vs.getTime_visita() : "*da definire*") + " è stata inserita o modificata nella tua scheda paziente."
+                                + "<br/>"
+                                + "Controlla le tue visite specialistiche per visualizzare i dettagli."
+                                + "<br/>" + "<br/>"
+                                + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
+            } catch (Exception ex) {
+                // Ricky; nascondo all'utente se non viene inviata la mail
+                Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (updateData)// paziente
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/visite_specialistiche"));

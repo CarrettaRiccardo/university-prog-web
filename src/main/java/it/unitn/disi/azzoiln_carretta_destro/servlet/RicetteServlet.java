@@ -222,7 +222,7 @@ public class RicetteServlet extends HttpServlet {
         if (inserito){
             try {
                 SendEmail.Invia(userDao.getUsername(r.getId_paziente()), "Una nuova ricetta è stata inserita",
-                        "Gentile utente."
+                        "Gentile utente.<br/>"
                         + "Una nuova ricetta è stata aggiunta nella tua scheda dal tuo medico di base."
                         + "<br/>"
                         + "Controlla le tue ricette per visualizzare i dettagli."

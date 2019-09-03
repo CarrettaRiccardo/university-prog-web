@@ -228,19 +228,17 @@ public class EsamiServlet extends HttpServlet {
         }
         
         if (inserito){
-            if (!updateData){// solo quando il medico modifica mando la mail..
-                try {
-                    SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Un nuovo esame è stato inserito",
-                            "Gentile utente."
-                            + "Un esame con data " + (v.getTime_esame() != null ? v.getTime_esame() : "*da definire*") + " è stato inserito nella tua scheda paziente."
-                            + "<br/>"
-                            + "Controlla i tuoi esami per visualizzare i dettagli."
-                            + "<br/>" + "<br/>"
-                            + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
-                } catch (Exception ex) {
-                    // Ricky; nascondo all'utente se non viene inviata alla mail
-                    Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            try {
+                SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Un nuovo esame è stato inserito",
+                        "Gentile utente.<br/>"
+                        + "Un esame con data " + (v.getTime_esame() != null ? v.getTime_esame() : "*da definire*") + " è stato inserito nella tua scheda paziente."
+                        + "<br/>"
+                        + "Controlla i tuoi esami per visualizzare i dettagli."
+                        + "<br/>" + "<br/>"
+                        + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
+            } catch (Exception ex) {
+                // Ricky; nascondo all'utente se non viene inviata alla mail
+                Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (updateData)// paziente
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/esami"));
