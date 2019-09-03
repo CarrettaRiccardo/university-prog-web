@@ -5,7 +5,6 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
@@ -42,7 +41,7 @@ public class MediciSpecialistiServlet extends HttpServlet {
         if (!contextPath.endsWith("/")) contextPath += "/";
 
         try {
-            if (u.getType() != UtenteType.SSP)  { // Non sono SSP, non posso vedere la lista di medici specialisti
+            if (u.getType() != UtenteType.SSP) { // Non sono SSP, non posso vedere la lista di medici specialisti
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "home"));
                 return;
             }

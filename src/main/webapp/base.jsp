@@ -52,14 +52,21 @@
                 },
                 responsive: {
                     details: {
-                        renderer: $.fn.dataTable.Responsive.renderer.tableAll({
+                        renderer: $.fn.dataTable.Responsive.renderer.listHidden({
                             tableClass: 'table'
                         })
                     }
                 },
                 // Disabilitazione ordinamento automatico
                 order: []
-            });
+            })
+                .on('click', 'tbody tr[data-href] td:nth-child(1)', function (e) {
+                    e.stopPropagation();
+                })
+                // Gestione click row table
+                .on('click', 'tbody tr[data-href]', function (e) {
+                    window.location.href = $(this).attr('data-href');
+                });
         });
     </script>
 </head>

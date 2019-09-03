@@ -92,7 +92,6 @@
 
 </div>
 
-
 <div class="card border-top-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
     <div class="card-body">
         <%-- Inclusione della servlet per caricare i dati --%>

@@ -1,5 +1,5 @@
 <%-- 
-    Document   : Pagina utilizzata da MEDICO_SPEC per inserire anamnesi della sua visita e da altre entità per visualizzare riepilogo visita
+    Document   : Pagina utilizzata da MEDICO_SPEC per inserire anamnesi della sua visita e da altre entitï¿½ per visualizzare riepilogo visita
     Created on : 24 ago 2019, 21:09:27
     Author     : Steve
 --%>
@@ -64,7 +64,7 @@
   </div>
   
   <div class="form-group">
-        <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${! empty i_visita}">checked onclick="return false;"</c:if> />Ticket di  <!--Se è già settato le rendo readonly tramite il return false-->
+        <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${! empty i_visita}">checked onclick="return false;"</c:if> />Ticket di  <!--Se ï¿½ giï¿½ settato le rendo readonly tramite il return false-->
         <c:choose>
             <c:when test="${empty i_visita}">  <fmt:formatNumber value = "${Ticket.costo_visite_specialistiche}" type = "currency" />  </c:when>
             <c:when test="${! empty i_visita}"> <fmt:formatNumber value = "${importo_ticket}" type = "currency" /> </c:when>

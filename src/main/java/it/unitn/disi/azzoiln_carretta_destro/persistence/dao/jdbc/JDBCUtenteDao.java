@@ -114,17 +114,17 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
                             ret = new Paziente(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                                     rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                                     rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                    rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"),rs.getString("sesso").charAt(0));
+                                    rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"), rs.getString("sesso").charAt(0));
                         } else if (rs.getString("ruolo").equals("medico")) {
                             ret = new Medico(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                                     rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
                                     rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"),
-                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"),rs.getString("sesso").charAt(0));
+                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"), rs.getString("sesso").charAt(0));
                         } else if (rs.getString("ruolo").equals("medico_spec")) {
                             ret = new MedicoSpecialista(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                                     rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
                                     rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"),
-                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"), rs.getString("specialita"),rs.getString("sesso").charAt(0));
+                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"), rs.getString("specialita"), rs.getString("sesso").charAt(0));
                         }
                         /*
                         DA COMPLETARE

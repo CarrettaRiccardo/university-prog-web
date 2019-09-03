@@ -4,7 +4,7 @@
 
 <%-- Configurazione base path, per non inserire "/project" in ogni link --%>
 <base href="/project/"/>
-<link href="assets/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="assets/favicon.ico" rel="icon" type="image/x-icon"/>
 
 <%-- Bootstrap --%>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -74,7 +74,7 @@
         $(".clickable-row").click(function () {
             window.location = $(this).data("href");
         });
-        
+
         <c:if test="${! empty url_rest}">    <!-- Codice per ricerca con autocompletamento -->
         $("#autocomplete").select2({
             placeholder: "Digita un nome",

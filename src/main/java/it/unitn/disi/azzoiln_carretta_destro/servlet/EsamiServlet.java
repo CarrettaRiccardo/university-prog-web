@@ -5,15 +5,10 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Persona;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.*;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 import it.unitn.disi.azzoiln_carretta_destro.utility.SendEmail;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,16 +36,16 @@ public class EsamiServlet extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
     }
-    
-    
+
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getRequestURI().indexOf("new_esami") > 0) {  //voglio accedere alla pagina per creare un nuovo Esame
             manageNewEsame(request, response);
             return;
         }
-        
+
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
-        
+
         if (request.getRequestURI().indexOf("compila_esame") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
             manageCompilaEsame(request, response, u);
             return;
@@ -67,11 +62,10 @@ public class EsamiServlet extends HttpServlet {
                 esami = userDao.getEsami(u.getId());
             } else if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC) {
                 request.setAttribute("title", "Esami_medico");
-                request.setAttribute("nome", ((Persona)u).getNome() + ((Persona)u).getCognome());  //per mostrare il nome del medico loggato
+                request.setAttribute("nome", ((Persona) u).getNome() + ((Persona) u).getCognome());  //per mostrare il nome del medico loggato
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 esami = userDao.getEsami(id_paziente);
-            }
-            else{ //sono SSP, non posso vedere le visite delle persone
+            } else { //sono SSP, non posso vedere le visite delle persone
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;
             }
@@ -88,15 +82,13 @@ public class EsamiServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
-            System.out.println(e.getMessage() +  "\n\n\n");
+            System.out.println(e.getMessage() + "\n\n\n");
             //throw new ServletException();
             throw new ServletException(e.getMessage());
         }
     }
-    
-    
-    
-    
+
+
     private void manageCompilaEsame(HttpServletRequest request, HttpServletResponse response, Utente u) throws ServletException, IOException {
         int id_paziente = -1, id_esame = -1;
         String contextPath = getServletContext().getContextPath();
@@ -106,7 +98,7 @@ public class EsamiServlet extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
-            if(u.getType() == UtenteType.PAZIENTE) //così il Paziente non vede il suo ID nell'URL
+            if (u.getType() == UtenteType.PAZIENTE) //così il Paziente non vede il suo ID nell'URL
                 id_paziente = u.getId();
             else
                 id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
@@ -118,26 +110,24 @@ public class EsamiServlet extends HttpServlet {
         } catch (Exception e) {
             throw new ServletException();
         }
-        
+
         Esame e = null;
         try {
             e = userDao.getEsame(id_paziente, id_esame);
         } catch (DaoException ex) {
             System.out.println(ex.getMessage());
             throw new ServletException(ex.getMessage());
+        } finally {
+            if (e == null) throw new ServletException("visita_spec_not_found");
         }
-        finally{
-            if(e == null) throw new ServletException("visita_spec_not_found");
-        }
-        
-        if( !e.isNew() || u.getType() != UtenteType.MEDICO_SPEC){ //mostro i campi in readonly, altrimenti compilabili
-            request.setAttribute("i_esame", e); 
+
+        if (!e.isNew() || u.getType() != UtenteType.MEDICO_SPEC) { //mostro i campi in readonly, altrimenti compilabili
+            request.setAttribute("i_esame", e);
             request.setAttribute("title", "view_esame");
-        }
-        else{
+        } else {
             request.setAttribute("title", "compila_esame");
         }
-        
+
 
         request.setAttribute("page", "compila_esame");
         request.setAttribute("id_esame", request.getParameter("id_esame"));  //per inserire tale valore come campo nascosto nell' HHTML (per averlo come parametro in POST per la compilazione)
@@ -153,15 +143,15 @@ public class EsamiServlet extends HttpServlet {
         request.setAttribute("data", e.getTime_esame());
         rd.forward(request, response);
     }
-    
-    
-    
+
+
     /**
      * Come in RicetteServlet.java
+     *
      * @param request
      * @param response
      * @throws ServletException
-     * @throws IOException 
+     * @throws IOException
      */
     private void manageNewEsame(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_paziente = -1;
@@ -191,7 +181,7 @@ public class EsamiServlet extends HttpServlet {
             throw new ServletException(ex.getMessage());
         }
         request.setAttribute("paziente", paz);
-        request.setAttribute("url_rest",Common.getDomain(request) + getServletContext().getInitParameter("url_esami_rest"));  //per url WB per autocompletamento
+        request.setAttribute("url_rest", Common.getDomain(request) + getServletContext().getInitParameter("url_esami_rest"));  //per url WB per autocompletamento
         rd.forward(request, response);
     }
 
@@ -199,39 +189,38 @@ public class EsamiServlet extends HttpServlet {
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";
-        
+
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
         Esame v = Esame.loadFromHttpRequest(request, u);
-        
+
         boolean inserito = false, updateData = false;
         try {
             // se un utente sta scegliendo la data della visita specialistica...
             String data_selez = request.getParameter("datepicker");
-            if (u.getType() == UtenteType.PAZIENTE && data_selez != null){
+            if (u.getType() == UtenteType.PAZIENTE && data_selez != null) {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     sdf.setLenient(false);
                     sdf.parse(data_selez);// restituisce una "ParseException" se non e' valida
-                } catch (ParseException ex){
+                } catch (ParseException ex) {
                     throw new ServletException("invalid_date_exception");
                 }
                 inserito = userDao.Paziente().setDataEsame(v.getId_esame(), data_selez);
                 updateData = true;
-            }
-            else{
-                if(u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
+            } else {
+                if (u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
                 inserito = userDao.Medico().addEsame(v);
             }
         } catch (DaoException ex) {
             System.out.println("Errore addEsame (EsamiServlet) -->\n" + ex.getMessage() + "\n\n");
             inserito = false;
         }
-        
-        if (inserito){
+
+        if (inserito) {
             try {
                 SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Un nuovo esame è stato inserito",
                         "Gentile utente.<br/>"
-                        + "Un esame con data " + (v.getTime_esame() != null ? v.getTime_esame() : "*da definire*") + " è stato inserito nella tua scheda paziente."
+                        + "Un esame con data " + (v.getTime_esame() != null ? v.getTime_esame() : "*da definire*") + " è stato inserito o modificato nella tua scheda paziente."
                         + "<br/>"
                         + "Controlla i tuoi esami per visualizzare i dettagli."
                         + "<br/>" + "<br/>"
@@ -246,7 +235,7 @@ public class EsamiServlet extends HttpServlet {
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/esami?id_paziente=" + v.getId_paziente() + "&r"));
             return;
         }
-        
+
 
         //request.setAttribute("i_anamnesi", v.getAnamnesi());
         request.setAttribute("errore", "errore");

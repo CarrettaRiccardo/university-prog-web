@@ -1,45 +1,29 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.MedicoDao;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.IdNotFoundException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Farmaci;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.UtenteType;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Visita;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.*;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 import it.unitn.disi.azzoiln_carretta_destro.utility.SendEmail;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class RicetteServlet extends HttpServlet {
 
     private UtenteDao userDao;
-    
+
     @Override
     public void init() throws ServletException {
         DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory"); //Steve ho tolto super.
@@ -52,14 +36,12 @@ public class RicetteServlet extends HttpServlet {
             throw new ServletException("Impossible to get dao factory for user storage system", ex);
         }
     }
-    
-    
-    
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
-        
+
         if (request.getRequestURI().indexOf("new_ricette") > 0) {  //voglio accedere alla pagina per creare una nuova Ricetta
             manageNewRicetta(request, response, u);
             return;
@@ -67,7 +49,7 @@ public class RicetteServlet extends HttpServlet {
 
         List<Ricetta> ricette;
         String contextPath = getServletContext().getContextPath();
-        
+
         if (!contextPath.endsWith("/"))
             contextPath += "/";
 
@@ -77,11 +59,10 @@ public class RicetteServlet extends HttpServlet {
                 ricette = userDao.getRicette(u.getId());
             } else if (u.getType() == UtenteType.MEDICO) {
                 request.setAttribute("title", "Ricette_medico");
-                request.setAttribute("nome", ((Medico)u).getNome() + ((Medico)u).getCognome());  //per mostrare il nome del medico loggato
+                request.setAttribute("nome", ((Medico) u).getNome() + ((Medico) u).getCognome());  //per mostrare il nome del medico loggato
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 ricette = userDao.getRicette(id_paziente);
-            }
-            else{ //sono SSP, non posso vedere le visite delle persone
+            } else { //sono SSP, non posso vedere le visite delle persone
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;
             }
@@ -101,8 +82,8 @@ public class RicetteServlet extends HttpServlet {
             throw new ServletException();
         }
     }
-    
-    
+
+
     /**
      * Metodo per gestire la richiesta per visualizzare il riassunto della ricetta. Si chiama 'compila'
      * semplicemente per seguire lo "standard" delle altre pagine, per avere una struttura un pochino più uniforme
@@ -110,7 +91,7 @@ public class RicetteServlet extends HttpServlet {
      * @param response
      * @param u
      * @throws ServletException
-     * @throws IOException 
+     * @throws IOException
      */
     /*private void manageCompilaRicetta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_paziente = -1, id_ricetta = -1;
@@ -157,16 +138,17 @@ public class RicetteServlet extends HttpServlet {
         request.setAttribute("paziente", paz);
         rd.forward(request, response);
     }*/
-    
-    
+
+
     /**
      * Effetua il redirect a new_ricetta impostando e controllando i relativi parametri
+     *
      * @param request
      * @param response
      * @throws ServletException
-     * @throws IOException 
+     * @throws IOException
      */
-    private void manageNewRicetta(HttpServletRequest request, HttpServletResponse response, Utente u) throws ServletException, IOException{
+    private void manageNewRicetta(HttpServletRequest request, HttpServletResponse response, Utente u) throws ServletException, IOException {
         int id_paziente = -1;
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
@@ -175,7 +157,7 @@ public class RicetteServlet extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
-            if(u.getType() == UtenteType.PAZIENTE) //così il Paziente non vede il suo ID nell'URL
+            if (u.getType() == UtenteType.PAZIENTE) //così il Paziente non vede il suo ID nell'URL
                 id_paziente = u.getId();
             else
                 id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
@@ -183,7 +165,7 @@ public class RicetteServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
-           throw new ServletException();
+            throw new ServletException();
         }
 
         request.setAttribute("title", "crea_ricetta");
@@ -196,30 +178,30 @@ public class RicetteServlet extends HttpServlet {
         } catch (DaoException ex) {
             throw new ServletException(ex.getMessage());
         }
-          
+
         request.setAttribute("paziente", paz);
-        request.setAttribute("url_rest",Common.getDomain(request) + getServletContext().getInitParameter("url_farmaci_rest"));  //per url WB per autocompletamento
+        request.setAttribute("url_rest", Common.getDomain(request) + getServletContext().getInitParameter("url_farmaci_rest"));  //per url WB per autocompletamento
         rd.forward(request, response);
     }
-    
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
-            contextPath += "/";        
+            contextPath += "/";
 
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
         Ricetta r = Ricetta.loadFromHttpRequest(request, u);
         boolean inserito;
         try {
-            if(u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
+            if (u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
             inserito = userDao.Medico().addRicetta(r);
         } catch (DaoException ex) {
             inserito = false;
         }
-        
-        if (inserito){
+
+        if (inserito) {
             try {
                 SendEmail.Invia(userDao.getUsername(r.getId_paziente()), "Una nuova ricetta è stata inserita",
                         "Gentile utente.<br/>"
@@ -235,11 +217,11 @@ public class RicetteServlet extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/ricette?id_paziente=" + r.getId_paziente() + "&r"));
             return;
         }
-        
+
         request.setAttribute("i_ricetta", r);
         request.setAttribute("errore", "errore");  //setto parametro per mostrare popup-errore
-            
-        manageNewRicetta(request, response,u);  //uso il metodo già definire per gestire il redirect a new_ricetta settando dei parametri aggiuntivi        
+
+        manageNewRicetta(request, response, u);  //uso il metodo già definire per gestire il redirect a new_ricetta settando dei parametri aggiuntivi
     }
 
 
