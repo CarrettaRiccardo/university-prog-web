@@ -10,16 +10,17 @@ TRUNCATE table utenti;
 INSERT INTO utenti
 VALUES (2, 'Matteo', 'Destro', '1965-12-12', 'matteo.est@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'm','SONOILCFDIMATTEO', 'medico_spec', NULL, 22, 20, 1, 0, 'Radiologo', 'Medicina generale, UNIPD', '1989-01-01'),
+        'm', 'SONOILCFDIMATTEO', 'medico_spec', NULL, 22, 20, 1, 0, 'Radiologo', 'Medicina generale, UNIPD',
+        '1989-01-01'),
        (3, 'Riccardo', 'Carretta', '1998-06-23', 'riccardo.carretta@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'm','ABCDE2FGHIL', 'medico', 3, 22, 15, 1, 1, NULL, 'Medicina, UNITN', '2000-05-13'),
+        'm', 'ABCDE2FGHIL', 'medico', 3, 22, 15, 1, 1, NULL, 'Medicina, UNITN', '2000-05-13'),
        (1, 'Steve', 'Azzolin', '1998-06-23', 'steve.azzolin1@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'm','ABCDEFGHIL', 'paziente', 3, 22, 15, 1, 1, NULL, 'Medicina, UNIRM', '2007-07-01'),
+        'm', 'ABCDEFGHIL', 'paziente', 3, 22, 15, 1, 1, NULL, 'Medicina, UNIRM', '2007-07-01'),
        (4, 'Provincia autonoma di Trento', NULL, NULL, 'trento@gov.it',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        NULL, NULL,'ssp', NULL, 22, NULL, NULL, NULL, NULL, 'Medicina, UNIMI', '2010-12-01');
+        NULL, NULL, 'ssp', NULL, 22, NULL, NULL, NULL, NULL, 'Medicina, UNIMI', '2010-12-01');
 
 /*************** TICKETS **************************/
 TRUNCATE table ticket;
@@ -40,7 +41,8 @@ VALUES (1, 1, 3, '2019-08-19 20:05:27'),
        (9, 1, 2, '2019-08-19 20:34:15'),
        (10, 1, 2, '2019-08-19 20:40:47'),
        (11, 1, 3, '2019-08-24 20:28:04'),
-       (12, 1, 3, '2019-09-03 20:28:04');
+       (12, 1, 3, '2019-09-03 20:28:04'),
+       (13, 1, 3, '2019-09-03 20:28:04');
 
 /*************** VISITE SPECIALISTICHE ***********************/
 TRUNCATE table visita_specialistica;
@@ -81,6 +83,13 @@ VALUES (1, 2, '2019-08-17 15:00:00'),
 
 /*************** RICETTE (farmaco) ********************/
 TRUNCATE table farmaco;
-INSERT INTO farmaco VALUES (12, 2, 12.9, 2, '2019-08-04 15:10:00');
+INSERT INTO farmaco
+VALUES (12, 2, 12.9, 2, '2019-08-04 15:10:00');
 
+/*************** ESAMI ********************/
+TRUNCATE table esame;
+INSERT INTO esame
+VALUES (13, 1, 1, 4, 'Referto esamo', '2019-08-04 22:15:00');
+
+/* Riabilitazione FK */
 set foreign_key_checks = 1;

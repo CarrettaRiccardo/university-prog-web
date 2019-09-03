@@ -1,24 +1,23 @@
-<%@ page import="it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica" %>
-<%@ page import="java.util.List" %>
 <%@ include file="../global/common.jsp" %>
-<jsp:useBean id="now" class="java.util.Date" />
+<jsp:useBean id="now" class="java.util.Date"/>
 
 <table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-3 shadow-sm text-white">
     <tr>
-        <th scope="col">Tipo <fmt:message key="tipo"/> </th>
-        <th scope="col">Data Visita <fmt:message key="data_visita"/> </th>
+        <th scope="col">Tipo <fmt:message key="tipo"/></th>
+        <th scope="col">Data Visita <fmt:message key="data_visita"/></th>
         <th scope="col">Esito <fmt:message key="esito"/></th>
     </tr>
     </thead>
     <tbody>
     <c:forEach items="${visite}" var="visita">
-        <tr 
-            <c:if test="${visita.isDaFissare()}"> style=font-weight:bold </c:if> 
-            <c:if test="${not visita.isDaFissare() or utente.isPaziente()}"> data-href='app/${u_url}/compila_visita_spec?id_paziente=${id_paziente}&id_visita=${visita.getId()}' </c:if>   <%-- Solo il paziente pu� aprire una visita_spec non fissata (appunto per fissarla) --%>
+        <tr
+                <c:if test="${visita.isDaFissare()}"> style=font-weight:bold </c:if>
+                <c:if test="${not visita.isDaFissare() or utente.isPaziente()}"> data-href='app/${u_url}/compila_visita_spec?id_paziente=${id_paziente}&id_visita=${visita.getId()}' </c:if> <%-- Solo il paziente pu� aprire una visita_spec non fissata (appunto per fissarla) --%>
         >
-            <td scope="row">${visita.getNome_visita()}</th>
-            <td scope="row">
+            <td>
+                ${visita.getNome_visita()}</th>
+            <td>
                 <c:choose>
                     <c:when test="${visita.isDaFissare()}">
                         <fmt:message key="visita_spec_da_fissare"/>
