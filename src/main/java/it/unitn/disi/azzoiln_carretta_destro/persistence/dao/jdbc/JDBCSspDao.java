@@ -41,7 +41,7 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
     public List<Medico> getMedici(Integer id_provincia) throws DaoException {
         List<Medico> ret = new LinkedList<>();
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia  inner join comuni c on c.id = u.comune left join foto f on u.id = f.id_utente  WHERE ruolo = 'medico' AND provincia = ? ORDER BY u.cognome,u.nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia  left join comuni c on c.id = u.comune left join foto f on u.id = f.id_utente  WHERE ruolo = 'medico' AND provincia = ? ORDER BY u.cognome,u.nome")) {
             stm.setInt(1, id_provincia);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -57,7 +57,7 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
     public List<MedicoSpecialista> getMediciSpecialisti(Integer id_provincia) throws DaoException {
         List<MedicoSpecialista> ret = new LinkedList<>();
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia  inner join comuni c on c.id = u.comune left join foto f on u.id = f.id_utente  WHERE ruolo = 'medico_spec' ORDER BY u.cognome,u.nome")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT *, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia  left join comuni c on c.id = u.comune left join foto f on u.id = f.id_utente  WHERE ruolo = 'medico_spec' ORDER BY u.cognome,u.nome")) {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 ret.add(getMedicoSpecialista(rs));
