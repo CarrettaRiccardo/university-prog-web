@@ -624,8 +624,8 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
                 ret = new VisitaSpecialistica(rs.getInt("id_medico_specialista"), rs.getInt("id_ticket"), rs.getInt("id"), rs.getInt("id_visita_spec"), rs.getString("anamnesi"), rs.getDate("time_visita"), rs.getString("nome_visita"), rs.getString("nome_medico_spec"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("cura"));
             }
         } catch (SQLException ex) {
-            //throw new DaoException("db_error", ex);
             System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
         }
         return ret;
     }

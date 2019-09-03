@@ -8,6 +8,20 @@ GRANT INSERT, UPDATE, DELETE, SELECT ON prog_web.* TO 'user_prog_web'@'localhost
 /* Disabilitazione FK per DROP TABLE, riabilitate alla fine */
 set foreign_key_checks = 0;
 
+drop table if exists competenze_medico_spec;
+create table competenze_medico_spec
+(
+    id_medico_spec    int       not null,
+    id_visita_spec    int       not null,
+    PRIMARY KEY (id_medico_spec,id_visita_spec),
+    FOREIGN KEY fk_competenza_to_ms (id_medico_spec) REFERENCES utenti (id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT,
+    FOREIGN KEY fk_competenza_to_vs (id_visita_spec) REFERENCES visite_specialistiche (id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+) engine = InnoDB;
+
 drop table if exists ticket;
 create table ticket
 (

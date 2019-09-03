@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,12 +61,19 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             if (u.getType() == UtenteType.PAZIENTE) {
                 request.setAttribute("title", "Visite_spec_paziente"); //per personalizzare il titolo che viene mostrato
                 visite = userDao.getVisiteSpecialistiche(u.getId());
-            } else if (u.getType() == UtenteType.MEDICO || u.getType() == UtenteType.MEDICO_SPEC) {
+            } else if (u.getType() == UtenteType.MEDICO) {
                 request.setAttribute("title", "Visite_spec_medico");
                 request.setAttribute("nome", ((Persona) u).getNome() + ((Persona) u).getCognome());  //per mostrare il nome del medico loggato
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 visite = userDao.getVisiteSpecialistiche(id_paziente);
-            } else { //sono SSP, non posso vedere le visite delle persone
+            }
+            else if (u.getType() == UtenteType.MEDICO_SPEC) {
+                request.setAttribute("title", "Visite_spec_medico");
+                request.setAttribute("nome", ((Persona)u).getNome() + ((Persona)u).getCognome());  //per mostrare il nome del medico loggato
+                Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+                visite = userDao.MedicoSpecialista().getVisiteSpecialistiche(id_paziente, u.getId());
+            }
+            else{ //sono SSP, non posso vedere le visite delle persone
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;
             }
@@ -120,9 +128,11 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         } finally {
             if (vs == null) throw new ServletException("visita_spec_not_found");
             if (importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
+            if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita() == null) throw new ServletException("visita_non_fissata"); //il medico non può accedere ad una visita non fissata
+            if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita().compareTo(new Date()) > 0 ) throw new ServletException("visita_futura"); 
         }
-
-        if (!vs.isNew() || u.getType() != UtenteType.MEDICO_SPEC) { //mostro i campi in readonly, altrimenti compilabili
+        
+        if(!vs.isNew() || u.getType() != UtenteType.MEDICO_SPEC){ //mostro i campi in readonly, altrimenti compilabili
             request.setAttribute("i_visita", vs);
             request.setAttribute("importo_ticket", importo_ticket);
             request.setAttribute("title", "view_visita_specialistica");

@@ -1,6 +1,7 @@
 <%@ page import="it.unitn.disi.azzoiln_carretta_destro.persistence.entities.VisitaSpecialistica" %>
 <%@ page import="java.util.List" %>
 <%@ include file="../global/common.jsp" %>
+<jsp:useBean id="now" class="java.util.Date" />
 
 <table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-3 shadow-sm text-white">
