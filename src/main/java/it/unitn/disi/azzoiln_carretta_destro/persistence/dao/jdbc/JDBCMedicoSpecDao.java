@@ -217,6 +217,15 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
         return ret2;
     }
 
+    
+    /**
+     * Tutte le visite passate di mia competenza + visite future o per oggi di mia competenza
+     * Non elenca le visite senza data fissata (anche se sono di mia competenza)
+     * @param id_paziente
+     * @param id_medico_spec
+     * @return
+     * @throws DaoException 
+     */
     @Override
     public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente, Integer id_medico_spec) throws DaoException {
         if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
@@ -240,6 +249,7 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
             System.out.println(ex.getMessage() + "\n\n");
             throw new DaoException("db_error", ex);            
         }
+        System.out.println("FINITO getVisiteSpecialistiche");
         return ret;
     }
 }

@@ -126,9 +126,9 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             System.out.println(ex.getMessage());
             throw new ServletException(ex.getMessage());
         } finally {
-            if (vs == null) throw new ServletException("visita_spec_not_found");
-            if (importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
-            if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita() == null) throw new ServletException("visita_non_fissata"); //il medico non può accedere ad una visita non fissata
+            if(vs == null) throw new ServletException("visita_spec_not_found");
+            if(importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
+            if(u.getType() != UtenteType.PAZIENTE && vs.getTime_visita() == null) throw new ServletException("visita_non_fissata"); //il medico/medico_spec non può accedere ad una visita non fissata
             if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita().compareTo(new Date()) > 0 ) throw new ServletException("visita_futura"); 
         }
         
@@ -136,7 +136,11 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             request.setAttribute("i_visita", vs);
             request.setAttribute("importo_ticket", importo_ticket);
             request.setAttribute("title", "view_visita_specialistica");
-        } else {
+        }
+        else if(vs.isDaFissare()){
+            request.setAttribute("title", "fissa_visita_specialistica");
+        }
+        else {
             request.setAttribute("title", "compila_visita_specialistica");
         }
 

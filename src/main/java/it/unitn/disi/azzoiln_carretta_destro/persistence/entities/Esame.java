@@ -57,7 +57,19 @@ public class Esame extends Prescrizione{
         return time_esame;
     }
     
+    /**
+     * 
+     * @return T Se è stato creato dal medico ma non è stata ancora selezionata la data_visita dal Paziente
+     */
     public boolean isNew(){
+        return id_ssp <= 0; //Perchè null diventa 0 da Integer a int
+    }
+    
+    /**
+     * 
+     * @return T Se è stata scelta una data dal Paziente
+     */
+    public boolean isDaFissare(){
         return time_esame == null;
     }
     
