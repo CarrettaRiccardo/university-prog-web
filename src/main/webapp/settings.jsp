@@ -28,9 +28,11 @@
 <jsp:include page="/global/navbar.jsp"/>
 
 <script>
-    function disableMedici() {
+    function disableSelects() {
         var meds = document.getElementById("selectMedico");
         meds.disabled = true;
+        var coms = document.getElementById("selectComune");
+        coms.disabled = true;
         document.getElementById("warningProvinciaChanged").style.visibility = "visible";
     }
 </script>
@@ -92,6 +94,20 @@
                     <h5 class="text-primary mt-3">Altro</h5>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
+                            <select id="selectProvincia" class="form-control" name="provincia"
+                                    onchange="disableSelects();">
+                                <option disabled selected value>-- Seleziona una Provincia --</option>
+                                <c:if test="${not empty province}">
+                                    <c:forEach items="${province}" var="prov">
+                                        <option value="${prov}" <c:if test="${utente.getProvinciaNome() == prov}"><c:out
+                                                value="selected"/></c:if>>
+                                            <c:out value="${prov}"></c:out>
+                                        </option>
+                                    </c:forEach>
+                                </c:if>
+                            </select>
+                        </div>
+                        <div class="col col-12 col-lg-6 py-1">
                             <select id="selectMedico" class="form-control" name="medico">
                                 <option disabled selected value>-- Seleziona un Medico di Base --</option>
                                 <c:if test="${not empty medici}">
@@ -105,14 +121,13 @@
                             </select>
                         </div>
                         <div class="col col-12 col-lg-6 py-1">
-                            <select id="selectProvincia" class="form-control" name="provincia"
-                                    onchange="disableMedici();">
-                                <option disabled selected value>-- Seleziona una Provincia --</option>
-                                <c:if test="${not empty province}">
-                                    <c:forEach items="${province}" var="prov">
-                                        <option value="${prov}" <c:if test="${utente.getProvinciaNome() == prov}"><c:out
+                            <select id="selectComune" class="form-control" name="comune">
+                                <option disabled selected value>-- Seleziona un Comune --</option>
+                                <c:if test="${not empty comuni}">
+                                    <c:forEach items="${comuni}" var="com">
+                                        <option value="${com}" <c:if test="${utente.getComuneNome() == com}"><c:out
                                                 value="selected"/></c:if>>
-                                            <c:out value="${prov}"></c:out>
+                                            <c:out value="${com}"></c:out>
                                         </option>
                                     </c:forEach>
                                 </c:if>
@@ -137,7 +152,7 @@
                     <div id="warningProvinciaChanged"
                          class="alert alert-warning alert-dismissible fade show position-fixed"
                          style="right: 20px; bottom: 0; z-index: 2; visibility: hidden" role="alert">
-                        Salva per selezionare un medico della nuova provincia
+                        Salva per selezionare un medico e comune della nuova provincia
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

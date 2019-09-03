@@ -71,7 +71,7 @@
                 <fmt:message key="${pageContext.exception.message}"/>
             </c:if>
         </div>
-        <a id="btnHome" class="btn btn-lg btn-gradient rounded-pill mt-5 px-5" href="app/home">Torna alla Home</a>
+        <a id="btnHome" class="btn btn-lg btn-gradient rounded-pill mt-5" href="app/home">Torna alla Home</a>
     </div>
 </div>
 </body>

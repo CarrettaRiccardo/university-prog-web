@@ -50,20 +50,7 @@ public class HomeServlet extends HttpServlet {
                 session.setAttribute("tipo", "paziente");
 
                 session.setAttribute("utente", pz);
-                List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
-                session.setAttribute("province", pr);
-                List<Medico> md = userDao.Ssp().getMedici(u.getProvincia());
-                // rimuovo dalla lista se stesso se è anche un medico
-                Integer i = 0;
-                Boolean removed = false;
-                while (!removed && i < md.size()) {
-                    if (md.get(i).getId() == pz.getId()) {
-                        md.remove(md.get(i));
-                        removed = true;
-                    }
-                    i++;
-                }
-                session.setAttribute("medici", md);
+                // per visualizzare il nome del medico in "Prenotazioni"
                 if (pz.getId_medico() != null) {
                     Medico myMedico = (Medico) userDao.getByPrimaryKey(pz.getId_medico(), "medico");
                     session.setAttribute("medico", myMedico);

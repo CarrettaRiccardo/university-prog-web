@@ -10,8 +10,8 @@ public class Ssp extends Utente{
 
     private String nome;
 
-    public Ssp(int id, String username, int provincia,String nome_provincia, int res, String nome) {
-        super(id, username, provincia, nome_provincia, res);
+    public Ssp(int id, String username, Integer provincia,String nome_provincia, int res, String nome) {
+        super(id, username, provincia, nome_provincia, null, null, res);
         this.nome = nome;
     }
 

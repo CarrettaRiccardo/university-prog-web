@@ -10,9 +10,9 @@
     <tbody>
     <c:forEach items="${esami}" var="esame">
         <tr
-           <%-- <c:if test="${!esame.isNew()}"> --%>
-                class='clickable-row' data-href="app/${u_url}/compila_esame?id_paziente=${id_paziente}&id_esame=${esame.getId()}"
-           <%--  </c:if> --%> >
+            <c:if test="${not esame.isNew()}"> style=font-weight:bold </c:if> 
+            <c:if test="${not esame.isDaFissare() or utente.isPaziente()}"> class='clickable-row' data-href="app/${u_url}/compila_esame?id_paziente=${id_paziente}&id_esame=${esame.getId()}" </c:if>
+        >
             <th scope="row"><c:out value="${esame.getNome_esame()}"/></th>
             <th scope="row">
                 <c:choose>

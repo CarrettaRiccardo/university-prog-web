@@ -76,20 +76,20 @@
         });
 
         <c:if test="${! empty url_rest}">    <!-- Codice per ricerca con autocompletamento -->
-        $("#autocomplete").select2({
-            placeholder: "Digita un nome",
-            allowClear: true,
-            disabled: false,
-            ajax: {
-                url: function (params) {
-                    return "${url_rest}" + params.term;
+            $("#autocomplete").select2({
+                placeholder: "Digita un nome",
+                allowClear: true,
+                disabled: false,
+                ajax: {
+                    url: function (params) {
+                        return "${url_rest}" + params.term;
 
+                    },
                 },
-            },
-            dataType: "json"
+                dataType: "json"
 
-        });
-        $("#autocomplete").val(null).trigger("change");
+            });
+            $("#autocomplete").val(null).trigger("change");
         </c:if>
     });
 </script>

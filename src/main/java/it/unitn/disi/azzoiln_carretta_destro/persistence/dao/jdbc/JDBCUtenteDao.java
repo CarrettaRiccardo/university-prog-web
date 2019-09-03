@@ -103,7 +103,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         Utente ret = null;
 
         if (id != null) {
-            try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia,path FROM utenti u inner join province p on p.id = u.provincia left join foto f on u.id = f.id_utente WHERE u.id = ?")) {
+            try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia,path, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia left join comuni c on c.id = u.comune left join foto f on u.id = f.id_utente WHERE u.id = ?")) {
                 stm.setInt(1, id);
 
                 try (ResultSet rs = stm.executeQuery()) {
@@ -114,17 +114,17 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
                             ret = new Paziente(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                                     rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                                     rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                                    rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("path"), rs.getString("sesso").charAt(0));
+                                    rs.getBoolean("paziente_attivo"), rs.getString("nome_provincia"), rs.getString("nome_comune"), rs.getString("path"), rs.getString("sesso").charAt(0));
                         } else if (rs.getString("ruolo").equals("medico")) {
                             ret = new Medico(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                                     rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
                                     rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"),
-                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"), rs.getString("sesso").charAt(0));
+                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("nome_comune"), rs.getString("path"), rs.getString("sesso").charAt(0));
                         } else if (rs.getString("ruolo").equals("medico_spec")) {
                             ret = new MedicoSpecialista(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                                     rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
                                     rs.getBoolean("medico_attivo"), rs.getInt("provincia"), rs.getInt("comune"),
-                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("path"), rs.getString("specialita"), rs.getString("sesso").charAt(0));
+                                    rs.getString("laurea"), rs.getDate("inizio_carriera"), rs.getString("nome_provincia"), rs.getString("nome_comune"), rs.getString("path"), rs.getString("specialita"), rs.getString("sesso").charAt(0));
                         }
                         /*
                         DA COMPLETARE
@@ -268,7 +268,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         Utente ret = null;
         int res = -3;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE id = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia left join comuni c on c.id = u.comune WHERE id = ?")) {
             stm.setInt(1, id);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
@@ -309,7 +309,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         Utente ret = null;
         int res = -3;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia FROM utenti u inner join province p on p.id = u.provincia WHERE username = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia left join comuni c on c.id = u.comune WHERE username = ?")) {
             stm.setString(1, username);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
@@ -356,14 +356,14 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
     private Persona getPersona(ResultSet rs, int res, String ruolo) throws SQLException {
         return new Persona(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                 rs.getString("cognome"), rs.getString("cf"), rs.getDate("data_nascita"),
-                rs.getInt("provincia"), rs.getInt("comune"), res, ruolo, rs.getString("nome_provincia"));
+                rs.getInt("provincia"), rs.getInt("comune"), res, ruolo, rs.getString("nome_provincia"), rs.getString("nome_comune"));
     }
 
     private Paziente getPaziente(ResultSet rs, int res) throws SQLException {
         return new Paziente(rs.getInt("id"), rs.getString("username"), rs.getString("nome"),
                 rs.getString("cognome"), rs.getDate("data_nascita"), rs.getString("cf"),
                 rs.getInt("id_medico"), rs.getInt("provincia"), rs.getInt("comune"),
-                rs.getBoolean("paziente_attivo"), res, rs.getString("nome_provincia"));
+                rs.getBoolean("paziente_attivo"), res, rs.getString("nome_provincia"), rs.getString("nome_comune"));
     }
 
     /**
@@ -396,11 +396,10 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
             Paziente p = (Paziente) user;
             ret = CON.prepareStatement("UPDATE utenti SET"
                     + " provincia = " + ((p.getProvincia() != null) ? p.getProvincia() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
-                    + ", comune = ?,"
-                    + "id_medico = " + ((p.getId_medico() != null) ? p.getId_medico() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
+                    + ", comune = " + ((p.getComune() != null) ? p.getComune() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
+                    + ", id_medico = " + ((p.getId_medico() != null) ? p.getId_medico() : "NULL")// evita che il ret.setString metta gli apici al "NULL"
                     + " WHERE id = ? "); //AND ruolo = 'paziente'     rimosso per permettere all'utente medico/paziente di aggiornare
-            ret.setInt(1, p.getId_Comune());
-            ret.setInt(2, p.getId());
+            ret.setInt(1, user.getId());
         } else if (user instanceof Medico) {
             throw new DaoException("Ehi, non so cosa deve modificare. Se hai idee dimmelo :)");
         } else throw new DaoException("update_error");
