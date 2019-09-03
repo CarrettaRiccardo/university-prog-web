@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:useBean id="utente" scope="session" class="it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente"/>
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm d-print-none">
 
     <!-- Logo -->
     <a class="navbar-brand" href="app/home">

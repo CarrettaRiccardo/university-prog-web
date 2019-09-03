@@ -202,10 +202,9 @@
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>
         <url-pattern>/app/medico/new_ricette</url-pattern>
-        <url-pattern>/app/medico/compila_ricetta</url-pattern>
-        <url-pattern>/app/medico_spec/compila_ricetta</url-pattern>
-        <url-pattern>/app/paziente/compila_ricetta</url-pattern>
-        <url-pattern>/app/ssp/compila_ricetta</url-pattern>
+        <url-pattern>/app/medico/dettagli_ricetta</url-pattern>
+        <url-pattern>/app/medico_spec/dettagli_ricetta</url-pattern>
+        <url-pattern>/app/paziente/dettagli_ricetta</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteSpecialisticheServlet</servlet-name>

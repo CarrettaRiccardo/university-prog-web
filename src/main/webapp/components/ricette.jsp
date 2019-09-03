@@ -11,8 +11,9 @@
     </thead>
     <tbody>
     <c:forEach items="${ricette}" var="ric">
-        <!--<tr <c:if test="${empty ric.getTime_vendita()}"> <c:out value='style=font-weight:bold'/></c:if> >-->
-        <c:if test="${!ric.isNew()}"> class='clickable-row' data-href='app/${u_url}/compila_ricetta?id_paziente=${id_paziente}&id_ricetta=${ric.getId()}' </c:if>
+        <tr <c:if test="${empty ric.getTime_vendita()}"> <c:out value='style=font-weight:bold'/></c:if>
+        <c:if test="${!ric.isNew()}"> class='clickable-row' data-href='app/${u_url}/dettagli_ricetta?id_paziente=${id_paziente}&id_ricetta=${ric.getId()}' </c:if>
+        >
         <td><c:out value="${ric.getNomeFarmaco()}"/></td>
         <td><c:out value="${ric.getTime()}"/></td>
         <td><c:out value="${ric.getQuantita()}"/></td>

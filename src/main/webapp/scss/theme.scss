@@ -55,11 +55,6 @@ $gradients: #007BFF #001F87,
   }
 }
 
-// Aumeno larghezza campo "Cerca" per datatables
-#table_filter input[type="search"] {
-  width: 100px;
-}
-
 // Pulsante esapnsione in tables centrato
 table.dataTable.dtr-inline.collapsed tr td:first-child:before {
   top: 0 !important;
@@ -67,8 +62,15 @@ table.dataTable.dtr-inline.collapsed tr td:first-child:before {
   margin: auto !important;
 }
 
-.table tr[data-href] {
-  cursor: pointer !important;
+// Impostazioni per stampa
+@media print {
+  html{
+    font-size: 1.8em;
+  }
+  .qr-img{
+    width: 400px;
+    height: 400px;
+  }
 }
 
 
