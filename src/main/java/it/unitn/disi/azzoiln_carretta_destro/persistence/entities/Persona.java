@@ -9,30 +9,27 @@ import java.util.Random;
  * @author Steve
  */
 public class Persona extends Utente {
-    private String nome, cognome, cf, ruolo, nome_comune;
+    private String nome, cognome, cf, ruolo;
     private String foto; //path foto_profilo
     private char sesso;
     private Date data_nascita;
-    private int id_comune;
 
-    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, String ruolo, String nome_provincia,String foto, char sesso) {
-        super(id, username, provincia, nome_provincia);
+    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, Integer provincia, Integer comune, String ruolo, String nome_provincia, String nome_comune, String foto, char sesso) {
+        super(id, username, provincia, nome_provincia, comune, nome_comune);
         this.nome = nome;
         this.cognome = cognome;
         this.cf = cf;
         this.data_nascita = data_nascita;
         this.ruolo = ruolo;
-        this.id_comune = comune;
         this.foto = foto;
         this.sesso = sesso;
     }
 
-    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, int provincia, int comune, int res, String ruolo, String nome_provincia) {
-        super(id, username, provincia,nome_provincia, res);
+    public Persona(int id, String username, String nome, String cognome, String cf, Date data_nascita, Integer provincia, Integer comune, int res, String ruolo, String nome_provincia, String nome_comune) {
+        super(id, username, provincia,nome_provincia, comune, nome_comune, res);
         this.nome = nome;
         this.cognome = cognome;
         this.cf = cf;
-        this.id_comune = comune;
         this.data_nascita = data_nascita;
         this.ruolo = ruolo;
         this.foto = "";
@@ -49,19 +46,6 @@ public class Persona extends Utente {
 
     public char getSesso() {
         return sesso;
-    }
-
-    public int getId_comune() {
-        return id_comune;
-    }
-
-
-    public int getId_Comune() {
-        return id_comune;
-    }
-
-    public String getNome_comune() {
-        return nome_comune;
     }
 
     public String getNome() {

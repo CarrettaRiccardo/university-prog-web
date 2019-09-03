@@ -28,7 +28,7 @@
         </c:if>
         <c:if test="${empty data && utente.isPaziente()}">
             <div class="col-md-8 float-left">
-                <input id="datepicker" name="datepicker" class="text-center my-2" />
+                <input id="datepicker" name="datepicker" class="text-center my-2" autocomplete="off"  />
             </div>
             <div class="col-md-4 float-left">
                 <button class="btn btn-gradient btn-block rounded-pill">Prenota esame</button>

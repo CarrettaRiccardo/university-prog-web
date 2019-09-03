@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -182,9 +183,10 @@ public class VisiteServlet extends HttpServlet {
 
         if (inserito) {
             try {
-                SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Una nuovo rapporto di una visita è stato inserito",
+                SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Un nuovo rapporto di una visita e' stato inserito",
                         "Gentile utente.<br/>"
-                        + "Una visita con data " + (v.getTime() != null ? v.getTime() : "*da definire*") + " è stata inserita o modificata nella tua scheda paziente."
+                        + "Una visita con data " + (v.getTime() != null ? ((new SimpleDateFormat("dd/MM/yyyy")).format(v.getTime())) 
+                                : "*da definire*") + " è stata inserita o modificata nella tua scheda paziente."
                         + "<br/>"
                         + "Controlla le tue visite per visualizzare i dettagli."
                         + "<br/>" + "<br/>"

@@ -21,6 +21,7 @@
         <div class="col col-12 col-md">
             <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
             <div class="pb-1"> Provincia: <b>${dettagli_utente.getProvinciaNome()}</b></div>
+            <div class="pb-1"> Comune: <b>${dettagli_utente.getComuneNome()}</b></div>
             <div class="pb-1"> È medico: <b>${dettagli_utente.isMedico()}</b></div>
             <div class="pb-1"> È medico specialista: <b>${dettagli_utente.isMedicoSpecialista()}</b></div>
             <c:if test="${ dettagli_utente.isMedico() || dettagli_utente.isMedicoSpecialista() }">

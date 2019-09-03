@@ -1,6 +1,7 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
@@ -19,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Steve
@@ -51,6 +54,41 @@ public class SettingsServlet extends HttpServlet {
         if (!contextPath.endsWith("/"))
             contextPath += "/";
 
+        try {
+            HttpSession session = request.getSession(false);
+            Utente u = (Utente) session.getAttribute("utente");
+            if (u.getType() == UtenteType.PAZIENTE) {
+                Paziente newPaz = (Paziente) u;
+                List<String> pr;
+                    pr = new LinkedList<>(userDao.Ssp().getListProvince());
+                session.setAttribute("province", pr);
+                if (newPaz.getProvincia() != null){
+                    List<String> cm = new LinkedList<>(userDao.Ssp().getListComuni(newPaz.getProvincia()));
+                    session.setAttribute("comuni", cm);
+                }
+                List<Medico> md = new ArrayList<>(userDao.Ssp().getMedici(newPaz.getProvincia()));
+                // rimuovo dalla lista se stesso se è anche un medico
+                Integer i = 0;
+                Boolean removed = false;
+                while (!removed && i < md.size()) {
+                    if (md.get(i).getId() == newPaz.getId()) {
+                        md.remove(md.get(i));
+                        removed = true;
+                    }
+                    i++;
+                }
+                session.setAttribute("medici", md);
+                if (newPaz.getId_medico() != null) {
+                    Medico myMedico = (Medico) userDao.getByPrimaryKey(newPaz.getId_medico(), "medico");
+                    session.setAttribute("medico", myMedico);
+                } else {
+                    session.removeAttribute("medico");
+                }
+            }
+        } catch (Exception ex) {
+            throw new ServletException("update_error");
+        }
+        
         response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/settings"));
     }
 
@@ -125,16 +163,25 @@ public class SettingsServlet extends HttpServlet {
                 Integer idMed = null;
                 String idM = request.getParameter("medico");
                 String nomeProv = request.getParameter("provincia");
+                String nomeCom = request.getParameter("comune");
                 if (idM != null)
                     idMed = Integer.parseInt(idM);
 
                 // creo l'oggetto Utente con i nuovi valori
                 Paziente p = (Paziente) u;
-
+                
+                Integer a = nomeProv != null ? (!nomeProv.equals(u.getProvinciaNome()) ? null : idMed) : null;
+                Integer b = nomeProv != null ? userDao.Ssp().getIdProvincia(nomeProv) : null;
+                Integer c = nomeProv != null ? (!nomeProv.equals(u.getProvinciaNome()) ? null : (nomeCom != null ? userDao.Ssp().getIdComune(nomeCom) : null)) : null;
+                String d = nomeProv != null ? (!nomeProv.equals(u.getProvinciaNome()) ? null : nomeCom) : null;
+                
                 newUtente = new Paziente(p.getId(), p.getUsername(),
                         p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
-                        nomeProv != null ? (!nomeProv.equals(u.getProvinciaNome()) ? null : idMed) : null,// controllo che se cambia provincia annulla il medico
-                        nomeProv != null ? userDao.Ssp().getIdProvincia(nomeProv) : null, p.getId_Comune(), true, nomeProv, updateFoto ? updateFotoPath : p.getFoto(), p.getSesso());
+                        a,// controllo che se cambia provincia annulla il medico e comune
+                        b,
+                        c,
+                        true, nomeProv, 
+                        d, updateFoto ? updateFotoPath : p.getFoto(), p.getSesso());
 
                 // aggiorno l'utente
                 userDao.update(newUtente);
@@ -143,6 +190,10 @@ public class SettingsServlet extends HttpServlet {
                 Paziente newPaz = (Paziente) newUtente;
                 List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
                 request.setAttribute("province", pr);
+                if (nomeProv != null){
+                    List<String> cm = new LinkedList<>(userDao.Ssp().getListComuni(userDao.Ssp().getIdProvincia(nomeProv)));
+                    request.setAttribute("comuni", cm);
+                }
                 List<Medico> md = new ArrayList<>(userDao.Ssp().getMedici(newUtente.getProvincia()));
                 // rimuovo dalla lista se stesso se è anche un medico
                 Integer i = 0;
@@ -154,7 +205,7 @@ public class SettingsServlet extends HttpServlet {
                     }
                     i++;
                 }
-                session.setAttribute("medici", md);
+                request.setAttribute("medici", md);
                 if (newPaz.getId_medico() != null) {
                     Medico myMedico = (Medico) userDao.getByPrimaryKey(newPaz.getId_medico(), "medico");
                     session.setAttribute("medico", myMedico);
@@ -178,11 +229,7 @@ public class SettingsServlet extends HttpServlet {
             throw new ServletException("update_error");
         }
 
-        String contextPath = getServletContext().getContextPath();
-        if (!contextPath.endsWith("/"))
-            contextPath += "/";
-
-        response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/settings"));
+        doGet(request, response);
     }
 
 

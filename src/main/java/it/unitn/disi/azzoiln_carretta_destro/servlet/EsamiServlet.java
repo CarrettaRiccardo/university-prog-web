@@ -218,9 +218,10 @@ public class EsamiServlet extends HttpServlet {
 
         if (inserito) {
             try {
-                SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Un nuovo esame è stato inserito",
+                SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Un nuovo esame e' stato inserito",
                         "Gentile utente.<br/>"
-                        + "Un esame con data " + (v.getTime_esame() != null ? v.getTime_esame() : "*da definire*") + " è stato inserito o modificato nella tua scheda paziente."
+                        + "Un esame con data " + (v.getTime_esame() != null ? ((new SimpleDateFormat("dd/MM/yyyy")).format(v.getTime_esame())) 
+                                : "*da definire*") + " è stato inserito o modificato nella tua scheda paziente."
                         + "<br/>"
                         + "Controlla i tuoi esami per visualizzare i dettagli."
                         + "<br/>" + "<br/>"

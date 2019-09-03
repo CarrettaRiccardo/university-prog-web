@@ -14,15 +14,15 @@ public class Paziente extends Persona{
     private Date ultima_visita, ultima_ricetta;
 
     
-    public Paziente(int id, String username, String nome, String cognome,Date data_nascita,String cf, Integer id_medico, Integer provincia, int comune, boolean paziente_attivo,String nome_provincia,String foto,char sesso) {
-        super(id, username, nome, cognome, cf, data_nascita,  provincia, comune, "paziente", nome_provincia,foto,sesso);
+    public Paziente(int id, String username, String nome, String cognome,Date data_nascita,String cf, Integer id_medico, Integer provincia, Integer comune, boolean paziente_attivo,String nome_provincia,String nome_comune, String foto,char sesso) {
+        super(id, username, nome, cognome, cf, data_nascita,  provincia, comune, "paziente", nome_provincia, nome_comune,foto,sesso);
         this.id_medico = id_medico;
         this.attivo = paziente_attivo;
     }
 
     
     /**
-     * Per oggetto recuperato durante il login. Va aggiunto il campo res per individuare errori al login
+     * Per oggetto recuperato durante il login.Va aggiunto il campo res per individuare errori al login
      * @param id
      * @param username
      * @param nome
@@ -35,9 +35,10 @@ public class Paziente extends Persona{
      * @param paziente_attivo
      * @param res
      * @param nome_provincia 
+     * @param nome_comune 
      */
-    public Paziente(int id, String username, String nome, String cognome,Date data_nascita,String cf, Integer id_medico, Integer provincia, int comune, boolean paziente_attivo, int res,String nome_provincia) {
-        super(id, username, nome, cognome, cf, data_nascita,  provincia, comune, res, "paziente", nome_provincia);
+    public Paziente(int id, String username, String nome, String cognome,Date data_nascita,String cf, Integer id_medico, Integer provincia, Integer comune, boolean paziente_attivo, int res,String nome_provincia, String nome_comune) {
+        super(id, username, nome, cognome, cf, data_nascita,  provincia, comune, res, "paziente", nome_provincia, nome_comune);
         this.id_medico = id_medico;
         this.attivo = paziente_attivo;
     }
