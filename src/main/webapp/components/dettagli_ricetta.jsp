@@ -28,7 +28,7 @@
 
         <div class="col col-12 col-lg pl-lg-4 mt-3 mt-lg-0">
             <h5 class="text-primary"><fmt:message key="dati_generali"/></h5>
-            <div class="pb-1"> <fmt:message key="codcice_medico"/>: <b>#${ricetta.getId_medico()}</b></div>
+            <div class="pb-1"> <fmt:message key="codice_medico"/>: <b>#${ricetta.getId_medico()}</b></div>
             <div class="pb-1"> <fmt:message key="cf_paziente"/>: <b>${CF_paziente}</b></div>
         </div>
     </div>
