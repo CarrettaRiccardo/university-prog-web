@@ -40,8 +40,8 @@
 <div class="mt-3 row">
     <c:set var="showAdd" value="${sessionScope.utente.getType() == UtenteType.MEDICO}"/>
 
-    <div class="col-12 order-2 order-md-1 <c:if test="${showAdd}">col-md-9 pr-0</c:if> ">
-        <ul class="nav nav-tabs">
+    <div class="col-12 <c:if test="${showAdd}">col-md-9 pr-md-0</c:if> ">
+        <ul class="nav nav-tabs flex-column flex-md-row">
             <c:forTokens items="${sezioni_dettagli}" var="sezione" varStatus="s" delims=",">
                 <li class="nav-item">
                     <c:if test="${sezione == subpage}">
@@ -72,7 +72,7 @@
     </div>
 
     <c:if test="${showAdd}">
-        <div class="col-12 col-md-3 order-1 order-md-2 pl-0">
+        <div class="col-12 col-md-3 pl-md-0 mt-2 mt-md-0">
             <a class="btn btn-gradient-${activeIndex + 2} text-white h6 btn-block mb-0"
                href="app/${u_url}/new_${subpage}?id_paziente=${param.id_paziente}"
                 <%--<c:choose>

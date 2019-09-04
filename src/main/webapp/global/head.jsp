@@ -71,10 +71,6 @@
     });
 
     jQuery(document).ready(function ($) {
-        $(".clickable-row").click(function () {
-            window.location = $(this).data("href");
-        });
-
         <c:if test="${! empty url_rest}">    <!-- Codice per ricerca con autocompletamento -->
             $("#autocomplete").select2({
                 placeholder: "Digita un nome",

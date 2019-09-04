@@ -9,8 +9,7 @@
     </thead>
     <tbody>
     <c:forEach items="${visite}" var="visita">
-        <tr class='clickable-row'
-            data-href='app/${u_url}/new_visite?id_paziente=${id_paziente}&id_visita=${visita.getId()}'>
+        <tr data-href='app/${u_url}/new_visite?id_paziente=${id_paziente}&id_visita=${visita.getId()}'>
             <td scope="row"><c:out value="${visita.getTime()}"/></td>
             <td><c:out value="${visita.getAnamnesiShort()}"/></td>
         </tr>

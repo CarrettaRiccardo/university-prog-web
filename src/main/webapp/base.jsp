@@ -15,7 +15,7 @@
                     let api = this.api();
                     // Popola il dataset prendendo i dati direttamente dalla tabella
                     // Usa le colonne 0, 1 e 2 -> TODO: Usare le colonne giuste in base alla sezione
-                    api.cells('tr', [0, 1, 2]).every(function () {
+                    api.cells('tr', [0, 1]).every(function () {
                         // Rimozione leemnti HTML per avere solo il testo. Non insersco duplicati
                         let data = $('<div>').html(this.data()).text();
                         if (dataset.indexOf(data) === -1) dataset.push(data);

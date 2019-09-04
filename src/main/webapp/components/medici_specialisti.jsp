@@ -15,7 +15,7 @@
     </thead>
     <tbody>
     <c:forEach items="${mediciSpecialsti}" var="medico">
-        <tr class='clickable-row' data-href='app/${u_url}/dettagli_utente/stats?id_medico_spec=${medico.getId()}'>
+        <tr data-href='app/${u_url}/dettagli_utente/stats?id_medico_spec=${medico.getId()}'>
             <th scope="row"><img width="45" height="40" class="rounded-circle"
                                  onerror="this.onerror=null; this.src='assets/default.jpg'"
                                  src="${PHOTOS_DIR}${medico.getFoto()}"/></th>
