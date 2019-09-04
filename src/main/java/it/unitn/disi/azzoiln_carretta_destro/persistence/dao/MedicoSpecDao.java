@@ -88,5 +88,12 @@ public interface MedicoSpecDao {
      */
     public boolean inCompetenza(Integer id_visita, int id_medico) throws DaoException;
 
+    /**
+     * Usato per controllo accesso alle foto in ProfilePhotoFilter
+     * @param foto_utente
+     * @return 
+     */
+    public boolean isMyPatient(String foto_utente,Integer id_medico) throws DaoException;
+
     
 }

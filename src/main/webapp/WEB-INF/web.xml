@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!-- SERVLET -->
     <servlet>
         <servlet-name>Login</servlet-name>
@@ -254,9 +253,20 @@
         <filter-name>SspFilter</filter-name>
         <filter-class>it.unitn.disi.azzoiln_carretta_destro.filters.SspFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>ProfilePhotoFilter</filter-name>
+        <filter-class>it.unitn.disi.azzoiln_carretta_destro.filters.ProfilePhotoFilter</filter-class>
+    </filter>
     <filter-mapping>
         <filter-name>AppFilter</filter-name>
         <url-pattern>/app/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ProfilePhotoFilter</filter-name>
+        <url-pattern>/profile_photos/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>

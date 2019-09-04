@@ -269,4 +269,9 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
         }
         return ret;
     }
+    
+    @Override
+    public boolean isMyPatient(String username, Integer id_medico) throws DaoException {
+        return true; //per assunzione che medico_spec vede tutti i pazienti
+    }
 }

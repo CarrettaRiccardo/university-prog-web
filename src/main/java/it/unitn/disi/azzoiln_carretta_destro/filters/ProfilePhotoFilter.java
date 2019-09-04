@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.rmi.ServerError;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.Filter;
@@ -22,62 +21,54 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Filtro su tutti gli URL /Medico/*
- * Se un URL comprende un id_paziente come parametro controlla che sia effettivamente un suo Paziente. Altrimenti da errore 'not_authorized'
+ * Filtro per controllare che un Paziente accede solo alle proprie foto e che i Medici accedano alle foto 
+ * solo dei propri Pazienti
  * @author Steve
  */
-public class MedicoFilter implements Filter {
+public class ProfilePhotoFilter implements Filter {
     
     private static final boolean debug = true;
-
-    private FilterConfig filterConfig = null;
     private UtenteDao userDao;
+   
+    private FilterConfig filterConfig = null;
     
-    public MedicoFilter() throws ServletException {
-        
+    public ProfilePhotoFilter() {
     }    
     
-    
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
-            throws IOException, ServletException, DaoException {
+            throws IOException, ServletException {
         if (debug) {
-            log("MedicoFilter:DoBeforeProcessing");
+            log("ProfilePhotoFilter:DoBeforeProcessing");
         }
 
         if(request instanceof HttpServletRequest){
-            HttpServletRequest req = (HttpServletRequest) request;
-            
-            if(req.getParameter("id_paziente") != null){
-                //E' settato un id_paziente. Devo controllare tramite una query che sia un mio paziente
-                //Altrimenti errore
-                Integer id_paziente = null;
-                try{
-                    id_paziente = Integer.parseInt(req.getParameter("id_paziente"));
-                }catch(NumberFormatException e){
-                    throw  new ServletException("id_paziente not valid", e);
-                }
-                finally{
-                    if(id_paziente == null || id_paziente <= 0)
-                        throw new ServletException("id_paziente not valid");
-                }
+            try {
+                HttpServletRequest req = (HttpServletRequest) request;
                 
+                String[] tmp = req.getRequestURI().split("/");
+                String foto_utente = tmp[tmp.length - 2];
                 
                 Utente u = (Utente) ((HttpServletRequest) request).getSession(false).getAttribute("utente");
-                if( ! (u instanceof Medico) )  //se non sono un medico non posso accedere all' URL Medico
-                    throw new ServletException("not_authorized");
-                System.out.println(userDao.Medico().isMyPatient(id_paziente,u.getId()));
-                if(! userDao.Medico().isMyPatient(id_paziente,u.getId()))
-                    throw new ServletException("not_my_patient");  //Il Paziente è riferito ad un altro dottore
+                
+                switch(u.getType()){
+                    case PAZIENTE:    if( !(u.getUsername().equals(foto_utente)) ) throw new ServletException("not_authorized_photo"); break;
+                    case MEDICO:      if( !userDao.Medico().isMyPatient(foto_utente, u.getId()) ) throw new ServletException("not_authorized_photo");   break;
+                    case MEDICO_SPEC: if( !userDao.MedicoSpecialista().isMyPatient(foto_utente, u.getId()) ) throw new ServletException("not_authorized_photo"); break;
+                    case SSP: throw new ServletException("not_authorized_photo");
+                }
+                
+                req.setAttribute("u_url", "medico");
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException(ex.getMessage());
             }
-            
-            req.setAttribute("u_url", "medico");
         }
     }    
     
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("MedicoFilter:DoAfterProcessing");
+            log("ProfilePhotoFilter:DoAfterProcessing");
         }
     }
 
@@ -90,37 +81,25 @@ public class MedicoFilter implements Filter {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet error occurs
      */
-    @Override
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
         
         if (debug) {
-            log("MedicoFilter:doFilter()");
+            log("ProfilePhotoFilter:doFilter()");
         }
-        
-        
         
         Throwable problem = null;
         try {
             doBeforeProcessing(request, response);
             chain.doFilter(request, response);
-        }
-        catch(DaoException d){
-            throw new ServletException("db_error");
-        }
-        catch (Throwable t) {
-            // If an exception is thrown somewhere down the filter chain,
-            // we still want to execute our after processing, and then
-            // rethrow the problem after that.
+        } catch (Throwable t) {
             problem = t;
             t.printStackTrace();
         }
         
         doAfterProcessing(request, response);
-
-        // If there was a problem, we want to rethrow it if it is
-        // a known type, otherwise log it.
+        
         if (problem != null) {
             if (problem instanceof ServletException) {
                 throw (ServletException) problem;
@@ -161,7 +140,7 @@ public class MedicoFilter implements Filter {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
             if (debug) {                
-                log("MedicoFilter:Initializing filter + getUserDao");
+                log("ProfilePhotoFilter:Initializing filter");
             }
         }
         
@@ -179,11 +158,11 @@ public class MedicoFilter implements Filter {
      * Return a String representation of this object.
      */
     @Override
-    public String toString(){
+    public String toString() {
         if (filterConfig == null) {
-            return ("MedicoFilter()");
+            return ("ProfilePhotoFilter()");
         }
-        StringBuffer sb = new StringBuffer("MedicoFilter(");
+        StringBuffer sb = new StringBuffer("ProfilePhotoFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
@@ -200,7 +179,7 @@ public class MedicoFilter implements Filter {
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly (Se vedi questo manda uno screen a Steve)</h1>\n<pre>\n");                
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
                 pw.print(stackTrace);                
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();

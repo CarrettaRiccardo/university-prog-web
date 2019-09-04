@@ -197,6 +197,25 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         return ret;
     }
     
+    @Override
+    public boolean isMyPatient(String username, Integer id_medico) throws DaoException {
+        boolean ret = false;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT id FROM utenti u WHERE id_medico=? AND username=?")) {
+            stm.setInt(1, id_medico);
+            stm.setString(2, username);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()){
+                 System.out.println("Si, " + username + " è mio " + id_medico);
+                 ret = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n\n");
+            throw new DaoException("db_error", ex);
+        } 
+        return ret;
+    }
+    
     
     /**
      * Ottiene la data di ultima visita per essere mostrata nell' elenco completo dei pazienti
@@ -483,6 +502,8 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
         }
         return ret;
     }
+
+    
     
     
 }
