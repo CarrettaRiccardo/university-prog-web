@@ -60,8 +60,20 @@
                 // Disabilitazione ordinamento automatico
                 order: []
             })
+            // Gestione click row table
                 .on('click', 'tbody tr[data-href] td:nth-child(1)', function (e) {
-                    e.stopPropagation();
+                    let pseudo = window.getComputedStyle($(this).get(0), ':before');
+                    if (pseudo.getPropertyValue("content") !== 'none' && // Controllo che ci sia il bottone
+                        e.target.nodeName === 'TD' &&  // Che abbia premuto la riga e non un elmento all'interno
+                        e.offsetX < 30) { // Che abbia premuto sul bottone e non sul testo dopo
+                        // Blocco la propagazione dell'evento perchè ho premuto il bottone "+"
+                        e.stopPropagation();
+                    } else {
+                        // Altrimenti ho premuto sulla riga della tabella, chiudo eventuali dettagli aperti
+                        console.log(e.target.parentNode);
+                        $('tr.child').hide();
+                        $('tr.parent').removeClass('parent');
+                    }
                 })
                 // Gestione click row table
                 .on('click', 'tbody tr[data-href]', function (e) {
