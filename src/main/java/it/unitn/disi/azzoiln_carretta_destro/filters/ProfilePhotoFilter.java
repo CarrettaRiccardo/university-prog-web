@@ -22,7 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Filtro per controllare che un Paziente accede solo alle proprie foto e che i Medici accedano alle foto 
- * solo dei propri Pazienti
+ * solo dei propri Pazienti.
+ * Inoltre solo un utente con sessione attiva può accedere alla foto
  * @author Steve
  */
 public class ProfilePhotoFilter implements Filter {

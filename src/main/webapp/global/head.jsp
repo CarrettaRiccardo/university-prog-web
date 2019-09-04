@@ -1,3 +1,4 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -93,11 +94,9 @@
 <div id="bannerCookies" style="display: none" class="alert alert-dismissible my-0 bg-secondary fixed-bottom text-center"
      role="alert">
     <div>
-        <b>Ti piacciono i cookies?</b> &#x1F36A; Se utilizzi il nostro sito accetti l'utilizzo di cookie per migliorare
-        la navigazione. <a href="http://www.whatarecookies.com/" class="text-light mx-2" target="_blank">Per saperne di
-        piu'</a>
+        <fmt:message key="lbl_footer"/> <a href="http://www.whatarecookies.com/" class="text-light mx-2" target="_blank"><fmt:message key="about_cookie"/></a>
         <button id="closeCookies" type="button" class="btn bg-dark text-light btn-sm">
-            Chiudi
+            <fmt:message key="chiudi"/>
         </button>
     </div>
 </div>
