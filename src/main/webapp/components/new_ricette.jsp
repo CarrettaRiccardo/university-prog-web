@@ -45,13 +45,6 @@
                    value="<c:choose><c:when test="${! empty i_ricetta}">${i_ricetta.getQuantita()}</c:when><c:when test="${empty i_ricetta}">1</c:when></c:choose>"
                    placeholder="1" required min='1' max='300'>
         </div>
-
-        <c:if test="${empty i_ricetta}">
-        <div class="form-group col-md-2">
-            <label for="ticket"><fmt:message key="costo_ticket"/></label>
-            <input type="text" class="form-control" id="ticket" value="${i_ticket.getCosto()}"  >
-        </div>
-    </c:if>
   </div>
   <input type="hidden" name="id_paziente" value="${paziente.getId()}">
             <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_ricetta}">
