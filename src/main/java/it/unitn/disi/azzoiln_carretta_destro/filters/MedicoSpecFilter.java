@@ -67,6 +67,10 @@ public class MedicoSpecFilter implements Filter {
                     throw new ServletException("not_my_patient");  //Non posso compilare dati su me stesso
             }   
             
+            /**
+             * id_visita corrisponde all' id della visita intesa come prescrizione. Non è il valore della visita all'interno
+             * delle possibili visite-spec disponibili
+             */
             if(req.getParameter("id_visita") != null){
                 Integer id_visita = null;
                 try{
@@ -79,7 +83,7 @@ public class MedicoSpecFilter implements Filter {
                 }
                 
                 Utente u = (Utente) ((HttpServletRequest) request).getSession(false).getAttribute("utente");
-                if(userDao.MedicoSpecialista().inCompetenza(id_visita, u.getId()))  throw new ServletException("not_authorized_visita");
+                if(!userDao.MedicoSpecialista().inCompetenza(id_visita, u.getId()))  throw new ServletException("not_authorized_visita");
             }   
             
             

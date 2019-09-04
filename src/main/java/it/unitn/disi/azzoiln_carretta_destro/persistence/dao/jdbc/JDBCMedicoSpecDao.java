@@ -252,12 +252,12 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
     }
 
     @Override
-    public boolean inCompetenza(Integer id_visita, int id_medico) throws DaoException {
-        if (id_visita == null || id_visita <= 0 || id_medico <= 0) throw new IdNotFoundException("id_visita");
+    public boolean inCompetenza(Integer id_presc, int id_medico) throws DaoException {
+        if (id_presc == null || id_presc <= 0 || id_medico <= 0) throw new IdNotFoundException("id_presc");
         boolean ret = false;
 
-        try (PreparedStatement stm = CON.prepareStatement(  "SELECT * FROM competenze_medico_spec WHERE id_medico_spec = ? AND id_visita_spec = ?")) {
-            stm.setInt(2, id_visita);
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM competenze_medico_spec WHERE id_medico_spec = ? AND id_visita_spec = (SELECT id_visita_spec FROM visita_specialistica WHERE id_prescrizione = ?) ")) {
+            stm.setInt(2, id_presc);
             stm.setInt(1, id_medico);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
