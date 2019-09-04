@@ -6,9 +6,9 @@
 <table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-3 shadow-sm text-white">
     <tr>
-        <th scope="col">Tipo <fmt:message key="tipo"/> </th>
-        <th scope="col">Data Visita <fmt:message key="data_visita"/> </th>
-        <th scope="col">Esito <fmt:message key="esito"/></th>
+        <th scope="col"><fmt:message key="tipo"/></th>
+        <th scope="col"><fmt:message key="data_visita"/></th>
+        <th scope="col"><fmt:message key="esito"/></th>
     </tr>
     </thead>
     <tbody>

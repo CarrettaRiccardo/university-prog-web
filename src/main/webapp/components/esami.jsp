@@ -3,8 +3,8 @@
 <table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-3 shadow-sm text-white">
     <tr>
-        <th scope="col">Tipo</th>
-        <th scope="col">Data Visita</th>
+        <th scope="col"><fmt:message key="tipo"/></th>
+        <th scope="col"><fmt:message key="data_visita"/></th>
     </tr>
     </thead>
     <tbody>

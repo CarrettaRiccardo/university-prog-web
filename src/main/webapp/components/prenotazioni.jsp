@@ -1,11 +1,11 @@
 <%@ include file="../global/common.jsp" %>
 
 <div class="text-center my-4">
-    <p class="font-weight-bold float-left" style="font-size: 17px">Seleziona la data per la visita:</p>
+    <p class="font-weight-bold float-left" style="font-size: 17px"><fmt:message key="seleziona_data_visita"/>:</p>
     <input id="datepicker" class="text-center mb-3 float-left" width="276" autocomplete="off"/>
     <button id="loadDate" class="btn btn-gradient btn-block rounded-pill ml-3 mb-3 float-left" <c:if test="${empty medico || medico.getId() == 0}"><c:out value="disabled"></c:out></c:if> style="width: 236px">Visualizza disponibilita'</button>
     
-    <p class="position-absolute" style="right: 20px; top: 20px; font-size: 17px">Medico di base:</p>
+    <p class="position-absolute" style="right: 20px; top: 20px; font-size: 17px"><fmt:message key="medico_base"/>:</p>
     <p class="font-weight-bold position-absolute" style="right: 20px; top: 50px; font-size: 17px">
         <c:if test="${empty medico || medico.getId() == 0}">
             <c:out value="-"></c:out>
@@ -14,7 +14,7 @@
             <c:out value="${medico.getNome()} ${medico.getCognome()}"></c:out>
         </c:if>
     </p>
-    <p class="font-italic text-right position-absolute" style="right: 20px; top: 80px; font-size: 13px; width: 170px">(puoi cambiare medico di base nelle impostazioni)</p>
+    <p class="font-italic text-right position-absolute" style="right: 20px; top: 80px; font-size: 13px; width: 170px">(<fmt:message key="cambia_medico"/>)</p>
 </div>
 <div class="text-center" style="margin-top: 150px">
     <c:if test="${not empty date && not (empty medico || medico.getId() == 0)}">
@@ -37,14 +37,14 @@
                                     <div class="alert alert-success text-center my-3" style="width: 550px">
                                         <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
                                         <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
-                                        <p><c:out value="Prenotazione effettuata"></c:out></p>
+                                        <p><fmt:message key="prenotazione_fatta"/></p>
                                     </div>
                                 </c:when>
                                 <c:otherwise>
                                     <div class="alert alert-danger text-center my-3" style="width: 550px">
                                         <p class="font-italic position-absolute" style="left: 5px; top: 2px"><c:out value="${day}"></c:out></p>
                                         <p class="font-weight-bold position-absolute" style="right: 5px; top: 2px;"><c:out value="${i}:00"></c:out></p>
-                                        <p><c:out value="Prenotazione non disponibile"></c:out></p>
+                                        <p><fmt:message key="prenotazione_non_disp"/></p>
                                     </div>
                                 </c:otherwise>
                             </c:choose>
@@ -62,7 +62,7 @@
                             <jsp:useBean id="now" class="java.util.Date"/>
                             <fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="nowDate"/>
                             <c:if test="${date > nowDate}">
-                                <button class="btn btn-gradient btn-block rounded-pill text-center ml-3 mt-2" style="width: 150px">Prenota visita</button> 
+                                <button class="btn btn-gradient btn-block rounded-pill text-center ml-3 mt-2" style="width: 150px"><fmt:message key="prenota_visita"/></button> 
                             </c:if>
                         </form>
                     </div>
@@ -74,12 +74,12 @@
             <c:choose>
                 <c:when test="${empty medico || medico.getId() == 0}">
                     <div class="alert alert-danger text-center my-3" style="width: 250px; height: 70px">
-                        <p>Seleziona una medico di base!</p>
+                        <p><fmt:message key="seleziona_medico_base"/></p>
                     </div>
                 </c:when>
                 <c:when test="${empty date}">
                     <div class="alert alert-danger text-center my-3" style="width: 250px; height: 50px">
-                        <p>Seleziona una data!</p>
+                        <p><fmt:message key="seleziona_data"/></p>
                     </div>
                 </c:when>
             </c:choose>

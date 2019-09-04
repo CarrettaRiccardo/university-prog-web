@@ -12,17 +12,17 @@
 <form action="app/${u_url}/new_visite" method="POST">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="paziente">Paziente</label>
+            <label for="paziente"><fmt:message key="paziente"/></label>
             <input type="email" class="form-control" id="paziente"
                    placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
         </div>
         <div class="form-group col-md-6">
-            <label for="data">Data</label>
+            <label for="data"><fmt:message key="data"/></label>
             <input type="password" class="form-control" id="data" placeholder="${data}" readonly>
         </div>
     </div>
     <div class="form-group">
-        <label for="anamnesi">Anamnesi</label>
+        <label for="anamnesi"><fmt:message key="anamnesi"/></label>
         <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}">
         <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px"
                   <c:if test="${! empty i_visita}">readonly</c:if>><c:choose><c:when
@@ -30,7 +30,7 @@
                 test="${! empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>
     </div>
     <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO and empty i_visita}">
-        <button type="submit" class="btn btn-primary">Conferma</button>
+        <button type="submit" class="btn btn-primary"><fmt:message key="conferma"/></button>
     </c:if>
 </form>
 

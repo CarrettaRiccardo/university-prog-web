@@ -17,11 +17,11 @@
 <form action="app/${u_url}/compila_esame" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
-      <label for="paziente">Paziente</label>
+      <label for="paziente"><fmt:message key="paziente"/></label>
       <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
     </div>
     <div class="form-group col-md-6">
-      <label for="data" class="col-md-12">Data</label>
+      <label for="data" class="col-md-12"><fmt:message key="data"/></label>
       <c:if test="${not empty id_esame}">
         <c:if test="${not empty data || not utente.isPaziente()}">
             <input type="text" class="form-control" width="150px" id="data" placeholder="${data}" readonly>
@@ -31,14 +31,14 @@
                 <input id="datepicker" name="datepicker" class="text-center my-2" autocomplete="off"  />
             </div>
             <div class="col-md-4 float-left">
-                <button class="btn btn-gradient btn-block rounded-pill">Prenota esame</button>
+                <button class="btn btn-gradient btn-block rounded-pill"><fmt:message key="pren_esame"/></button>
             </div>
         </c:if>
       </c:if>
     </div>
   </div>
   <div class="form-group">
-    <label for="esito">Anamnesi</label>
+    <label for="esito"><fmt:message key="anamnesi"/></label>
     <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
     <input type="hidden" class="form-control" name="id_esame" value="${id_esame}"> 
     <textarea class="form-control" id="esito" name="esito" style="height: 150px"
@@ -47,7 +47,7 @@
               </c:if>><c:choose><c:when test="${empty i_esame}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getRisultato()}</c:when></c:choose></textarea>
   </div>
   <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_esame}">
-    <button type="submit" class="btn btn-primary">Conferma</button>
+    <button type="submit" class="btn btn-primary"><fmt:message key="conferma"/></button>
   </c:if>
 </form>
   

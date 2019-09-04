@@ -277,4 +277,4 @@ create table log_time
 ) engine = InnoDB;
 
 /* Riabilitazione FK */
-set foreign_key_checks = 0;
+set foreign_key_checks = 1;

@@ -11,27 +11,27 @@
         </div>
 
         <div class="col col-12 col-md pl-md-4">
-            <h5 class="text-primary">Dati personali</h5>
-            <div class="pb-1"> Nome: <b>${dettagli_utente.getNome()}</b></div>
-            <div class="pb-1"> Cognome: <b>${dettagli_utente.getCognome()}</b></div>
-            <div class="pb-1"> Codice fiscale: <b>${dettagli_utente.getCf()}</b></div>
-            <div class="pb-1"> Data nascita: <b>${dettagli_utente.getData_nascita_Stringa()}</b></div>
+            <h5 class="text-primary"><fmt:message key="dati_personali"/></h5>
+            <div class="pb-1"> <fmt:message key="nome"/>: <b>${dettagli_utente.getNome()}</b></div>
+            <div class="pb-1"> <fmt:message key="cognome"/> <b>${dettagli_utente.getCognome()}</b></div>
+            <div class="pb-1"> <fmt:message key="cf"/>: <b>${dettagli_utente.getCf()}</b></div>
+            <div class="pb-1"> <fmt:message key="data_nascita"/>: <b>${dettagli_utente.getData_nascita_Stringa()}</b></div>
         </div>
 
         <div class="col col-12 col-md">
-            <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
-            <div class="pb-1"> Provincia: <b>${dettagli_utente.getProvinciaNome()}</b></div>
-            <div class="pb-1"> Comune: <b>${dettagli_utente.getComuneNome()}</b></div>
-            <div class="pb-1"> È medico: <b>${dettagli_utente.isMedico()}</b></div>
-            <div class="pb-1"> È medico specialista: <b>${dettagli_utente.isMedicoSpecialista()}</b></div>
+            <h5 class="text-primary mt-3 mt-md-0"><fmt:message key="altro"/></h5>
+            <div class="pb-1"> <fmt:message key="provincia"/> <b>${dettagli_utente.getProvinciaNome()}</b></div>
+            <div class="pb-1"> <fmt:message key="comune"/> <b>${dettagli_utente.getComuneNome()}</b></div>
+            <div class="pb-1"> <fmt:message key="is_medico"/>: <b>${dettagli_utente.isMedico()}</b></div>
+            <div class="pb-1"> <fmt:message key="is_medico_spec"/>: <b>${dettagli_utente.isMedicoSpecialista()}</b></div>
             <c:if test="${ dettagli_utente.isMedico() || dettagli_utente.isMedicoSpecialista() }">
-            <div class="pb-1"> Laurea: <b> <c:out value="${dettagli_utente.getLaurea()}" default="-"/></b></div>
-            <div class="pb-1"> Inizio carriera: <b> <c:out value="${dettagli_utente.getInizioCarriera()}"
+            <div class="pb-1"> <fmt:message key="laurea"/> <b> <c:out value="${dettagli_utente.getLaurea()}" default="-"/></b></div>
+            <div class="pb-1"> <fmt:message key="inizio_carriera"/>: <b> <c:out value="${dettagli_utente.getInizioCarriera()}"
                                                            default="-"/></b></div>
         </div>
         </c:if>
         <c:if test="${ dettagli_utente.isMedicoSpecialista() }">
-        <div class="pb-1"> Specialità: <b> <c:out value="${dettagli_utente.getSpecialita()}" default="-"/></b>
+        <div class="pb-1"> <fmt:message key="specialita"/>: <b> <c:out value="${dettagli_utente.getSpecialita()}" default="-"/></b>
             </c:if>
         </div>
     </div>
@@ -103,7 +103,7 @@
 <c:if test="${param.r ne null}">
     <div class="alert alert-success alert-dismissible fade show position-fixed"
          style="right: 20px; bottom: 0; z-index: 2" role="alert">
-        Operazione eseguita con <b>successo</b>!
+        <fmt:message key="op_successo"/>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>

@@ -8,8 +8,8 @@
     <thead class="bg-gradient-1 shadow-sm text-white">
     <tr>
         <th scope="col"></th>
-        <th scope="col">Cognome</th>
-        <th scope="col">Nome</th>
+        <th scope="col"><fmt:message key="cognome"/></th>
+        <th scope="col"><fmt:message key="nome"/></th>
     </tr>
     </thead>
     <tbody>

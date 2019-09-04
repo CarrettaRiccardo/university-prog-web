@@ -1,7 +1,3 @@
-<!--
-INIZIO A PROGETTARE UNA STRUTTURA COMUNE (STEVE)
---->
-
 <%@ include file="../../global/common.jsp" %>
 <jsp:useBean id="now" class="java.util.Date"/>
 <fmt:formatDate var="time" value="${now}" pattern="yyyy"/>
