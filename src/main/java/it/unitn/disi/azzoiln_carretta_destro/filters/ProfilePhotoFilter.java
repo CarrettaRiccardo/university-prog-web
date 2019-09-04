@@ -62,6 +62,10 @@ public class ProfilePhotoFilter implements Filter {
                 System.out.println(ex.getMessage());
                 throw new ServletException(ex.getMessage());
             }
+            catch(NullPointerException ex){
+                System.out.println(ex.getMessage());
+                throw new ServletException("no_session");
+            }
         }
     }    
     
