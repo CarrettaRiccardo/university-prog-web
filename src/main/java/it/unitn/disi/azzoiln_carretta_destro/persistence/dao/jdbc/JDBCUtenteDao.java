@@ -508,6 +508,24 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
     }
 
     @Override
+    public List<Esame> getSspEsami(Integer id_ssp) throws DaoException {
+        if (id_ssp == null || id_ssp <= 0) throw new IdNotFoundException("id_ssp");
+        LinkedList<Esame> ret = new LinkedList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.*, u.nome as paz_nome, u.cognome as paz_cognome FROM esame r inner join esami_prescrivibili f on f.id = r.id_esame inner join prescrizione p on p.id = r.id_prescrizione inner join utenti u on p.id_medico = u.id WHERE id_ssp = ? ORDER BY time_esame DESC")) {
+            stm.setInt(1, id_ssp);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Esame e = new Esame(rs.getInt("id_esame"), rs.getInt("id_ticket"), rs.getInt("id_ssp"), rs.getString("risultato"), rs.getDate("time_esame"), rs.getInt("id_prescrizione"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getDate("time"), rs.getString("nome"), rs.getString("paz_nome") + " " + rs.getString("paz_cognome"));
+                ret.add(e);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+
+    @Override
     public Farmaci getFarmaci() throws DaoException {
         Farmaci ret = new Farmaci();
 

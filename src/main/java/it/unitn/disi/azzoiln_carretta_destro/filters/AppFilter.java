@@ -79,8 +79,8 @@ public class AppFilter implements Filter {
                     sezioniDettagli = "visite,visite_specialistiche,esami";
                     break;
                 case SSP:
-                    sezioni = "medici,medici_specialisti";
-                    sezioniDettagli = "stats";
+                    sezioni = "esami,stats";
+                    sezioniDettagli = "";
                     break;
             }
             String[] sezioniTitles = sezioni.replaceAll("_", " ").split(",");

@@ -141,30 +141,25 @@
         <url-pattern>/app/paziente/dettagli_utente/*</url-pattern>
         <url-pattern>/app/medico/dettagli_utente/*</url-pattern>
         <url-pattern>/app/medico_spec/dettagli_utente/*</url-pattern>
-        <url-pattern>/app/ssp/dettagli_utente/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>MediciServlet</servlet-name>
         <url-pattern>/app/paziente/medici</url-pattern>
-        <url-pattern>/app/ssp/medici</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>MediciSpecialistiServlet</servlet-name>
         <url-pattern>/app/paziente/medici_specialisti</url-pattern>
-        <url-pattern>/app/ssp/medici_specialisti</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PazientiServlet</servlet-name>
         <url-pattern>/app/medico/pazienti</url-pattern>
         <url-pattern>/app/medico_spec/pazienti</url-pattern>
-        <url-pattern>/app/ssp/pazienti</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RicetteServlet</servlet-name>
         <url-pattern>/app/paziente/ricette</url-pattern>
         <url-pattern>/app/medico/ricette</url-pattern>
         <url-pattern>/app/medico_spec/ricette</url-pattern>
-        <url-pattern>/app/ssp/ricette</url-pattern>
         <!-- MAGARI PER STATS. -->
     </servlet-mapping>
     <servlet-mapping>
@@ -182,7 +177,6 @@
     <servlet-mapping>
         <servlet-name>VisiteSpecialisticheServlet</servlet-name>
         <url-pattern>/app/paziente/visite_specialistiche</url-pattern>
-        <url-pattern>/app/ssp/visite_specialistiche</url-pattern>
         <url-pattern>/app/medico/visite_specialistiche</url-pattern>
         <url-pattern>/app/medico_spec/visite_specialistiche</url-pattern>
     </servlet-mapping>
@@ -191,7 +185,6 @@
         <url-pattern>/app/paziente/visite</url-pattern>
         <url-pattern>/app/medico/visite</url-pattern>
         <url-pattern>/app/medico_spec/visite</url-pattern>
-        <url-pattern>/app/ssp/visite</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteServlet</servlet-name>
@@ -219,6 +212,7 @@
         <url-pattern>/app/medico/compila_esame</url-pattern>
         <url-pattern>/app/medico_spec/compila_esame</url-pattern>
         <url-pattern>/app/paziente/compila_esame</url-pattern>
+        <url-pattern>/app/ssp/compila_esame</url-pattern>
     </servlet-mapping>
     <!-- SESSIONE -->
     <servlet-mapping>

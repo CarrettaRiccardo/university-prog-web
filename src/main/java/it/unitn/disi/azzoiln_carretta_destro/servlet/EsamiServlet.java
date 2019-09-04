@@ -65,6 +65,10 @@ public class EsamiServlet extends HttpServlet {
                 request.setAttribute("nome", ((Persona) u).getNome() + ((Persona) u).getCognome());  //per mostrare il nome del medico loggato
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 esami = userDao.getEsami(id_paziente);
+            } else if (u.getType() == UtenteType.SSP) {
+                request.setAttribute("title", "Esami_ssp");
+                request.setAttribute("nome", ((Ssp) u).getNome());  //per mostrare il nome del SSP
+                esami = userDao.getSspEsami(u.getId());
             } else { //sono SSP, non posso vedere le visite delle persone
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;
@@ -83,7 +87,6 @@ public class EsamiServlet extends HttpServlet {
             throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             System.out.println(e.getMessage() + "\n\n\n");
-            //throw new ServletException();
             throw new ServletException(e.getMessage());
         }
     }
@@ -220,12 +223,12 @@ public class EsamiServlet extends HttpServlet {
             try {
                 SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Un nuovo esame e' stato inserito",
                         "Gentile utente.<br/>"
-                        + "Un esame con data " + (v.getTime_esame() != null ? ((new SimpleDateFormat("dd/MM/yyyy")).format(v.getTime_esame())) 
+                                + "Un esame con data " + (v.getTime_esame() != null ? ((new SimpleDateFormat("dd/MM/yyyy")).format(v.getTime_esame()))
                                 : "*da definire*") + " è stato inserito o modificato nella tua scheda paziente."
-                        + "<br/>"
-                        + "Controlla i tuoi esami per visualizzare i dettagli."
-                        + "<br/>" + "<br/>"
-                        + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
+                                + "<br/>"
+                                + "Controlla i tuoi esami per visualizzare i dettagli."
+                                + "<br/>" + "<br/>"
+                                + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
             } catch (Exception ex) {
                 // Ricky; nascondo all'utente se non viene inviata alla mail
                 Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
