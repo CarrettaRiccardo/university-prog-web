@@ -482,6 +482,30 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         return ret;
     }
 
+    /**
+     * Ottiene l' elenco dei tickets ordinati in ordine cronologico inverso
+     *
+     * @param id_paziente
+     * @return Elenco dei tickets ordinati in ordine cronologico inverso
+     */
+    @Override
+    public List<Ticket> getTickets(Integer id_paziente) throws DaoException {
+        if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+        List<Ticket> ret = new LinkedList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT t.* FROM ticket t WHERE t.id_paziente = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Ticket t = new Ticket(rs.getInt("id"), rs.getFloat("costo"), rs.getString("tipo").charAt(0), rs.getDate("time"), rs.getInt("id_paziente"));
+                ret.add(t);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+
 
     /**
      * Ottiene l' elenco degli esami del paziente ordinati in ordine cronologico inverso
@@ -677,6 +701,25 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 ret = new Ricetta(rs.getInt("id_prescrizione"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getInt("id_farmaco"), rs.getString("nome"), rs.getFloat("costo"), rs.getShort("quantita"), rs.getDate("time_vendita"), rs.getDate("time"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+
+    @Override
+    public Ticket getTicket(int id_paziente, int id_ticket) throws DaoException {
+        if (id_ticket <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        Ticket ret = null;
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT t.* FROM ticket t WHERE t.id_paziente = ? AND t.id = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_ticket);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = new Ticket(rs.getInt("id"), rs.getFloat("costo"), rs.getString("tipo").charAt(0), rs.getDate("time"), rs.getInt("id_paziente"));
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage() + "\n\n");

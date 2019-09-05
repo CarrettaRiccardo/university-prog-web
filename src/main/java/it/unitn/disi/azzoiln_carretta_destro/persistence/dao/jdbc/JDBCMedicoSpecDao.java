@@ -80,9 +80,10 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
 
         try {
             Integer id_ticket = null;
-            PreparedStatement ps = CON.prepareStatement("insert into ticket (costo,tipo) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = CON.prepareStatement("insert into ticket (costo,tipo, id_paziente) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
             ps.setFloat(1, Ticket.costo_visite_specialistiche);
-            ps.setString(2, "");
+            ps.setString(2, "v");
+            ps.setInt(3, visita.getId_paziente());
 
             int count = ps.executeUpdate();
             if (count == 0) return false;
@@ -157,56 +158,54 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
         return ret;
     }
 
-    
-    
-    
+
     @Override
     public ArrayList<ArrayList<Integer>> getStatsVisiteSpecialistiche(int id_medico) throws DaoException {
-        if(id_medico <= 0) throw new IdNotFoundException("id_medico");
-        ArrayList< ArrayList<Integer> > ret2 = new ArrayList<>();
-        
-        try (PreparedStatement stm = CON.prepareStatement(  "SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
-                                                            "FROM \n" +
-                                                            "     (\n" +
-                                                            "      SELECT * FROM\n" +
-                                                            "        (\n" +
-                                                            "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
-                                                            "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
-                                                            "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
-                                                            "		) as tmp , (SELECT DISTINCT YEAR(time_visita) as anno FROM visita_specialistica WHERE id_medico_specialista = ? AND YEAR(time_visita) >= YEAR(NOW()) - 2) as tmp2\n" +
-                                                            "      ) AS seq \n" +
-                                                            "LEFT JOIN (prescrizione p  inner join visita_specialistica f ON f.id_medico_specialista = ? AND p.id = f.id_prescrizione) ON seq.mese = MONTH(time_visita) AND seq.anno = YEAR(time_visita)\n" +
-                                                            "WHERE YEAR(time_visita) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
-                                                            "GROUP BY seq.anno, seq.mese\n" +
-                                                            "ORDER BY seq.anno, seq.mese")) {
+        if (id_medico <= 0) throw new IdNotFoundException("id_medico");
+        ArrayList<ArrayList<Integer>> ret2 = new ArrayList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(p.id) as tot, seq.mese, seq.anno\n" +
+                "FROM \n" +
+                "     (\n" +
+                "      SELECT * FROM\n" +
+                "        (\n" +
+                "			SELECT 1 AS mese UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION\n" +
+                "			SELECT 5 UNION SELECT 6  UNION SELECT 7 UNION SELECT 8 UNION \n" +
+                "			SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12\n" +
+                "		) as tmp , (SELECT DISTINCT YEAR(time_visita) as anno FROM visita_specialistica WHERE id_medico_specialista = ? AND YEAR(time_visita) >= YEAR(NOW()) - 2) as tmp2\n" +
+                "      ) AS seq \n" +
+                "LEFT JOIN (prescrizione p  inner join visita_specialistica f ON f.id_medico_specialista = ? AND p.id = f.id_prescrizione) ON seq.mese = MONTH(time_visita) AND seq.anno = YEAR(time_visita)\n" +
+                "WHERE YEAR(time_visita) >= YEAR(NOW()) - 2 OR time IS NULL\n" +
+                "GROUP BY seq.anno, seq.mese\n" +
+                "ORDER BY seq.anno, seq.mese")) {
             stm.setInt(1, id_medico);
             stm.setInt(2, id_medico);
             ResultSet rs = stm.executeQuery();
             for (int i = 0; i < 12; i++) {
                 ret2.add(new ArrayList<Integer>());
             }
-            
+
             Statistiche m = new Statistiche();
             while (rs.next()) {
-                 System.out.println(rs.getInt("tot"));
-                 Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
-                 ret2.get(s.mese-1).add(s.count);                    
-            }            
+                System.out.println(rs.getInt("tot"));
+                Statistiche.LightStats s = m.new LightStats(rs.getInt("tot"), rs.getInt("mese"), rs.getInt("anno"));
+                ret2.get(s.mese - 1).add(s.count);
+            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
-        }    
-        if(ret2.get(0).size() == 0){ //se non c'è nessun elemento meto degli 0 per evitare problemi nel forEach in JSP
+        }
+        if (ret2.get(0).size() == 0) { //se non c'è nessun elemento meto degli 0 per evitare problemi nel forEach in JSP
             for (int i = 0; i < 12; i++) {
                 ret2.get(i).add(0);
             }
         }
-        
+
         System.out.println("STAMPO STATS_VS");
         int i = 0;
-        for(ArrayList<Integer> m : ret2){
+        for (ArrayList<Integer> m : ret2) {
             System.out.print("Mese:" + i);
-            for(Integer m2 : m){
+            for (Integer m2 : m) {
                 System.out.print(" -> " + m2);
             }
             System.out.println("");
@@ -215,27 +214,28 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
         return ret2;
     }
 
-    
+
     /**
      * Tutte le visite passate di mia competenza + visite future o per oggi di mia competenza
      * Non elenca le visite senza data fissata (anche se sono di mia competenza)
+     *
      * @param id_paziente
      * @param id_medico_spec
      * @return
-     * @throws DaoException 
+     * @throws DaoException
      */
     @Override
     public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente, Integer id_medico_spec) throws DaoException {
         if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
         LinkedList<VisitaSpecialistica> ret = new LinkedList<>();
 
-        try (PreparedStatement stm = CON.prepareStatement(  "SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec \n" +
-                                                            "FROM visita_specialistica v \n" +
-                                                            "     inner join prescrizione p on p.id = v.id_prescrizione \n" +
-                                                            "	  inner join visite_specialistiche v2 on v2.id = v.id_visita_spec \n" +
-                                                            "WHERE p.id_paziente = ? AND v.time_visita IS NOT NULL AND \n" +
-                                                            "      EXISTS (SELECT id_visita_spec FROM competenze_medico_spec WHERE id_medico_spec = ? AND id_visita_spec = v2.id )\n" +
-                                                            "ORDER BY time DESC")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT v.*,p.*,v2.nome as nome_visita,'not_yet' as nome_medico_spec \n" +
+                "FROM visita_specialistica v \n" +
+                "     inner join prescrizione p on p.id = v.id_prescrizione \n" +
+                "	  inner join visite_specialistiche v2 on v2.id = v.id_visita_spec \n" +
+                "WHERE p.id_paziente = ? AND v.time_visita IS NOT NULL AND \n" +
+                "      EXISTS (SELECT id_visita_spec FROM competenze_medico_spec WHERE id_medico_spec = ? AND id_visita_spec = v2.id )\n" +
+                "ORDER BY time DESC")) {
             stm.setInt(1, id_paziente);
             stm.setInt(2, id_medico_spec);
             ResultSet rs = stm.executeQuery();
@@ -245,7 +245,7 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage() + "\n\n");
-            throw new DaoException("db_error", ex);            
+            throw new DaoException("db_error", ex);
         }
         System.out.println("FINITO getVisiteSpecialistiche");
         return ret;
@@ -265,11 +265,11 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage() + "\n\n");
-            throw new DaoException("db_error", ex);            
+            throw new DaoException("db_error", ex);
         }
         return ret;
     }
-    
+
     @Override
     public boolean isMyPatient(String username, Integer id_medico) throws DaoException {
         return true; //per assunzione che medico_spec vede tutti i pazienti
