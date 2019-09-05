@@ -61,7 +61,7 @@ public class StatisticheServlet extends HttpServlet {
         request.setAttribute("title", "stats");
         request.setAttribute("user", u);
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
-        rd.include(request, response);
+        rd.forward(request, response);
     }
 
 
