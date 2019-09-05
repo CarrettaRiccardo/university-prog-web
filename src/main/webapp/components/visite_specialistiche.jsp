@@ -23,7 +23,7 @@
                     <c:when test="${visita.isDaFissare()}">
                         <fmt:message key="visita_spec_da_fissare"/>
                     </c:when>
-                    <c:otherwise> ${visita.getTime_visita()} </c:otherwise>
+                    <c:otherwise><fmt:formatDate value="${visita.getTime_visita()}" pattern="dd/MM/yyyy"/></c:otherwise>
                 </c:choose>
             </td>
             <td>${visita.getAnamnesiShort()}</td>

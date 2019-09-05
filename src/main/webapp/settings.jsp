@@ -84,7 +84,8 @@
                                    placeholder="Codice fiscale"/>
                         </div>
                         <div class="col col-12 col-lg-6 py-1">
-                            <input type="text" class="form-control" disabled value="${utente.getData_nascita_Stringa()}"
+                            <input type="text" class="form-control" disabled
+                                   value="<fmt:formatDate value="${utente.getData_nascita()}" pattern="dd/MM/yyyy"/>"
                                    placeholder="Data Nascita"/>
                         </div>
                     </div>

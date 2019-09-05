@@ -15,7 +15,7 @@
             <div class="pb-1"> <fmt:message key="nome"/>: <b>${dettagli_utente.getNome()}</b></div>
             <div class="pb-1"> <fmt:message key="cognome"/> <b>${dettagli_utente.getCognome()}</b></div>
             <div class="pb-1"> <fmt:message key="cf"/>: <b>${dettagli_utente.getCf()}</b></div>
-            <div class="pb-1"> <fmt:message key="data_nascita"/>: <b>${dettagli_utente.getData_nascita_Stringa()}</b></div>
+            <div class="pb-1"> <fmt:message key="data_nascita"/>: <b> <fmt:formatDate value="${dettagli_utente.getData_nascita()}" pattern="dd/MM/yyyy"/></b></div>
         </div>
 
         <div class="col col-12 col-md">

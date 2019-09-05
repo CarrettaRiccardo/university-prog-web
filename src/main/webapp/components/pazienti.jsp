@@ -25,7 +25,7 @@
             </td>
             <td><c:out value="${paz.getCognome()}"/></td>
             <td><c:out value="${paz.getNome()}"/></td>
-            <td><c:out value="${paz.getData_nascita()}"/></td>
+            <td><fmt:formatDate value="${paz.getData_nascita()}" pattern="dd/MM/yyyy"/></td>
             <td>
                 <c:choose>
                     <c:when test="${empty paz.getLastVisita()}"> - </c:when>

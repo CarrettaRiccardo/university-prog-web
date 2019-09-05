@@ -11,8 +11,8 @@
 
 
 <c:choose>
-    <c:when test="${empty i_visita}">  <fmt:formatDate var="data" value="${now}"/>  </c:when>
-    <c:when test="${! empty i_visita}"> <fmt:formatDate var="data" value="${i_visita.getTime_visita()}"/> </c:when>
+    <c:when test="${empty i_visita}">  <fmt:formatDate value="${noe}" pattern="dd/MM/yyyy"/></c:when>
+    <c:when test="${! empty i_visita}"> <fmt:formatDate value="${i_visita.getTime_visita()}" pattern="dd/MM/yyyy"/></c:when>
 </c:choose>
 
 <form action="app/${u_url}/compila_visita_spec" method="POST">
