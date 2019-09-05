@@ -69,7 +69,7 @@ public class VisiteServlet extends HttpServlet {
             request.setAttribute("page", "visite");
             request.setAttribute("id_paziente", request.getParameter("id_paziente"));
             RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_utente") ? "/components/visite.jsp" : "/base.jsp");
-            rd.include(request, response);
+            rd.forward(request, response);
         } catch (IdNotFoundException e) {
             throw new ServletException("utente_not_found");
         } catch (DaoException e) {

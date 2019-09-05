@@ -1,5 +1,4 @@
 <%@ include file="../global/common.jsp" %>
-<%@ page pageEncoding="UTF-8" %>
 
 <script>
     function printClick() {

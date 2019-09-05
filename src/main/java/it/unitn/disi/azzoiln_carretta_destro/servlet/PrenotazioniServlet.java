@@ -84,7 +84,7 @@ public class PrenotazioniServlet extends HttpServlet {
         }
 
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
-        rd.include(request, response);
+        rd.forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
