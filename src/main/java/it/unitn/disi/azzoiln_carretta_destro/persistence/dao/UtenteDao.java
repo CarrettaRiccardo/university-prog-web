@@ -153,14 +153,7 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      */
     public List<Esame> getEsami(Integer id_paziente) throws DaoException;
 
-    /**
-     * Ottiene l' elenco degli esami dei pazienti del SSP ordinati in ordine cronologico inverso
-     *
-     * @param id_ssp
-     * @return Elenco degli esami dei pazienti del SSP ordinati in ordine cronologico inverso
-     */
-    public List<Esame> getSspEsami(Integer id_ssp) throws DaoException;
-
+    
 
     /**
      * @return Elenco di tutti i farmaci disponibili

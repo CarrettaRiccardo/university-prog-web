@@ -129,7 +129,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             if(vs == null) throw new ServletException("visita_spec_not_found");
             if(importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
             if(u.getType() != UtenteType.PAZIENTE && vs.getTime_visita() == null) throw new ServletException("visita_non_fissata"); //il medico/medico_spec non può accedere ad una visita non fissata
-            if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita().compareTo(new Date()) > 0 ) throw new ServletException("visita_futura"); 
+            if(/*u.getType() == UtenteType.MEDICO_SPEC &&*/ vs.getTime_visita() != null && vs.getTime_visita().compareTo(new Date()) > 0 ) throw new ServletException("visita_futura");  //nessuno può accedere ad un elemento fissato per il futuro
         }
         
         if(!vs.isNew() || u.getType() != UtenteType.MEDICO_SPEC){ //mostro i campi in readonly, altrimenti compilabili

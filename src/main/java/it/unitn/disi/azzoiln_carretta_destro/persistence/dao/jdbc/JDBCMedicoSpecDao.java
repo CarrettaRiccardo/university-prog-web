@@ -99,6 +99,7 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
             ps.setString(4, visita.getCura());
             ps.setInt(5, visita.getId());
             count = ps.executeUpdate();
+            ps.close();
             if (count == 0) return false;
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

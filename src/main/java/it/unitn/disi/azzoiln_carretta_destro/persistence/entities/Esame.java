@@ -13,9 +13,10 @@ import java.util.Date;
  * @author Steve
  */
 public class Esame extends Prescrizione {
-    private int id_esame, id_ticket, id_ssp;
+
+    private int id_esame, id_ticket, id_ssp; //id_esame è l'id tra i vari esami possibili prescrivibili
     private String risultato, nome_esame;
-    private Date time_esame;
+    private Date time_esame,data_nascita_paziente;
     private String nome_paziente;
 
     public Esame(int id_esame, int id_ticket, int id_ssp, String risultato, Date time_esame, int id_presc, int id_paziente, int id_medico, Date time, String nome_esame) {
@@ -86,6 +87,14 @@ public class Esame extends Prescrizione {
         return time_esame == null;
     }
 
+    public Date getData_nascita_paziente() {
+        return data_nascita_paziente;
+    }
+
+    public void setData_nascita_paziente(Date data_nascita_paziente) {
+        this.data_nascita_paziente = data_nascita_paziente;
+    }
+
     /**
      * Esegue tutta la logica di gestione parametri e controllo valori non validi
      *
@@ -94,7 +103,7 @@ public class Esame extends Prescrizione {
      * @return Oggetto Esame
      * @throws javax.servlet.ServletException
      */
-    public static Esame loadFromHttpRequest(final HttpServletRequest request, final Utente u) throws ServletException {
+    public static Esame loadFromHttpRequestNew(final HttpServletRequest request, final Utente u) throws ServletException {
         int id_paziente = -1;
         Integer id_esame = -1;
 
@@ -113,5 +122,28 @@ public class Esame extends Prescrizione {
         }
 
         return new Esame(id_esame, id_paziente, u.getId());
+    }
+    
+    
+    public static Esame loadFromHttpRequestCompila(HttpServletRequest request, Utente u) throws ServletException  {
+        int id_paziente = -1;
+        Integer id_esame = -1;
+        String esito;
+
+        if (request.getParameter("id_paziente") == null || request.getParameter("id_esame") == null || request.getParameter("esito") == null || request.getParameter("ticket") == null)
+            throw new ServletException("bad_request");
+        try {
+            esito = request.getParameter("esito");
+            id_esame = Integer.parseInt(request.getParameter("id_esame"));
+            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+            if (id_paziente <= 0) throw new NumberFormatException("id_utente_not_valid");
+            if (id_esame <= 0) throw new NumberFormatException("id_esame_not_valid");
+        } catch (NumberFormatException e) {
+            throw new ServletException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServletException();
+        }
+
+        return new Esame(-1, -1, u.getId(), esito, new Date(), id_esame, id_paziente, -1, null, null);
     }
 }

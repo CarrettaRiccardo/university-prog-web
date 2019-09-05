@@ -38,15 +38,28 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="esito"><fmt:message key="anamnesi"/></label>
+    <label for="esito"><fmt:message key="esito"/></label>
     <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
     <input type="hidden" class="form-control" name="id_esame" value="${id_esame}"> 
     <textarea class="form-control" id="esito" name="esito" style="height: 150px"
-              <c:if test="${not empty i_esame}">
+              <c:if test="${not empty i_esame and empty errore}">
                   readonly
-              </c:if>><c:choose><c:when test="${empty i_esame}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getRisultato()}</c:when></c:choose></textarea>
+              </c:if>><c:choose><c:when test="${empty i_esame}">I risultati per l'esame sono i seguenti :</c:when><c:when test="${! empty i_esame}">${i_esame.getRisultato()}</c:when></c:choose></textarea>
   </div>
-  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_esame}">
+  
+  
+  <!-- TICKET -->
+    <div class="form-group">
+        <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${! empty i_esame}">checked onclick="return false;"</c:if> /><fmt:message key="ticket_di"/>  <!--Se � gi� settato le rendo readonly tramite il return false-->
+        <c:choose>
+            <c:when test="${empty i_esame}">  <fmt:formatNumber value = "${Ticket.costo_esami}" type = "currency" />  </c:when>
+            <c:when test="${not empty importo_ticket}"> <fmt:formatNumber value = "${importo_ticket}" type = "currency" /> </c:when>
+        </c:choose>
+        <fmt:message key="pagato"/>
+    </div>
+  
+  
+  <c:if test="${sessionScope.utente.getType() == UtenteType.SSP and (empty i_esame or not empty errore)}"> <!-- Se sono SSP e sto creando un rapporto visita oppure quello di prima ha fatto errore -->
     <button type="submit" class="btn btn-primary"><fmt:message key="conferma"/></button>
   </c:if>
 </form>
@@ -59,6 +72,7 @@
         </button>
     </div>
 </c:if>
+  
 <script>
     var dateToday = new Date();
     $('#datepicker').datepicker({

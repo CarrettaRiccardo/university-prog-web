@@ -7,7 +7,12 @@
         <c:if test="${utente.isSsp()}">
             <td><fmt:message key="paziente"/></td>
         </c:if>
-        <th scope="col"><fmt:message key="data_visita"/></th>
+        <td>
+            <c:choose>
+                    <c:when test="${utente.isSsp()}"><fmt:message key="data_nascita"/></c:when>
+                    <c:otherwise><fmt:message key="data_esame"/></c:otherwise>
+            </c:choose>
+        </td>
     </tr>
     </thead>
     <tbody>
@@ -23,8 +28,13 @@
             </c:if>
             <td>
                 <c:choose>
-                    <c:when test="${esame.isDaFissare()}"><fmt:message key="visita_spec_da_fissare"/></c:when>
-                    <c:otherwise>${esame.getTime_esame()}</c:otherwise>
+                    <c:when test="${utente.isSsp()}">${esame.getData_nascita_paziente()}</c:when>
+                    <c:otherwise>
+                        <c:choose>
+                            <c:when test="${esame.isDaFissare()}"><fmt:message key="visita_spec_da_fissare"/></c:when>
+                            <c:otherwise>${esame.getTime_esame()}</c:otherwise>
+                        </c:choose>
+                    </c:otherwise>
                 </c:choose>
             </td>
         </tr>

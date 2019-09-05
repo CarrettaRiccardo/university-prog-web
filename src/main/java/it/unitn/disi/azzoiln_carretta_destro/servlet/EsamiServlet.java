@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,15 +40,14 @@ public class EsamiServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().indexOf("new_esami") > 0) {  //voglio accedere alla pagina per creare un nuovo Esame
-            manageNewEsame(request, response);
-            return;
-        }
-
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
 
         if (request.getRequestURI().indexOf("compila_esame") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
             manageCompilaEsame(request, response, u);
+            return;
+        }
+        else if (request.getRequestURI().indexOf("new_esami") > 0) {  //voglio accedere alla pagina per creare un nuovo Esame
+            manageNewEsame(request, response);
             return;
         }
         List<Esame> esami;
@@ -68,8 +68,8 @@ public class EsamiServlet extends HttpServlet {
             } else if (u.getType() == UtenteType.SSP) {
                 request.setAttribute("title", "Esami_ssp");
                 request.setAttribute("nome", ((Ssp) u).getNome());  //per mostrare il nome del SSP
-                esami = userDao.getSspEsami(u.getId());
-            } else { //sono SSP, non posso vedere le visite delle persone
+                esami = userDao.Ssp().getEsami(u.getId());
+            } else { 
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;
             }
@@ -115,19 +115,31 @@ public class EsamiServlet extends HttpServlet {
         }
 
         Esame e = null;
-        try {
-            e = userDao.getEsame(id_paziente, id_esame);
-        } catch (DaoException ex) {
-            System.out.println(ex.getMessage());
-            throw new ServletException(ex.getMessage());
-        } finally {
-            if (e == null) throw new ServletException("visita_spec_not_found");
-        }
+        
+        if(request.getAttribute("i_esame") == null){
+            Double importo_ticket = null;
+            try {
+                e = userDao.getEsame(id_paziente, id_esame);
+                importo_ticket = userDao.getImportoTicket(e.getId_ticket());
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException(ex.getMessage());
+            } finally {
+                if (e == null) throw new ServletException("esame_not_found");
+                if (importo_ticket == null && !e.isNew()) throw new ServletException("ticket_not_found");
+                if (u.getType() != UtenteType.PAZIENTE && e.getTime_esame() == null) throw new ServletException("esame_non_fissato"); //il medico/medico_spec/ssp non può accedere ad un esame non fissato
+                if (e.getTime_esame() != null && e.getTime_esame().compareTo(new Date()) > 0 ) throw new ServletException("esame_futuro"); 
+            }
 
-        if (!e.isNew() || u.getType() != UtenteType.MEDICO_SPEC) { //mostro i campi in readonly, altrimenti compilabili
-            request.setAttribute("i_esame", e);
-            request.setAttribute("title", "view_esame");
-        } else {
+            if (!e.isNew() || u.getType() != UtenteType.SSP) { 
+                request.setAttribute("i_esame", e);
+                request.setAttribute("title", "view_esame");
+            } else {
+                request.setAttribute("title", "compila_esame");//se l'esame è nuovo e io sono SSP
+            }
+        }
+        else{ //sono nel caso di un errore generato da doPost, allora mostro l'errore coi dati già inseriti
+            e = (Esame) request.getAttribute("i_esame");
             request.setAttribute("title", "compila_esame");
         }
 
@@ -194,25 +206,34 @@ public class EsamiServlet extends HttpServlet {
             contextPath += "/";
 
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
-        Esame v = Esame.loadFromHttpRequest(request, u);
+        Esame v = null;
 
         boolean inserito = false, updateData = false;
         try {
-            // se un utente sta scegliendo la data della visita specialistica...
-            String data_selez = request.getParameter("datepicker");
-            if (u.getType() == UtenteType.PAZIENTE && data_selez != null) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    sdf.setLenient(false);
-                    sdf.parse(data_selez);// restituisce una "ParseException" se non e' valida
-                } catch (ParseException ex) {
-                    throw new ServletException("invalid_date_exception");
-                }
-                inserito = userDao.Paziente().setDataEsame(v.getId_esame(), data_selez);
-                updateData = true;
-            } else {
+            if (request.getRequestURI().indexOf("new_esame") > 0){ //Il Medico prescrive un esame
                 if (u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
-                inserito = userDao.Medico().addEsame(v);
+                v = Esame.loadFromHttpRequestNew(request, u);
+                inserito = userDao.Medico().addEsame(v);                
+            }
+            else if (request.getRequestURI().indexOf("compila_esame") > 0){ //SSP compila i dati dell' esame appena fatto oppire l'utente seleziona una data_esame
+                v = Esame.loadFromHttpRequestCompila(request, u);
+                
+                if (u.getType() == UtenteType.PAZIENTE && request.getParameter("datepicker") != null) {
+                    String data_selez = request.getParameter("datepicker");
+                    try{
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        sdf.setLenient(false);
+                        sdf.parse(data_selez);// restituisce una "ParseException" se non e' valida
+                    } catch (ParseException ex) {
+                        throw new ServletException("invalid_date_exception");
+                    }
+                    inserito = userDao.Paziente().setDataVisitaSpecialistica(v.getId(), data_selez);
+                    updateData = true;
+                } else {
+                    if (u.getType() != UtenteType.SSP) throw new DaoException("Operazione non ammessa");
+                    inserito = userDao.Ssp().erogaEsame(v);
+                    updateData = true;
+                }
             }
         } catch (DaoException ex) {
             System.out.println("Errore addEsame (EsamiServlet) -->\n" + ex.getMessage() + "\n\n");
@@ -233,16 +254,19 @@ public class EsamiServlet extends HttpServlet {
                 // Ricky; nascondo all'utente se non viene inviata alla mail
                 Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (updateData)// paziente
+            if (updateData)// paziente | ssp
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/esami"));
             else // medico
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/esami?id_paziente=" + v.getId_paziente()));
             return;
         }
 
-
-        //request.setAttribute("i_anamnesi", v.getAnamnesi());
+        
+        request.setAttribute("i_esame", v);
         request.setAttribute("errore", "errore");
-        manageNewEsame(request, response);
+        if(request.getRequestURI().indexOf("new_esame") > 0)
+            manageNewEsame(request, response);
+        else if(request.getRequestURI().indexOf("compila_esame") > 0)
+            manageCompilaEsame(request, response, u);
     }
 }
