@@ -28,13 +28,8 @@
             </c:if>
             <td>
                 <c:choose>
-                    <c:when test="${utente.isSsp()}">${esame.getData_nascita_paziente()}</c:when>
-                    <c:otherwise>
-                        <c:choose>
-                            <c:when test="${esame.isDaFissare()}"><fmt:message key="visita_spec_da_fissare"/></c:when>
-                            <c:otherwise>${esame.getTime_esame()}</c:otherwise>
-                        </c:choose>
-                    </c:otherwise>
+                    <c:when test="${esame.isDaFissare()}"><fmt:message key="visita_spec_da_fissare"/></c:when>
+                    <c:otherwise><fmt:formatDate value="${esame.getTime_esame()}" pattern="dd/MM/yyyy"/></c:otherwise>
                 </c:choose>
             </td>
         </tr>

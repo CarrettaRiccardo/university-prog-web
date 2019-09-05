@@ -81,17 +81,4 @@ public class Persona extends Utente {
     public Date getData_nascita() {
         return data_nascita;
     }
-
-    public String getData_nascita_Stringa() {
-        String date = "";
-        try{
-            date = getData_nascita().toString();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            sdf.setLenient(false);
-            sdf.parse(date);
-        } catch (Exception ex){
-            // se fa errore nella conversione (In caso la data sia nulla ad esempio)
-        }
-        return date;
-    }
 }

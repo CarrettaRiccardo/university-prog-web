@@ -13,25 +13,21 @@
         <div class="col col-12 col-md pl-md-4">
             <h5 class="text-primary"><fmt:message key="dati_personali"/></h5>
             <div class="pb-1"> <fmt:message key="nome"/>: <b>${dettagli_utente.getNome()}</b></div>
-            <div class="pb-1"> <fmt:message key="cognome"/> <b>${dettagli_utente.getCognome()}</b></div>
+            <div class="pb-1"> <fmt:message key="cognome"/>: <b>${dettagli_utente.getCognome()}</b></div>
             <div class="pb-1"> <fmt:message key="cf"/>: <b>${dettagli_utente.getCf()}</b></div>
-            <div class="pb-1"> <fmt:message key="data_nascita"/>: <b>${dettagli_utente.getData_nascita_Stringa()}</b></div>
+            <div class="pb-1"> <fmt:message key="data_nascita"/>: <b> <fmt:formatDate value="${dettagli_utente.getData_nascita()}" pattern="dd/MM/yyyy"/></b></div>
         </div>
 
         <div class="col col-12 col-md">
             <h5 class="text-primary mt-3 mt-md-0"><fmt:message key="altro"/></h5>
-            <div class="pb-1"> <fmt:message key="provincia"/> <b>${dettagli_utente.getProvinciaNome()}</b></div>
-            <div class="pb-1"> <fmt:message key="comune"/> <b>${dettagli_utente.getComuneNome()}</b></div>
-            <div class="pb-1"> <fmt:message key="is_medico"/>: <b>${dettagli_utente.isMedico()}</b></div>
-            <div class="pb-1"> <fmt:message key="is_medico_spec"/>: <b>${dettagli_utente.isMedicoSpecialista()}</b></div>
+            <div class="pb-1"> <fmt:message key="provincia"/>: <b>${dettagli_utente.getProvinciaNome()}</b></div>
+            <div class="pb-1"> <fmt:message key="comune"/>: <b>${dettagli_utente.getComuneNome()}</b></div>
             <c:if test="${ dettagli_utente.isMedico() || dettagli_utente.isMedicoSpecialista() }">
-            <div class="pb-1"> <fmt:message key="laurea"/> <b> <c:out value="${dettagli_utente.getLaurea()}" default="-"/></b></div>
-            <div class="pb-1"> <fmt:message key="inizio_carriera"/>: <b> <c:out value="${dettagli_utente.getInizioCarriera()}"
-                                                           default="-"/></b></div>
-        </div>
-        </c:if>
-        <c:if test="${ dettagli_utente.isMedicoSpecialista() }">
-        <div class="pb-1"> <fmt:message key="specialita"/>: <b> <c:out value="${dettagli_utente.getSpecialita()}" default="-"/></b>
+            <div class="pb-1"> <fmt:message key="laurea"/>: <b> <c:out value="${dettagli_utente.getLaurea()}" default="-"/></b></div>
+            <div class="pb-1"> <fmt:message key="inizio_carriera"/>: <b> <c:out value="${dettagli_utente.getInizioCarriera()}" default="-"/></b></div>
+            </c:if>
+            <c:if test="${ dettagli_utente.isMedicoSpecialista() }">
+            <div class="pb-1"> <fmt:message key="specialita"/>: <b> <c:out value="${dettagli_utente.getSpecialita()}" default="-"/></b></div>
             </c:if>
         </div>
     </div>

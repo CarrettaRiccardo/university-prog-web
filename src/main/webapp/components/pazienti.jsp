@@ -25,17 +25,17 @@
             </td>
             <td><c:out value="${paz.getCognome()}"/></td>
             <td><c:out value="${paz.getNome()}"/></td>
-            <td><c:out value="${paz.getData_nascita()}"/></td>
+            <td><fmt:formatDate value="${paz.getData_nascita()}" pattern="dd/MM/yyyy"/></td>
             <td>
                 <c:choose>
                     <c:when test="${empty paz.getLastVisita()}"> - </c:when>
-                    <c:when test="${! empty paz.getLastVisita()}"> <c:out value="${paz.getLastVisita()}"/> </c:when>
+                    <c:when test="${! empty paz.getLastVisita()}"><fmt:formatDate value="${paz.getLastVisita()}" pattern="dd/MM/yyyy"/></c:when>
                 </c:choose>
             </td>
             <td>
                 <c:choose>
                     <c:when test="${empty paz.getLastRicetta()}"> - </c:when>
-                    <c:when test="${! empty paz.getLastRicetta()}"> <c:out value="${paz.getLastRicetta()}"/> </c:when>
+                    <c:when test="${! empty paz.getLastRicetta()}"><fmt:formatDate value="${paz.getLastRicetta()}" pattern="dd/MM/yyyy"/></c:when>
                 </c:choose>
             </td>
         </tr>
