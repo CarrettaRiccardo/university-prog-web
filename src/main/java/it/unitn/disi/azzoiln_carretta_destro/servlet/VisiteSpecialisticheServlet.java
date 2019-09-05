@@ -205,6 +205,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
         VisitaSpecialistica vs = null;
         boolean inserito = false, updateData = false;
+        String data_selez = request.getParameter("datepicker");
 
         if (request.getRequestURI().indexOf("new_visite_specialistiche") > 0) {
             vs = VisitaSpecialistica.loadFromHttpRequestNew(request, u);
@@ -220,7 +221,6 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
 
             // se un utente sta scegliendo la data della visita specialistica...
             try {
-                String data_selez = request.getParameter("datepicker");
                 if (u.getType() == UtenteType.PAZIENTE && data_selez != null) {
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -246,7 +246,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             try {
                 SendEmail.Invia(userDao.getUsername(vs.getId_paziente()), "Un nuovo rapporto di una visita specialistica e' stato inserito",
                         "Gentile utente.<br/>"
-                                + "Una visita specialistica con data " + (vs.getTime_visita() != null ?  ((new SimpleDateFormat("dd/MM/yyyy")).format(vs.getTime_visita())) 
+                                + "Una visita specialistica con data " + ((updateData ? data_selez : vs.getTime_visita()) != null ? ((new SimpleDateFormat("dd/MM/yyyy")).format(updateData ? data_selez : vs.getTime_visita())) 
                                         : "*da definire*") + " è stata inserita o modificata nella tua scheda paziente."
                                 + "<br/>"
                                 + "Controlla le tue visite specialistiche per visualizzare i dettagli."

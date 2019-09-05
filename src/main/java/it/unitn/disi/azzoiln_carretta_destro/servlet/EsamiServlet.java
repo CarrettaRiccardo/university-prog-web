@@ -8,6 +8,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.*;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 import it.unitn.disi.azzoiln_carretta_destro.utility.SendEmail;
+import java.io.File;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,7 +21,12 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.Part;
 
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 5,    // 5 MB
+        maxFileSize = 1024 * 1024 * 10,        // 10 MB
+        maxRequestSize = 1024 * 1024 * 20)    // 20 MB
 public class EsamiServlet extends HttpServlet {
     private UtenteDao userDao;
 
@@ -194,9 +200,9 @@ public class EsamiServlet extends HttpServlet {
         Esame v = Esame.loadFromHttpRequest(request, u);
 
         boolean inserito = false, updateData = false;
+        String data_selez = request.getParameter("datepicker");
         try {
             // se un utente sta scegliendo la data della visita specialistica...
-            String data_selez = request.getParameter("datepicker");
             if (u.getType() == UtenteType.PAZIENTE && data_selez != null) {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -210,6 +216,27 @@ public class EsamiServlet extends HttpServlet {
             } else {
                 if (u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
                 inserito = userDao.Medico().addEsame(v);
+                
+            Boolean uploadFile = request.getPart("file").getSize() > 0;
+            String updateFotoPath = "";
+
+            // se c'è un upload del file selezionato...
+            if (uploadFile) {
+                // gets absolute path of the web application
+                String applicationPath = request.getServletContext().getRealPath("");
+                String relativePath = getServletContext().getAttribute("PHOTOS_DIR").toString();//getServletContext().getAttribute("PHOTOS_DIR").toString();
+                String userPath = u.getUsername();
+                // constructs path of the directory to save uploaded file
+                String uploadFilePath = applicationPath + relativePath + File.separator + userPath;
+                File file = new File(uploadFilePath);
+                if (!file.exists()) file.mkdirs();
+
+                Part filePart = request.getPart("file");
+                //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix. (to get only filename)
+                updateFotoPath = uploadFilePath + File.separator + "aaaa";
+
+                filePart.write(updateFotoPath);
+            }
             }
         } catch (DaoException ex) {
             System.out.println("Errore addEsame (EsamiServlet) -->\n" + ex.getMessage() + "\n\n");
@@ -220,7 +247,7 @@ public class EsamiServlet extends HttpServlet {
             try {
                 SendEmail.Invia(userDao.getUsername(v.getId_paziente()), "Un nuovo esame e' stato inserito",
                         "Gentile utente.<br/>"
-                        + "Un esame con data " + (v.getTime_esame() != null ? ((new SimpleDateFormat("dd/MM/yyyy")).format(v.getTime_esame())) 
+                        + "Un esame con data " + ((updateData ? data_selez : v.getTime_esame()) != null ? ((new SimpleDateFormat("dd/MM/yyyy")).format(updateData ? data_selez : v.getTime_esame())) 
                                 : "*da definire*") + " è stato inserito o modificato nella tua scheda paziente."
                         + "<br/>"
                         + "Controlla i tuoi esami per visualizzare i dettagli."

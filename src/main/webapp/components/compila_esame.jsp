@@ -14,7 +14,7 @@
     <c:when test="${! empty i_esame}"> <fmt:formatDate var="data" value="${i_visita.getTime_esame()}"/> </c:when>
 </c:choose>
 
-<form action="app/${u_url}/compila_esame" method="POST">
+<form action="app/${u_url}/compila_esame" method="POST" enctype="multipart/form-data">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="paziente">Paziente</label>
@@ -45,8 +45,13 @@
               <c:if test="${not empty i_esame}">
                   readonly
               </c:if>><c:choose><c:when test="${empty i_esame}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getRisultato()}</c:when></c:choose></textarea>
-  </div>
-  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_esame}">
+  </div><%--sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_esame--%>
+  <c:if test="${true}">
+    <div class="custom-file d-block my-3" style="width: 250px">
+        <input id="photo_upload" type="file" name="file" class="custom-file-input"/>
+        <label id="file_name" class="custom-file-label text-left" for="photo_upload">Aggiungi file</label>
+    </div>
+      
     <button type="submit" class="btn btn-primary">Conferma</button>
   </c:if>
 </form>
