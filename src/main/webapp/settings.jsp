@@ -70,6 +70,12 @@
                             <input type="text" class="form-control" disabled value="${utente.getNome()}"
                                    placeholder="Nome"/>
                         </div>
+                        <c:if test="${ utente.isSsp() }">
+                            <div class="col col-12 col-lg-6 py-1">
+                                <input type="text" class="form-control" disabled value="${utente.getProvinciaNome()}"
+                                       placeholder="Provincia"/>
+                            </div>
+                        </c:if>
                         <c:if test="${ !utente.isSsp() }">
                             <div class="col col-12 col-lg-6 py-1">
                                 <input type="text" class="form-control" disabled value="${utente.getCognome()}"
@@ -168,8 +174,8 @@
                     </div>
                     </c:if>
                     <c:if test="${not utente.isSsp()}">
-                    <button type="submit"
-                            class="btn btn-primary float-right my-3">Salva
+                    <button type="submit" class="btn btn-primary float-right my-3">
+                        Salva
                     </button>
                     </c:if>
             </div>
