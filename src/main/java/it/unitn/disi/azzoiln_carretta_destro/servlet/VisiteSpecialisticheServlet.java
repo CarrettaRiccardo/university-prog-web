@@ -258,18 +258,21 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
                                 + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
             } catch (Exception ex) {
                 // Ricky; nascondo all'utente se non viene inviata la mail
-                Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println(ex.getMessage());
             }
             if (updateData)// paziente
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/visite_specialistiche"));
-            else // medico
+            else // medico_spec
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/visite_specialistiche?id_paziente=" + vs.getId_paziente()));
             return;
         }
-
-
-        request.setAttribute("i_visita", vs);
-        request.setAttribute("errore", "errore");
-        manageNewVisita(request, response);
+        else{
+            request.setAttribute("i_visita", vs);
+            request.setAttribute("errore", "errore");
+            if(request.getRequestURI().indexOf("new_visite_specialistiche") > 0)
+                manageNewVisita(request, response);
+            else if(request.getRequestURI().indexOf("compila_visita_spec") > 0)
+                manageCompilaVisita(request, response, u);
+        }
     }
 }

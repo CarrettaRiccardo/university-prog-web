@@ -71,7 +71,7 @@ public class MedicoSpecFilter implements Filter {
              * id_visita corrisponde all' id della visita intesa come prescrizione. Non è il valore della visita all'interno
              * delle possibili visite-spec disponibili
              */
-            if(req.getParameter("id_visita") != null){
+            if(req.getParameter("id_visita") != null && req.getRequestURI().indexOf("visite_specialistiche") > 0){
                 Integer id_visita = null;
                 try{
                     id_visita = Integer.parseInt(req.getParameter("id_visita"));

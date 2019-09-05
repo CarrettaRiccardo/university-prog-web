@@ -210,10 +210,11 @@ public class EsamiServlet extends HttpServlet {
 
         boolean inserito = false, updateData = false;
         try {
-            if (request.getRequestURI().indexOf("new_esame") > 0){ //Il Medico prescrive un esame
+            if (request.getRequestURI().indexOf("new_esami") > 0){ //Il Medico prescrive un esame
                 if (u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
                 v = Esame.loadFromHttpRequestNew(request, u);
-                inserito = userDao.Medico().addEsame(v);                
+                inserito = userDao.Medico().addEsame(v); 
+                System.out.println("addEsame by MEDICO = " + inserito);
             }
             else if (request.getRequestURI().indexOf("compila_esame") > 0){ //SSP compila i dati dell' esame appena fatto oppire l'utente seleziona una data_esame
                 v = Esame.loadFromHttpRequestCompila(request, u);
@@ -264,7 +265,7 @@ public class EsamiServlet extends HttpServlet {
         
         request.setAttribute("i_esame", v);
         request.setAttribute("errore", "errore");
-        if(request.getRequestURI().indexOf("new_esame") > 0)
+        if(request.getRequestURI().indexOf("new_esami") > 0)
             manageNewEsame(request, response);
         else if(request.getRequestURI().indexOf("compila_esame") > 0)
             manageCompilaEsame(request, response, u);

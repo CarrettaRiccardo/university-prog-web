@@ -44,36 +44,35 @@
     <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
     <input type="hidden" class="form-control" name="id_visita" value="${id_visita}"> 
     <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px" 
-              <c:if test="${not empty i_visita}">
+              <c:if test="${not empty i_visita and empty errore}">
                   readonly
               </c:if>
-                  ><c:choose><c:when test="${empty i_visita}">Il paziente presenta ...</c:when><c:when test="${not empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>
+                  ><c:choose><c:when test="${empty i_visita}">Il paziente presenta ...</c:when><c:when test="${not empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea> <!-- Identazione così brutta per evitare brutti spazi dentro la TextArea -->
   </div>
   
   <div class="form-group">
     <label for="cura"><fmt:message key="cura"/></label>
     <textarea class="form-control" id="cura" name="cura" style="height: 150px" 
-              <c:if test="${! empty i_visita}">
+              <c:if test="${not empty i_visita and empty errore}">
                   readonly
-              </c:if>
-              
-        ><c:choose>
-            <c:when test="${empty i_visita}"></c:when>
-            <c:when test="${not empty i_visita}">${i_visita.getCura()}</c:when>
-        </c:choose></textarea>
+              </c:if>   
+        ><c:choose><c:when test="${empty i_visita}"></textarea></c:when><c:when test="${not empty i_visita}">${i_visita.getCura()}</textarea></c:when></c:choose>
   </div>
-<c:if test="${not i_visita.isDaFissare()}">  
+
+<!-- TICKET -->
+                
+<c:if test="${not i_visita.isDaFissare() or not empty errore}">  <!-- Mostro nel caso stia compilando la visita o c'è stato un errore nel doPost precedente -->
     <div class="form-group">
-          <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${! empty i_visita}">checked onclick="return false;"</c:if> /><fmt:message key="ticket_di"/>  <!--Se ï¿½ giï¿½ settato le rendo readonly tramite il return false-->
+          <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${not empty i_visita and empty errore}">checked onclick="return false;"</c:if> /><fmt:message key="ticket_di"/>  <!--Se ï¿½ giï¿½ settato le rendo readonly tramite il return false-->
           <c:choose>
-              <c:when test="${empty i_visita}">  <fmt:formatNumber value = "${Ticket.costo_visite_specialistiche}" type = "currency" />  </c:when>
+              <c:when test="${empty i_visita or not empty errore}">  <fmt:formatNumber value = "${Ticket.costo_visite_specialistiche}" type = "currency" />  </c:when>
               <c:when test="${not empty i_visita}"> <fmt:formatNumber value = "${importo_ticket}" type = "currency" /> </c:when>
           </c:choose>
       <fmt:message key="pagato"/>
     </div>
 </c:if>
   
-  <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_visita}">
+  <c:if test="${sessionScope.utente.isMedicoSpecialista() and (empty i_visita or not empty errore)}">
     <button type="submit" class="btn btn-primary"><fmt:message key="conferma"/></button>
   </c:if>
 </form>

@@ -77,7 +77,7 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
     @Override
     public boolean compileVisitaSpecialistica(VisitaSpecialistica visita, Integer id_medico_spec) throws DaoException {
         if (visita == null || id_medico_spec <= 0 || visita.getId_paziente() <= 0 || visita.getId() <= 0) return false;
-
+        
         try {
             Integer id_ticket = null;
             PreparedStatement ps = CON.prepareStatement("insert into ticket (costo,tipo, id_paziente) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -236,7 +236,7 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
                 "	  inner join visite_specialistiche v2 on v2.id = v.id_visita_spec \n" +
                 "WHERE p.id_paziente = ? AND v.time_visita IS NOT NULL AND \n" +
                 "      EXISTS (SELECT id_visita_spec FROM competenze_medico_spec WHERE id_medico_spec = ? AND id_visita_spec = v2.id )\n" +
-                "ORDER BY time DESC")) {
+                "ORDER BY time_visita DESC")) {
             stm.setInt(1, id_paziente);
             stm.setInt(2, id_medico_spec);
             ResultSet rs = stm.executeQuery();
