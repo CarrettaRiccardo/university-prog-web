@@ -63,7 +63,7 @@ public class PazientiServlet extends HttpServlet {
             request.setAttribute("page", "pazienti");
             request.setAttribute("pazienti", pazienti);
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
-            rd.include(request, response);
+            rd.forward(request, response);
         } catch (IdNotFoundException e) {
             throw new ServletException(e.getMessage());
         } catch (DaoException e) {
