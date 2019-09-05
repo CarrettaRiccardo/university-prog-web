@@ -61,16 +61,16 @@
                             <fmt:formatDate value="${timest}" pattern="yyyy-MM-dd" var="day" />
                             <c:choose>
                                 <c:when test="${reserv.getIdPaziente() == sessionScope.utente.getId()}">
-                                    <div class="alert alert-success text-center my-3" style="width: 550px">
-                                        <p style="font-style: italic; left: 5px; top: 2px; position: absolute"><c:out value="${day}"></c:out></p>
-                                        <p style="font-weight: bold; right: 5px; top: 2px; position: absolute"><c:out value="${i}:00"></c:out></p>
+                                    <div class="alert alert-success text-center my-3" style="max-width: 550px">
+                                        <p style="font-style: italic;"><c:out value="${day}"></c:out></p>
+                                        <p style="font-weight: bold;"><c:out value="${i}:00"></c:out></p>
                                         <p><fmt:message key="prenotazione_fatta"/></p>
                                     </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <div class="alert alert-danger text-center my-3" style="width: 550px">
-                                        <p class="font-italic position-absolute" style="left: 5px; top: 2px"><c:out value="${day}"></c:out></p>
-                                        <p class="font-weight-bold position-absolute" style="right: 5px; top: 2px;"><c:out value="${i}:00"></c:out></p>
+                                    <div class="alert alert-danger text-center my-3" style="max-width: 550px">
+                                        <p class="font-italic position-absolute"><c:out value="${day}"></c:out></p>
+                                        <p class="font-weight-bold position-absolute"><c:out value="${i}:00"></c:out></p>
                                         <p><fmt:message key="prenotazione_non_disp"/></p>
                                     </div>
                                 </c:otherwise>
@@ -81,7 +81,6 @@
                 <c:if test="${not contains}">
                     <form action="app/paziente/prenotazioni" method="post">
                         <div class="row alert alert-dark text-center my-3" style="max-width: 550px">
-
                                 <div class="col-6 text-left">
                                     <p class="font-italic" >${date}</p>
                                     <input type="hidden" name="date" value="${date}"/>

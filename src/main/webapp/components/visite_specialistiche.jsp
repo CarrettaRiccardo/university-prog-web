@@ -12,7 +12,8 @@
     <tbody>
     <c:forEach items="${visite}" var="visita">
         <tr
-                <c:if test="${visita.isDaFissare()}"> style=font-weight:bold </c:if>
+                <c:if test="${visita.isDaFissare() and utente.isPaziente()}"> style="font-weight:bold" </c:if>
+                <c:if test="${visita.isDaFissare() and not utente.isPaziente()}">style="color: #b1b3b5"</c:if>
                 <c:if test="${not visita.isDaFissare() or utente.isPaziente()}"> data-href='app/${u_url}/compila_visita_spec?id_paziente=${id_paziente}&id_visita=${visita.getId()}' </c:if> <%-- Solo il paziente pu� aprire una visita_spec non fissata (appunto per fissarla) --%>
         >
             <td>

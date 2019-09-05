@@ -1,4 +1,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!--
+    Contiene tutti i riferimenti a style o js.
+    Definisce anche tutti gli script comuni
+-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -89,6 +94,82 @@
             $("#autocomplete").val(null).trigger("change");
         </c:if>
     });
+</script>
+    
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#table').DataTable({
+                // Autocomletamento con typeahead
+                initComplete: function () {
+                    let dataset = [];
+                    let api = this.api();
+                    // Popola il dataset prendendo i dati direttamente dalla tabella
+                    // Usa le colonne 0, 1 e 2 -> TODO: Usare le colonne giuste in base alla sezione
+                    api.cells('tr', [0, 1]).every(function () {
+                        // Rimozione leemnti HTML per avere solo il testo. Non insersco duplicati
+                        let data = $('<div>').html(this.data()).text();
+                        if (dataset.indexOf(data) === -1) dataset.push(data);
+                    });
+                    // Ordinamento dataset
+                    dataset.sort();
+                    // Inizializzazione Select2
+                    let select = $('#table_filter input[type="search"]', api.table().container());
+                    select.typeahead({
+                        source: dataset,
+                        afterSelect: function (value) {
+                            api.search(value).draw();
+                        }
+                    });
+                },
+                pageLength: 50,
+                // Traduzione componenti DataTables
+                language: {
+                    search: "Cerca:",
+                    emptyTable: "Nessun elemento disponibile",
+                    info: "Elementi da _START_ a _END_ di _TOTAL_ totali",
+                    infoEmpty: "0 elementi totali",
+                    infoFiltered: "(filtrati da _MAX_ elementi totali)",
+                    lengthMenu: "Mostra _MENU_ elementi",
+                    loadingRecords: "Caricamento...",
+                    processing: "Calcolo...",
+                    zeroRecords: "Nessun elemento trovato",
+                    paginate: {
+                        first: "Primo",
+                        last: "Ultimo",
+                        next: "Prossimo",
+                        previous: "Precedente"
+                    },
+                },
+                responsive: {
+                    details: {
+                        renderer: $.fn.dataTable.Responsive.renderer.listHidden({
+                            tableClass: 'table'
+                        })
+                    }
+                },
+                // Disabilitazione ordinamento automatico
+                order: []
+            })
+            // Gestione click row table
+                .on('click', 'tbody tr[data-href] td:nth-child(1)', function (e) {
+                    let pseudo = window.getComputedStyle($(this).get(0), ':before');
+                    if (pseudo.getPropertyValue("content") !== 'none' && // Controllo che ci sia il bottone
+                        e.target.nodeName === 'TD' &&  // Che abbia premuto la riga e non un elmento all'interno
+                        e.offsetX < 30) { // Che abbia premuto sul bottone e non sul testo dopo
+                        // Blocco la propagazione dell'evento perchè ho premuto il bottone "+"
+                        e.stopPropagation();
+                    } else {
+                        // Altrimenti ho premuto sulla riga della tabella, chiudo eventuali dettagli aperti
+                        console.log(e.target.parentNode);
+                        $('tr.child').hide();
+                        $('tr.parent').removeClass('parent');
+                    }
+                })
+                // Gestione click row table
+                .on('click', 'tbody tr[data-href]', function (e) {
+                    window.location.href = $(this).attr('data-href');
+                });
+        });
 </script>
 
 <div id="bannerCookies" style="display: none" class="alert alert-dismissible my-0 bg-secondary fixed-bottom text-center"

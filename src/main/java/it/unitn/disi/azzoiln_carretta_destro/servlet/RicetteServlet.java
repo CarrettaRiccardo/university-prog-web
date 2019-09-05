@@ -227,7 +227,7 @@ public class RicetteServlet extends HttpServlet {
                 // Ricky; nascondo all'utente se non viene inviata alla mail
                 Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/ricette?id_paziente=" + r.getId_paziente() + "&r"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/ricette?id_paziente=" + r.getId_paziente()));
             return;
         }
 

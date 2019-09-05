@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setBundle basename="messages"/>
 
 <jsp:useBean id="utente" scope="session" class="it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente"/>
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm d-print-none">
@@ -34,7 +36,7 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdownMenu">
-                <a class="dropdown-item" href="app/${u_url}/settings.handler">Impostazioni</a>
+                <a class="dropdown-item" href="app/${u_url}/settings.handler"><fmt:message key="impostazioni"/></a>
                 <a class="dropdown-item" href="app/logout.handler">Logout</a>
             </div>
         </div>
@@ -54,5 +56,4 @@
             </c:forTokens>
         </ul>
     </div>
-
 </nav>

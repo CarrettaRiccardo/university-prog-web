@@ -16,10 +16,3 @@
     </c:forEach>
     </tbody>
 </table>
-
-
-<c:if test="${utente.getType() == MEDICO}">
-    <div class="fixed-bottom">
-        <button>Ciao</button>
-    </div>
-</c:if>
