@@ -22,8 +22,6 @@
             <h5 class="text-primary mt-3 mt-md-0"><fmt:message key="altro"/></h5>
             <div class="pb-1"> <fmt:message key="provincia"/> <b>${dettagli_utente.getProvinciaNome()}</b></div>
             <div class="pb-1"> <fmt:message key="comune"/> <b>${dettagli_utente.getComuneNome()}</b></div>
-            <div class="pb-1"> <fmt:message key="is_medico"/>: <b>${dettagli_utente.isMedico()}</b></div>
-            <div class="pb-1"> <fmt:message key="is_medico_spec"/>: <b>${dettagli_utente.isMedicoSpecialista()}</b></div>
             <c:if test="${ dettagli_utente.isMedico() || dettagli_utente.isMedicoSpecialista() }">
             <div class="pb-1"> <fmt:message key="laurea"/> <b> <c:out value="${dettagli_utente.getLaurea()}" default="-"/></b></div>
             <div class="pb-1"> <fmt:message key="inizio_carriera"/>: <b> <c:out value="${dettagli_utente.getInizioCarriera()}"
