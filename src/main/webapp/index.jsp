@@ -109,7 +109,9 @@
     <!-- 
         Qua pensavo di scrivere alcune cose aggiuntive che abbiamo fatto per presentarle. Cosa ne pensate ?
         Le scriviamo solo nel docuemnto che creiamo oppure anche qua ? Perchè questa pagina sarebbe da mostrare 
-        ai potenziali clienti/utenti
+        ai potenziali clienti/utenti.
+    
+        Vedi per idee sul testo -> https://salute.regione.veneto.it/web/fser/cittadino/app-sanita-km-zero
     -->
     
     <div class="row d-none d-md-block">
