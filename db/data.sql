@@ -25,7 +25,7 @@ VALUES (2, 'Matteo', 'Destro', '1965-12-12', 'matteo.est@gmail.com',
 /*************** TICKETS **************************/
 TRUNCATE table ticket;
 INSERT INTO ticket
-VALUES (1, 50, '', '2019-08-25 20:09:27');
+VALUES (1, 50, 'e', '2019-08-25 20:09:27', 1);
 
 /*************** PRESCRIZIONI ********************/
 TRUNCATE table prescrizione;

@@ -11,9 +11,9 @@ set foreign_key_checks = 0;
 drop table if exists competenze_medico_spec;
 create table competenze_medico_spec
 (
-    id_medico_spec    int       not null,
-    id_visita_spec    int       not null,
-    PRIMARY KEY (id_medico_spec,id_visita_spec),
+    id_medico_spec int not null,
+    id_visita_spec int not null,
+    PRIMARY KEY (id_medico_spec, id_visita_spec),
     FOREIGN KEY fk_competenza_to_ms (id_medico_spec) REFERENCES utenti (id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT,
@@ -27,8 +27,12 @@ create table ticket
 (
     id    int       not null AUTO_INCREMENT,
     costo float     not null,
-    tipo  char      not null,
+    tipo  char      not null COMMENT 'v (visita_spec) | e (esame)',
     time  timestamp not null DEFAULT NOW(),
+    id_paziente int not null,
+    FOREIGN KEY fk_ticket_to_paziente (id_paziente) REFERENCES utenti (id)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT,
     PRIMARY KEY (id)
 ) engine = InnoDB;
 
