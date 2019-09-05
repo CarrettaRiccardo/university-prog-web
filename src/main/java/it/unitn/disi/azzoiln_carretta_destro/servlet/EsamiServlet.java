@@ -261,13 +261,20 @@ public class EsamiServlet extends HttpServlet {
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/esami?id_paziente=" + v.getId_paziente()));
             return;
         }
-
-        
-        request.setAttribute("i_esame", v);
-        request.setAttribute("errore", "errore");
-        if(request.getRequestURI().indexOf("new_esami") > 0)
-            manageNewEsame(request, response);
-        else if(request.getRequestURI().indexOf("compila_esame") > 0)
-            manageCompilaEsame(request, response, u);
+        else{
+            try {
+                v.setNome_esame(userDao.getNomeEsameById(v.getId_esame()));
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException("esame_not_found");
+            }
+            
+            request.setAttribute("i_esame", v);
+            request.setAttribute("errore", "errore");
+            if(request.getRequestURI().indexOf("new_esami") > 0)
+                manageNewEsame(request, response);
+            else if(request.getRequestURI().indexOf("compila_esame") > 0)
+                manageCompilaEsame(request, response, u);
+        }
     }
 }

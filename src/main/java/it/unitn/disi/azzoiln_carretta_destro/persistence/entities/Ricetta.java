@@ -64,6 +64,10 @@ public class Ricetta extends Prescrizione {
         return costo;
     }
 
+    public void setNomeFarmaco(String nome_farmaco) {
+        this.nome_farmaco = nome_farmaco;
+    }
+
     public short getQuantita() {
         return quantita;
     }

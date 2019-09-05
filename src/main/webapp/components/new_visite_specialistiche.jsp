@@ -18,7 +18,11 @@
     </div>
     <div class="form-group">
         <label for="autocomplete"><fmt:message key="visita_spec"/></label>
-        <select id="autocomplete" name="id_visita" class="form-control select2-allow-clear" required></select>
+        <select  <c:if test="${empty i_visita}"> id="autocomplete" </c:if> name="id_visita" class="form-control select2-allow-clear" required>
+            <c:if test="${not empty i_visita}">
+                <option selected value="${i_visita.getId_visita_spec()}"> ${i_visita.getNome_visita()} </option>
+            </c:if>
+        </select>
         <small class="form-text text-muted"><fmt:message key="suggest_select2"/></small>
     </div>
     <input type="hidden" name="id_paziente" value="${paziente.getId()}">

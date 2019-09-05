@@ -230,11 +230,20 @@ public class RicetteServlet extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/ricette?id_paziente=" + r.getId_paziente()));
             return;
         }
-
-        request.setAttribute("i_ricetta", r);
-        request.setAttribute("errore", "errore");  //setto parametro per mostrare popup-errore
-
-        manageNewRicetta(request, response, u);  //uso il metodo già definire per gestire il redirect a new_ricetta settando dei parametri aggiuntivi
+        else{
+            try {
+                r.setNomeFarmaco(userDao.getNomeFarmacoById(r.getId_farmaco()));
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException("famraco_not_found");
+            }
+            request.setAttribute("i_ricetta", r);
+            request.setAttribute("errore", "errore");  //setto parametro per mostrare popup-errore
+            
+            if(request.getRequestURI().indexOf("new_ricette") > 0)
+                manageNewRicetta(request, response, u);  //uso il metodo già definire per gestire il redirect a new_ricetta settando dei parametri aggiuntivi
+            else throw new ServletException("error_message_other");
+        }
     }
 
 

@@ -32,8 +32,8 @@
             <select <c:if test="${empty i_ricetta}"> id="autocomplete" </c:if> name="id_farmaco"
                                                                                class="form-control select2-allow-clear"
                                                                                required>
-                <c:if test="${empty i_ricetta}">
-                    <option selected> ${i_ricetta.getNomeFarmaco()} </option>
+                <c:if test="${not empty i_ricetta}">
+                    <option selected value="${i_ricetta.getId_farmaco()}"> ${i_ricetta.getNomeFarmaco()} </option>
                 </c:if>
             </select>
             <small class="form-text text-muted"><fmt:message key="suggest_select2"/></small>
@@ -42,12 +42,12 @@
         <div class="form-group col-md-4">
             <label for="quantita"><fmt:message key="visita_spec_da_fissare"/><!--Quantit�--></label>
             <input type="number" class="form-control" id="quantita" name="qta"
-                   value="<c:choose><c:when test="${! empty i_ricetta}">${i_ricetta.getQuantita()}</c:when><c:when test="${empty i_ricetta}">1</c:when></c:choose>"
+                   value="<c:choose><c:when test="${not empty i_ricetta}">${i_ricetta.getQuantita()}</c:when><c:when test="${empty i_ricetta}">1</c:when></c:choose>"
                    placeholder="1" required min='1' max='300'>
         </div>
   </div>
   <input type="hidden" name="id_paziente" value="${paziente.getId()}">
-            <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO_SPEC and empty i_ricetta}">
+            <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO and (empty i_ricetta or not empty errore)}">
             <button type="submit" class="btn btn-primary"><fmt:message key="conferma"/></button>
             </c:if>
 </form>

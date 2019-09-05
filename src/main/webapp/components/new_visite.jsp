@@ -25,11 +25,11 @@
         <label for="anamnesi"><fmt:message key="anamnesi"/></label>
         <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}">
         <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px"
-                  <c:if test="${! empty i_visita}">readonly</c:if>><c:choose><c:when
+                  <c:if test="${not empty i_visita and empty errore}">readonly</c:if>><c:choose><c:when
                 test="${empty i_visita}">Il paziente presenta ...</c:when><c:when
                 test="${! empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>
     </div>
-    <c:if test="${sessionScope.utente.getType() == UtenteType.MEDICO and empty i_visita}">
+    <c:if test="${sessionScope.utente.isMedico() and (empty i_visita or not empty errore)}">
         <button type="submit" class="btn btn-primary"><fmt:message key="conferma"/></button>
     </c:if>
 </form>

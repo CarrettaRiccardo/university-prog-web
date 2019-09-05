@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.rmi.ServerError;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -267,6 +268,12 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             return;
         }
         else{
+            try {
+                vs.setNome_visita(userDao.getNomeVisitaSpecById(vs.getId_visita_spec()));
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException("visita_spec_not_found");
+            }
             request.setAttribute("i_visita", vs);
             request.setAttribute("errore", "errore");
             if(request.getRequestURI().indexOf("new_visite_specialistiche") > 0)

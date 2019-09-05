@@ -37,7 +37,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
     @Override
     public boolean addVisita(Visita visita) throws DaoException {
         if(visita == null || visita.getId_medico() <= 0 || visita.getId_paziente() <= 0) return false;  
-        return false;/*
+        
         try {
             Integer new_id = null;
             PreparedStatement ps = CON.prepareStatement("insert into prescrizione (id_paziente,id_medico) VALUES (?,?)",Statement.RETURN_GENERATED_KEYS);
@@ -63,7 +63,7 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             throw new DaoException(ex.getMessage(), ex);
         }
         
-        return true;*/
+        return true;
     }
 
     @Override

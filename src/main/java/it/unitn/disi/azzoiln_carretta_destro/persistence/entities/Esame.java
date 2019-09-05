@@ -68,6 +68,10 @@ public class Esame extends Prescrizione {
     public String getNome_esame() {
         return nome_esame;
     }
+    
+    public void setNome_esame(String nome_esame) {
+        this.nome_esame = nome_esame;
+    }
 
     public Date getTime_esame() {
         return time_esame;

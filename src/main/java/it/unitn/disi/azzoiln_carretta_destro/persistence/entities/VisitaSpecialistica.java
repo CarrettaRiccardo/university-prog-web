@@ -77,6 +77,10 @@ public class VisitaSpecialistica extends Prescrizione{
     public String getNome_visita() {
         return nome_visita;
     }
+    
+    public void setNome_visita(String nome) {
+        this.nome_visita = nome;
+    }
 
     public String getNome_medico_specialista() {
         return nome_medico_specialista;

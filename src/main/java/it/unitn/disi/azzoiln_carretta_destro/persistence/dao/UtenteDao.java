@@ -240,4 +240,11 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      * @throws DaoException
      */
     public Double getImportoTicket(int id_ticket) throws DaoException;
+    
+    
+    public String getNomeFarmacoById(Integer id_farmaco) throws DaoException;
+
+    public String getNomeEsameById(Integer id_esame) throws DaoException;
+    
+    public String getNomeVisitaSpecById(Integer id_visita_spec) throws DaoException;
 }

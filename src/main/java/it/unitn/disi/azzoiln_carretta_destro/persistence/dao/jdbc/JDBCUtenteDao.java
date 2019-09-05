@@ -728,4 +728,59 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         }
         return ret;
     }
+    
+    
+    @Override
+    public String getNomeFarmacoById(Integer id_farmaco) throws DaoException{
+        if (id_farmaco <= 0) return null; 
+        String ret = "";
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM farmaci WHERE id = ?")) {
+            stm.setInt(1, id_farmaco);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = rs.getString("nome");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+    
+    @Override
+    public String getNomeEsameById(Integer id_esame) throws DaoException{
+        if (id_esame <= 0) return null; 
+        String ret = "";
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM esami_prescrivibili WHERE id = ?")) {
+            stm.setInt(1, id_esame);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = rs.getString("nome");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+    
+    @Override
+    public String getNomeVisitaSpecById(Integer id_visita_spec) throws DaoException{
+        if (id_visita_spec <= 0) return null; 
+        String ret = "";
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM visite_specialistiche WHERE id = ?")) {
+            stm.setInt(1, id_visita_spec);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = rs.getString("nome");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
 }
