@@ -12,12 +12,12 @@
 <!-- RICKY -->
 <body class="bg">
 
-<nav class="navbar navbar-light bg-white shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm d-print-none">
     <a class="navbar-brand" href="app/home">
         <img src="assets/logo.svg" width="36" height="36" class="d-inline-block align-top mr-2" alt="logo">
-        <span class="h4 font-weight-normal d-none d-sm-inline">
-                <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
-            </span>
+        <span class="h4 font-weight-normal d-none d-lg-inline">
+            <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
+        </span>
     </a>
 </nav>
 

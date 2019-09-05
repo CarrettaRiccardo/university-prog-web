@@ -137,6 +137,13 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      */
     public List<Ricetta> getRicette(Integer id_paziente) throws DaoException;
 
+    /**
+     * Ottiene l' elenco dei ticket del paziente ordinati in ordine cronologico inverso
+     *
+     * @param id_paziente
+     * @return Elenco degli esami del paziente ordinati in ordine cronologico inverso
+     */
+    public List<Ticket> getTickets(Integer id_paziente) throws DaoException;
 
     /**
      * Ottiene l' elenco degli esami del paziente ordinati in ordine cronologico inverso
@@ -146,6 +153,7 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      */
     public List<Esame> getEsami(Integer id_paziente) throws DaoException;
 
+    
 
     /**
      * @return Elenco di tutti i farmaci disponibili
@@ -184,7 +192,7 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      * Registra il tempo impiegato per elaborare la risposta. Per statistiche
      *
      * @param requestURI
-     * @param l          tempo in millisecondi
+     * @param time       tempo in millisecondi
      */
     public void addLogTime(String requestURI, long time);
 
@@ -216,6 +224,13 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      */
     public Ricetta getRicetta(int id_paziente, int id_ricetta) throws DaoException;
 
+    /**
+     * @param id_paziente
+     * @param id_ticket
+     * @return I dati di un singolo ticket
+     */
+    public Ticket getTicket(int id_paziente, int id_ticket) throws DaoException;
+
 
     /**
      * Non è sufficiente prendere il vallre dalla classe Ticket perchè il valore potrebbe cambiare nel tempo
@@ -225,4 +240,11 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      * @throws DaoException
      */
     public Double getImportoTicket(int id_ticket) throws DaoException;
+    
+    
+    public String getNomeFarmacoById(Integer id_farmaco) throws DaoException;
+
+    public String getNomeEsameById(Integer id_esame) throws DaoException;
+    
+    public String getNomeVisitaSpecById(Integer id_visita_spec) throws DaoException;
 }

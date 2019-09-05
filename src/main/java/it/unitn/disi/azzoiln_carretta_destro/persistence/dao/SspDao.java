@@ -1,6 +1,7 @@
 package it.unitn.disi.azzoiln_carretta_destro.persistence.dao;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
@@ -20,7 +21,15 @@ public interface SspDao{
      * @param id_esame
      * @return 
      */
-    public boolean erogaEsame(Integer id_esame);
+    public boolean erogaEsame(Esame e) throws DaoException;
+    
+    /**
+     * Ottiene l' elenco degli esami dei pazienti del SSP ordinati in ordine cronologico inverso
+     *
+     * @param id_ssp
+     * @return Elenco degli esami dei pazienti del SSP ordinati in ordine cronologico inverso
+     */
+    public List<Esame> getEsami(Integer id_ssp) throws DaoException;
     
     public List<Medico> getMedici(Integer id_provincia) throws DaoException;
 

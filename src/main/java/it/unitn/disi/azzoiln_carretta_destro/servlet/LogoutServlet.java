@@ -47,6 +47,7 @@ public class LogoutServlet extends HttpServlet {
             Cookie c = cookies[i];
             if (c.getName().equals("user_token")) {
                 found = true;
+                c.setValue("");// ne annullo il valore per sicurezza
                 c.setMaxAge(0);// cancella
                 response.addCookie(c);
             }
@@ -57,7 +58,7 @@ public class LogoutServlet extends HttpServlet {
         session.invalidate();
 
         if (!response.isCommitted()) {
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "login"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath +  "login"));
         }
     }
 

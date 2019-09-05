@@ -11,18 +11,22 @@
 <form action="app/${u_url}/new_esami" method="POST">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="paziente">Paziente</label>
+            <label for="paziente"><fmt:message key="paziente"/></label>
             <input type="email" class="form-control" id="paziente"
                    placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
         </div>
     </div>
     <div class="form-group">
-        <label for="autocomplete">Esame</label>
-        <select id="autocomplete" name="id_esame" class="form-control select2-allow-clear" required></select>
+        <label for="autocomplete"><fmt:message key="esame"/></label>
+        <select <c:if test="${empty i_esame}"> id="autocomplete" </c:if> name="id_esame" class="form-control select2-allow-clear" required>
+            <c:if test="${not empty i_esame}">
+                <option selected value="${i_esame.getId_esame()}"> ${i_esame.getNome_esame()} </option>
+            </c:if>
+        </select>
         <small class="form-text text-muted">Click the input text or space to start to digit.</small>
     </div>
     <input type="hidden" name="id_paziente" value="${paziente.getId()}">
-    <button type="submit" class="btn btn-primary">Conferma</button>
+    <button type="submit" class="btn btn-primary"><fmt:message key="conferma"/></button>
 </form>
 
 <c:if test="${errore ne null}">

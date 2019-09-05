@@ -69,9 +69,31 @@ public interface MedicoSpecDao {
 
     
     /**
-     * Ottiene le VS solamente di sua competenza
+     * Tutte le visite passate di mia competenza + visite future o per oggi di mia competenza
+     * Non elenca le visite senza data fissata (anche se sono di mia competenza)
+     * @param id_paziente
+     * @param id_medico_spec
+     * @return
+     * @throws DaoException 
      */
     public List<VisitaSpecialistica> getVisiteSpecialistiche(Integer id_paziente,Integer id_medico_spec) throws DaoException;
+
+    
+    /**
+     * Verifica che abbia id_visita tra le competenze
+     * @param id_visita
+     * @param id
+     * @return
+     * @throws DaoException 
+     */
+    public boolean inCompetenza(Integer id_visita, int id_medico) throws DaoException;
+
+    /**
+     * Usato per controllo accesso alle foto in ProfilePhotoFilter
+     * @param foto_utente
+     * @return 
+     */
+    public boolean isMyPatient(String foto_utente,Integer id_medico) throws DaoException;
 
     
 }

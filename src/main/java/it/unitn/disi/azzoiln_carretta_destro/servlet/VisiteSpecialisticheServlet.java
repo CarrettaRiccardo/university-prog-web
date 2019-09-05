@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.rmi.ServerError;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -126,17 +127,21 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             System.out.println(ex.getMessage());
             throw new ServletException(ex.getMessage());
         } finally {
-            if (vs == null) throw new ServletException("visita_spec_not_found");
-            if (importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
-            if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita() == null) throw new ServletException("visita_non_fissata"); //il medico non può accedere ad una visita non fissata
-            if(u.getType() == UtenteType.MEDICO_SPEC && vs.getTime_visita().compareTo(new Date()) > 0 ) throw new ServletException("visita_futura"); 
+            if(vs == null) throw new ServletException("visita_spec_not_found");
+            if(importo_ticket == null && !vs.isNew()) throw new ServletException("ticket_not_found");
+            if(u.getType() != UtenteType.PAZIENTE && vs.getTime_visita() == null) throw new ServletException("visita_non_fissata"); //il medico/medico_spec non può accedere ad una visita non fissata
+            if(/*u.getType() == UtenteType.MEDICO_SPEC &&*/ vs.getTime_visita() != null && vs.getTime_visita().compareTo(new Date()) > 0 ) throw new ServletException("visita_futura");  //nessuno può accedere ad un elemento fissato per il futuro
         }
         
         if(!vs.isNew() || u.getType() != UtenteType.MEDICO_SPEC){ //mostro i campi in readonly, altrimenti compilabili
             request.setAttribute("i_visita", vs);
             request.setAttribute("importo_ticket", importo_ticket);
             request.setAttribute("title", "view_visita_specialistica");
-        } else {
+        }
+        else if(vs.isDaFissare()){
+            request.setAttribute("title", "fissa_visita_specialistica");
+        }
+        else {
             request.setAttribute("title", "compila_visita_specialistica");
         }
 
@@ -254,18 +259,27 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
                                 + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
             } catch (Exception ex) {
                 // Ricky; nascondo all'utente se non viene inviata la mail
-                Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println(ex.getMessage());
             }
             if (updateData)// paziente
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/visite_specialistiche"));
-            else // medico
-                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/visite_specialistiche?id_paziente=" + vs.getId_paziente() + "&r"));
+            else // medico_spec
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/visite_specialistiche?id_paziente=" + vs.getId_paziente()));
             return;
         }
-
-
-        request.setAttribute("i_visita", vs);
-        request.setAttribute("errore", "errore");
-        manageNewVisita(request, response);
+        else{
+            try {
+                vs.setNome_visita(userDao.getNomeVisitaSpecById(vs.getId_visita_spec()));
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException("visita_spec_not_found");
+            }
+            request.setAttribute("i_visita", vs);
+            request.setAttribute("errore", "errore");
+            if(request.getRequestURI().indexOf("new_visite_specialistiche") > 0)
+                manageNewVisita(request, response);
+            else if(request.getRequestURI().indexOf("compila_visita_spec") > 0)
+                manageCompilaVisita(request, response, u);
+        }
     }
 }

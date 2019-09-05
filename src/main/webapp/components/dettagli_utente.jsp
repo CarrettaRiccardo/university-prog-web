@@ -11,27 +11,23 @@
         </div>
 
         <div class="col col-12 col-md pl-md-4">
-            <h5 class="text-primary">Dati personali</h5>
-            <div class="pb-1"> Nome: <b>${dettagli_utente.getNome()}</b></div>
-            <div class="pb-1"> Cognome: <b>${dettagli_utente.getCognome()}</b></div>
-            <div class="pb-1"> Codice fiscale: <b>${dettagli_utente.getCf()}</b></div>
-            <div class="pb-1"> Data nascita: <b>${dettagli_utente.getData_nascita_Stringa()}</b></div>
+            <h5 class="text-primary"><fmt:message key="dati_personali"/></h5>
+            <div class="pb-1"> <fmt:message key="nome"/>: <b>${dettagli_utente.getNome()}</b></div>
+            <div class="pb-1"> <fmt:message key="cognome"/>: <b>${dettagli_utente.getCognome()}</b></div>
+            <div class="pb-1"> <fmt:message key="cf"/>: <b>${dettagli_utente.getCf()}</b></div>
+            <div class="pb-1"> <fmt:message key="data_nascita"/>: <b> <fmt:formatDate value="${dettagli_utente.getData_nascita()}" pattern="dd/MM/yyyy"/></b></div>
         </div>
 
         <div class="col col-12 col-md">
-            <h5 class="text-primary mt-3 mt-md-0">Altro</h5>
-            <div class="pb-1"> Provincia: <b>${dettagli_utente.getProvinciaNome()}</b></div>
-            <div class="pb-1"> Comune: <b>${dettagli_utente.getComuneNome()}</b></div>
-            <div class="pb-1"> È medico: <b>${dettagli_utente.isMedico()}</b></div>
-            <div class="pb-1"> È medico specialista: <b>${dettagli_utente.isMedicoSpecialista()}</b></div>
+            <h5 class="text-primary mt-3 mt-md-0"><fmt:message key="altro"/></h5>
+            <div class="pb-1"> <fmt:message key="provincia"/>: <b>${dettagli_utente.getProvinciaNome()}</b></div>
+            <div class="pb-1"> <fmt:message key="comune"/>: <b>${dettagli_utente.getComuneNome()}</b></div>
             <c:if test="${ dettagli_utente.isMedico() || dettagli_utente.isMedicoSpecialista() }">
-            <div class="pb-1"> Laurea: <b> <c:out value="${dettagli_utente.getLaurea()}" default="-"/></b></div>
-            <div class="pb-1"> Inizio carriera: <b> <c:out value="${dettagli_utente.getInizioCarriera()}"
-                                                           default="-"/></b></div>
-        </div>
-        </c:if>
-        <c:if test="${ dettagli_utente.isMedicoSpecialista() }">
-        <div class="pb-1"> Specialità: <b> <c:out value="${dettagli_utente.getSpecialita()}" default="-"/></b>
+            <div class="pb-1"> <fmt:message key="laurea"/>: <b> <c:out value="${dettagli_utente.getLaurea()}" default="-"/></b></div>
+            <div class="pb-1"> <fmt:message key="inizio_carriera"/>: <b> <c:out value="${dettagli_utente.getInizioCarriera()}" default="-"/></b></div>
+            </c:if>
+            <c:if test="${ dettagli_utente.isMedicoSpecialista() }">
+            <div class="pb-1"> <fmt:message key="specialita"/>: <b> <c:out value="${dettagli_utente.getSpecialita()}" default="-"/></b></div>
             </c:if>
         </div>
     </div>
@@ -40,8 +36,8 @@
 <div class="mt-3 row">
     <c:set var="showAdd" value="${sessionScope.utente.getType() == UtenteType.MEDICO}"/>
 
-    <div class="col-12 order-2 order-md-1 <c:if test="${showAdd}">col-md-9 pr-0</c:if> ">
-        <ul class="nav nav-tabs">
+    <div class="col-12 <c:if test="${showAdd}">col-md-9 pr-md-0</c:if> ">
+        <ul class="nav nav-tabs flex-column flex-md-row">
             <c:forTokens items="${sezioni_dettagli}" var="sezione" varStatus="s" delims=",">
                 <li class="nav-item">
                     <c:if test="${sezione == subpage}">
@@ -72,7 +68,7 @@
     </div>
 
     <c:if test="${showAdd}">
-        <div class="col-12 col-md-3 order-1 order-md-2 pl-0">
+        <div class="col-12 col-md-3 pl-md-0 mt-2 mt-md-0">
             <a class="btn btn-gradient-${activeIndex + 2} text-white h6 btn-block mb-0"
                href="app/${u_url}/new_${subpage}?id_paziente=${param.id_paziente}"
                 <%--<c:choose>
@@ -103,7 +99,7 @@
 <c:if test="${param.r ne null}">
     <div class="alert alert-success alert-dismissible fade show position-fixed"
          style="right: 20px; bottom: 0; z-index: 2" role="alert">
-        Operazione eseguita con <b>successo</b>!
+        <fmt:message key="op_successo"/>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>

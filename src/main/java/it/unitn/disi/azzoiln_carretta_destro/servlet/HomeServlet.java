@@ -40,7 +40,7 @@ public class HomeServlet extends HttpServlet {
             case PAZIENTE: redirectUrl = "paziente/prenotazioni"; break;
             case MEDICO: redirectUrl = "medico/pazienti"; break;
             case MEDICO_SPEC: redirectUrl = "medico_spec/pazienti"; break;
-            case SSP: redirectUrl = "ssp/medici"; break;
+            case SSP: redirectUrl = "ssp/esami"; break;
         }
         HttpSession session = request.getSession(false);
         // carico i dati dell'utente in sessione per una navigazione e gestione più semplice

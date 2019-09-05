@@ -9,7 +9,9 @@
 <div class="choose-container text-center">
     <img src="assets/logo.svg" width="100" height="100">
     <div class="display-4 mb-4 pb-1 font-weight-normal">
-        <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
+        <h1>
+            <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
+        </h1>
     </div>
 
     <h2 class="mb-4 mt-4"><fmt:message key="choose_title"/></h2>

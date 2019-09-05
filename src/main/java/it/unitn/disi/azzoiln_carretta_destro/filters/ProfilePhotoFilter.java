@@ -1,55 +1,79 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.unitn.disi.azzoiln_carretta_destro.filters;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Utente;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * Filtro su URL /PAZIENTE/
- * Nonè necessario controllare che id_paziente nell'URL venga modificato per accedere ai dati di altri Pazienti 
- * perchè id_paziente è letto dalla sessione dell'utente
+ * Filtro per controllare che un Paziente accede solo alle proprie foto e che i Medici accedano alle foto 
+ * solo dei propri Pazienti.
+ * Inoltre solo un utente con sessione attiva può accedere alla foto
  * @author Steve
  */
-public class PazienteFilter implements Filter {
+public class ProfilePhotoFilter implements Filter {
     
     private static final boolean debug = true;
-
-    // The filter configuration object we are associated with.  If
-    // this value is null, this filter instance is not currently
-    // configured. 
-    private FilterConfig filterConfig = null;
     private UtenteDao userDao;
+   
+    private FilterConfig filterConfig = null;
+    
+    public ProfilePhotoFilter() {
+    }    
     
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("PazienteFilter:DoBeforeProcessing");
-        }
-        
-        if(request instanceof HttpServletRequest){
-            HttpServletRequest req = (HttpServletRequest) request;
-            req.setAttribute("u_url", "paziente"); //deve essere impostato per automatizzare il redirect da una pagina all'altra con i vari possibili URL tra medico/Paziente..
+            log("ProfilePhotoFilter:DoBeforeProcessing");
         }
 
-        
+        if(request instanceof HttpServletRequest){
+            try {
+                HttpServletRequest req = (HttpServletRequest) request;
+                
+                String[] tmp = req.getRequestURI().split("/");
+                String foto_utente = tmp[tmp.length - 2];
+                
+                Utente u = (Utente) ((HttpServletRequest) request).getSession(false).getAttribute("utente");
+                
+                switch(u.getType()){
+                    case PAZIENTE:    if( !(u.getUsername().equals(foto_utente)) ) throw new ServletException("not_authorized_photo"); break;
+                    case MEDICO:      if( !userDao.Medico().isMyPatient(foto_utente, u.getId()) ) throw new ServletException("not_authorized_photo");   break;
+                    case MEDICO_SPEC: if( !userDao.MedicoSpecialista().isMyPatient(foto_utente, u.getId()) ) throw new ServletException("not_authorized_photo"); break;
+                    case SSP: throw new ServletException("not_authorized_photo");
+                }
+                
+                req.setAttribute("u_url", "medico");
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException(ex.getMessage());
+            }
+            catch(NullPointerException ex){
+                System.out.println(ex.getMessage());
+                throw new ServletException("no_session");
+            }
+        }
     }    
     
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("PazienteFilter:DoAfterProcessing");
+            log("ProfilePhotoFilter:DoAfterProcessing");
         }
     }
 
@@ -67,13 +91,12 @@ public class PazienteFilter implements Filter {
             throws IOException, ServletException {
         
         if (debug) {
-            log("PazienteFilter:doFilter()");
+            log("ProfilePhotoFilter:doFilter()");
         }
-        
-        doBeforeProcessing(request, response);
         
         Throwable problem = null;
         try {
+            doBeforeProcessing(request, response);
             chain.doFilter(request, response);
         } catch (Throwable t) {
             problem = t;
@@ -81,7 +104,6 @@ public class PazienteFilter implements Filter {
         }
         
         doAfterProcessing(request, response);
-
         
         if (problem != null) {
             if (problem instanceof ServletException) {
@@ -123,8 +145,17 @@ public class PazienteFilter implements Filter {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
             if (debug) {                
-                log("PazienteFilter:Initializing filter");
+                log("ProfilePhotoFilter:Initializing filter");
             }
+        }
+        
+        DaoFactory daoFactory = (DaoFactory) filterConfig.getServletContext().getAttribute("daoFactory"); 
+        if (daoFactory == null)
+            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, "Impossible to get dao factory for user storage system Filter", new ServletException("Impossible to get dao factory for user storage system Filter"));                    
+        try {
+            userDao = daoFactory.getDAO(UtenteDao.class);
+        } catch (DaoFactoryException ex) {
+            Logger.getLogger(MedicoFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -134,9 +165,9 @@ public class PazienteFilter implements Filter {
     @Override
     public String toString() {
         if (filterConfig == null) {
-            return ("PazienteFilter()");
+            return ("ProfilePhotoFilter()");
         }
-        StringBuffer sb = new StringBuffer("PazienteFilter(");
+        StringBuffer sb = new StringBuffer("ProfilePhotoFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());

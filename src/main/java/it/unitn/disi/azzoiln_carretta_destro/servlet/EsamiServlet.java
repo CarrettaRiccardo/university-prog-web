@@ -16,8 +16,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,15 +49,14 @@ public class EsamiServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().indexOf("new_esami") > 0) {  //voglio accedere alla pagina per creare un nuovo Esame
-            manageNewEsame(request, response);
-            return;
-        }
-
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
 
         if (request.getRequestURI().indexOf("compila_esame") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
             manageCompilaEsame(request, response, u);
+            return;
+        }
+        else if (request.getRequestURI().indexOf("new_esami") > 0) {  //voglio accedere alla pagina per creare un nuovo Esame
+            manageNewEsame(request, response);
             return;
         }
         List<Esame> esami;
@@ -71,7 +74,11 @@ public class EsamiServlet extends HttpServlet {
                 request.setAttribute("nome", ((Persona) u).getNome() + ((Persona) u).getCognome());  //per mostrare il nome del medico loggato
                 Integer id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
                 esami = userDao.getEsami(id_paziente);
-            } else { //sono SSP, non posso vedere le visite delle persone
+            } else if (u.getType() == UtenteType.SSP) {
+                request.setAttribute("title", "Esami_ssp");
+                request.setAttribute("nome", ((Ssp) u).getNome());  //per mostrare il nome del SSP
+                esami = userDao.Ssp().getEsami(u.getId());
+            } else { 
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;
             }
@@ -89,7 +96,6 @@ public class EsamiServlet extends HttpServlet {
             throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
             System.out.println(e.getMessage() + "\n\n\n");
-            //throw new ServletException();
             throw new ServletException(e.getMessage());
         }
     }
@@ -118,19 +124,31 @@ public class EsamiServlet extends HttpServlet {
         }
 
         Esame e = null;
-        try {
-            e = userDao.getEsame(id_paziente, id_esame);
-        } catch (DaoException ex) {
-            System.out.println(ex.getMessage());
-            throw new ServletException(ex.getMessage());
-        } finally {
-            if (e == null) throw new ServletException("visita_spec_not_found");
-        }
+        
+        if(request.getAttribute("i_esame") == null){
+            Double importo_ticket = null;
+            try {
+                e = userDao.getEsame(id_paziente, id_esame);
+                importo_ticket = userDao.getImportoTicket(e.getId_ticket());
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException(ex.getMessage());
+            } finally {
+                if (e == null) throw new ServletException("esame_not_found");
+                if (importo_ticket == null && !e.isNew()) throw new ServletException("ticket_not_found");
+                if (u.getType() != UtenteType.PAZIENTE && e.getTime_esame() == null) throw new ServletException("esame_non_fissato"); //il medico/medico_spec/ssp non può accedere ad un esame non fissato
+                if (e.getTime_esame() != null && e.getTime_esame().compareTo(new Date()) > 0 ) throw new ServletException("esame_futuro"); 
+            }
 
-        if (!e.isNew() || u.getType() != UtenteType.MEDICO_SPEC) { //mostro i campi in readonly, altrimenti compilabili
-            request.setAttribute("i_esame", e);
-            request.setAttribute("title", "view_esame");
-        } else {
+            if (!e.isNew() || u.getType() != UtenteType.SSP) { 
+                request.setAttribute("i_esame", e);
+                request.setAttribute("title", "view_esame");
+            } else {
+                request.setAttribute("title", "compila_esame");//se l'esame è nuovo e io sono SSP
+            }
+        }
+        else{ //sono nel caso di un errore generato da doPost, allora mostro l'errore coi dati già inseriti
+            e = (Esame) request.getAttribute("i_esame");
             request.setAttribute("title", "compila_esame");
         }
 
@@ -197,46 +215,67 @@ public class EsamiServlet extends HttpServlet {
             contextPath += "/";
 
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
-        Esame v = Esame.loadFromHttpRequest(request, u);
+        Esame v = null;
 
         boolean inserito = false, updateData = false;
         String data_selez = request.getParameter("datepicker");
         try {
-            // se un utente sta scegliendo la data della visita specialistica...
-            if (u.getType() == UtenteType.PAZIENTE && data_selez != null) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    sdf.setLenient(false);
-                    sdf.parse(data_selez);// restituisce una "ParseException" se non e' valida
-                } catch (ParseException ex) {
-                    throw new ServletException("invalid_date_exception");
-                }
-                inserito = userDao.Paziente().setDataEsame(v.getId_esame(), data_selez);
-                updateData = true;
-            } else {
+            
+            if (request.getRequestURI().indexOf("new_esami") > 0){ //Il Medico prescrive un esame
                 if (u.getType() != UtenteType.MEDICO) throw new DaoException("Operazione non ammessa");
-                inserito = userDao.Medico().addEsame(v);
-                
-            Boolean uploadFile = request.getPart("file").getSize() > 0;
-            String updateFotoPath = "";
-
-            // se c'è un upload del file selezionato...
-            if (uploadFile) {
-                // gets absolute path of the web application
-                String applicationPath = request.getServletContext().getRealPath("");
-                String relativePath = getServletContext().getAttribute("PHOTOS_DIR").toString();//getServletContext().getAttribute("PHOTOS_DIR").toString();
-                String userPath = u.getUsername();
-                // constructs path of the directory to save uploaded file
-                String uploadFilePath = applicationPath + relativePath + File.separator + userPath;
-                File file = new File(uploadFilePath);
-                if (!file.exists()) file.mkdirs();
-
-                Part filePart = request.getPart("file");
-                //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix. (to get only filename)
-                updateFotoPath = uploadFilePath + File.separator + "aaaa";
-
-                filePart.write(updateFotoPath);
+                v = Esame.loadFromHttpRequestNew(request, u);
+                inserito = userDao.Medico().addEsame(v); 
+                System.out.println("addEsame by MEDICO = " + inserito);
             }
+            else if (request.getRequestURI().indexOf("compila_esame") > 0){ //SSP compila i dati dell' esame appena fatto oppire l'utente seleziona una data_esame
+                v = Esame.loadFromHttpRequestCompila(request, u);
+                
+                if (u.getType() == UtenteType.PAZIENTE && request.getParameter("datepicker") != null) {
+                    try{
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        sdf.setLenient(false);
+                        sdf.parse(data_selez);// restituisce una "ParseException" se non e' valida
+                    } catch (ParseException ex) {
+                        throw new ServletException("invalid_date_exception");
+                    }
+                    inserito = userDao.Paziente().setDataEsame(v.getId(), data_selez);
+                    updateData = true;
+                } else {
+                    if (u.getType() != UtenteType.SSP) throw new DaoException("Operazione non ammessa");
+                    
+                    // parte upload file
+                    String uploadFile = request.getParameter("isFile");
+                    if (uploadFile != null && request.getParameter("id_paziente") != null && request.getPart("file").getSize() > 0) {
+                        // se c'è un upload del file selezionato...
+                        String updateFotoPath = "";
+                        Integer id_paziente = Integer.valueOf(request.getParameter("id_paziente"));
+                        // gets absolute path of the web application
+                        String applicationPath = request.getServletContext().getRealPath("");
+                        String relativePath = getServletContext().getAttribute("PHOTOS_DIR").toString();//getServletContext().getAttribute("PHOTOS_DIR").toString();
+                        String userPath = userDao.getUsername(id_paziente);
+                        // constructs path of the directory to save uploaded file
+                        String uploadFilePath = applicationPath + relativePath + File.separator + userPath;
+
+                        Part filePart = request.getPart("file");
+                        
+                        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix. (to get only filename)
+                        String extension = "";
+                        int i = fileName.lastIndexOf('.');
+                        if (i > 0) {
+                            extension = fileName.substring(i+1);
+                        }
+                        updateFotoPath = uploadFilePath + File.separator;
+                        Path path = Paths.get(uploadFilePath);
+                        Files.createDirectories(path);
+                        
+                        updateFotoPath += v.getId() + "." + extension;
+                        
+                        filePart.write(updateFotoPath);
+                    }
+                    
+                    inserito = userDao.Ssp().erogaEsame(v);
+                    updateData = false;
+                }
             }
         } catch (DaoException ex) {
             System.out.println("Errore addEsame (EsamiServlet) -->\n" + ex.getMessage() + "\n\n");
@@ -249,24 +288,34 @@ public class EsamiServlet extends HttpServlet {
                         "Gentile utente.<br/>"
                         + "Un esame con data " + ((updateData ? data_selez : v.getTime_esame()) != null ? ((new SimpleDateFormat("dd/MM/yyyy")).format(updateData ? data_selez : v.getTime_esame())) 
                                 : "*da definire*") + " è stato inserito o modificato nella tua scheda paziente."
-                        + "<br/>"
-                        + "Controlla i tuoi esami per visualizzare i dettagli."
-                        + "<br/>" + "<br/>"
-                        + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
+                                + "<br/>"
+                                + "Controlla i tuoi esami per visualizzare i dettagli."
+                                + "<br/>" + "<br/>"
+                                + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
             } catch (Exception ex) {
                 // Ricky; nascondo all'utente se non viene inviata alla mail
                 Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (updateData)// paziente
+            if (updateData || u.getType() == UtenteType.SSP)// paziente | ssp
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/esami"));
             else // medico
-                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/esami?id_paziente=" + v.getId_paziente() + "&r"));
+                response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/esami?id_paziente=" + v.getId_paziente()));
             return;
         }
-
-
-        //request.setAttribute("i_anamnesi", v.getAnamnesi());
-        request.setAttribute("errore", "errore");
-        manageNewEsame(request, response);
+        else{
+            try {
+                v.setNome_esame(userDao.getNomeEsameById(v.getId_esame()));
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException("esame_not_found");
+            }
+            
+            request.setAttribute("i_esame", v);
+            request.setAttribute("errore", "errore");
+            if(request.getRequestURI().indexOf("new_esami") > 0)
+                manageNewEsame(request, response);
+            else if(request.getRequestURI().indexOf("compila_esame") > 0)
+                manageCompilaEsame(request, response, u);
+        }
     }
 }

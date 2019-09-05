@@ -70,7 +70,7 @@ public class LoginServlet extends HttpServlet {
         // cerca i cookie di "ricordami"
         for (int i = 0; i < cookies.length && token_remember_me == null; i++) {
             Cookie c = cookies[i];
-            if (c.getName().equals("user_token")) {
+            if (c.getName().equals("user_token") && !c.getValue().equals("")) {
                 ck = c;
                 token_remember_me = c.getValue();
                 // cerco l'id corrispondente

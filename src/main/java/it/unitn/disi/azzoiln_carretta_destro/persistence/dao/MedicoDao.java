@@ -72,6 +72,13 @@ public interface MedicoDao{
      * @throws DaoException 
      */
     public boolean isMyPatient(Integer id_paziente, Integer id_medico) throws DaoException;
+    
+    /**
+     * Come precedente ma basandosi su Username
+     * @param foto_utente
+     * @return 
+     */
+    public boolean isMyPatient(String foto_utente, Integer id_medico) throws DaoException;
 
     
     /**
@@ -87,4 +94,6 @@ public interface MedicoDao{
     public ArrayList<ArrayList<Integer>> getStatsEsami(int id_medico) throws DaoException;
 
     public Integer getNumPazienti(int id_medico) throws DaoException;
+
+    
 }

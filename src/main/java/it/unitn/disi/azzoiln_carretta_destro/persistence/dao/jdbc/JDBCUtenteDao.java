@@ -268,7 +268,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         Utente ret = null;
         int res = -3;
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia left join comuni c on c.id = u.comune WHERE id = ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT u.*, p.nome as nome_provincia, c.nome as nome_comune FROM utenti u inner join province p on p.id = u.provincia left join comuni c on c.id = u.comune WHERE u.id = ?")) {
             stm.setInt(1, id);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
@@ -482,6 +482,30 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         return ret;
     }
 
+    /**
+     * Ottiene l' elenco dei tickets ordinati in ordine cronologico inverso
+     *
+     * @param id_paziente
+     * @return Elenco dei tickets ordinati in ordine cronologico inverso
+     */
+    @Override
+    public List<Ticket> getTickets(Integer id_paziente) throws DaoException {
+        if (id_paziente == null || id_paziente <= 0) throw new IdNotFoundException("id_paziente");
+        List<Ticket> ret = new LinkedList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT t.* FROM ticket t WHERE t.id_paziente = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Ticket t = new Ticket(rs.getInt("id"), rs.getFloat("costo"), rs.getString("tipo").charAt(0), rs.getDate("time"), rs.getInt("id_paziente"));
+                ret.add(t);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+
 
     /**
      * Ottiene l' elenco degli esami del paziente ordinati in ordine cronologico inverso
@@ -506,6 +530,7 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         }
         return ret;
     }
+
 
     @Override
     public Farmaci getFarmaci() throws DaoException {
@@ -649,8 +674,41 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
     }
 
     @Override
-    public Ricetta getRicetta(int arg0, int arg1) throws DaoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Ricetta getRicetta(int id_paziente, int id_ricetta) throws DaoException {
+        if (id_ricetta <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        Ricetta ret = null;
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione WHERE id_paziente = ? AND id_prescrizione = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_ricetta);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = new Ricetta(rs.getInt("id_prescrizione"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getInt("id_farmaco"), rs.getString("nome"), rs.getFloat("costo"), rs.getShort("quantita"), rs.getDate("time_vendita"), rs.getDate("time"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+
+    @Override
+    public Ticket getTicket(int id_paziente, int id_ticket) throws DaoException {
+        if (id_ticket <= 0 || id_paziente <= 0) throw new IdNotFoundException("ids_error");
+        Ticket ret = null;
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT t.* FROM ticket t WHERE t.id_paziente = ? AND t.id = ? ORDER BY time DESC")) {
+            stm.setInt(1, id_paziente);
+            stm.setInt(2, id_ticket);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = new Ticket(rs.getInt("id"), rs.getFloat("costo"), rs.getString("tipo").charAt(0), rs.getDate("time"), rs.getInt("id_paziente"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
     }
 
     @Override
@@ -663,6 +721,61 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 ret = rs.getDouble("costo");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+    
+    
+    @Override
+    public String getNomeFarmacoById(Integer id_farmaco) throws DaoException{
+        if (id_farmaco <= 0) return null; 
+        String ret = "";
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM farmaci WHERE id = ?")) {
+            stm.setInt(1, id_farmaco);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = rs.getString("nome");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+    
+    @Override
+    public String getNomeEsameById(Integer id_esame) throws DaoException{
+        if (id_esame <= 0) return null; 
+        String ret = "";
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM esami_prescrivibili WHERE id = ?")) {
+            stm.setInt(1, id_esame);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = rs.getString("nome");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+    
+    @Override
+    public String getNomeVisitaSpecById(Integer id_visita_spec) throws DaoException{
+        if (id_visita_spec <= 0) return null; 
+        String ret = "";
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM visite_specialistiche WHERE id = ?")) {
+            stm.setInt(1, id_visita_spec);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                ret = rs.getString("nome");
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage() + "\n\n");

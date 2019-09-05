@@ -77,13 +77,29 @@ public class VisitaSpecialistica extends Prescrizione{
     public String getNome_visita() {
         return nome_visita;
     }
+    
+    public void setNome_visita(String nome) {
+        this.nome_visita = nome;
+    }
 
     public String getNome_medico_specialista() {
         return nome_medico_specialista;
     }
     
+    /**
+     * 
+     * @return T se la visita_spec non è ancora stata completata
+     */
     public boolean isNew(){
         return id_medico_specialista <= 0 || id_ticket <= 0;
+    }
+    
+    /**
+     * 
+     * @return T se la data della visita non è ancor a stata fissata
+     */
+    public boolean isDaFissare(){
+        return time_visita == null;
     }
     
     

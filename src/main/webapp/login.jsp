@@ -1,7 +1,7 @@
 <%@ include file="global/common.jsp" %>
 <html>
 <head>
-    <title>Login</title>
+    <title><fmt:message key="login"/></title>
 
     <%@include file="global/head.jsp" %>
     <%-- Questo path rimane uguale perchè valutato a compile time--%>
@@ -38,7 +38,9 @@
 <form method="GET" action="login.handler" class="form-login text-center ">
     <img src="assets/logo.svg" width="100" height="100">
     <div class="display-4 mb-4 pb-1 font-weight-normal">
-        <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
+        <h1>
+            <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
+        </h1>
     </div>
     <c:if test="${not empty param.login_error}">
         <div class="alert alert-danger" role="alert">

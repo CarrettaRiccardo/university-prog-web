@@ -8,6 +8,8 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.*;
 import it.unitn.disi.azzoiln_carretta_destro.utility.Common;
 import it.unitn.disi.azzoiln_carretta_destro.utility.SendEmail;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +47,9 @@ public class RicetteServlet extends HttpServlet {
 
         if (request.getRequestURI().indexOf("new_ricette") > 0) {  //voglio accedere alla pagina per creare una nuova Ricetta
             manageNewRicetta(request, response, u);
+            return;
+        } else if (request.getRequestURI().indexOf("dettagli_ricetta") > 0) {
+            manageRicettaDetails(request, response, u);
             return;
         }
 
@@ -85,25 +91,35 @@ public class RicetteServlet extends HttpServlet {
 
 
     /**
-     * Metodo per gestire la richiesta per visualizzare il riassunto della ricetta. Si chiama 'compila'
-     * semplicemente per seguire lo "standard" delle altre pagine, per avere una struttura un pochino più uniforme
+     * Metodo per gestire la richiesta per visualizzare il riassunto della ricetta.
+     *
      * @param request
      * @param response
-     * @param u
      * @throws ServletException
      * @throws IOException
      */
-    /*private void manageCompilaRicetta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id_paziente = -1, id_ricetta = -1;
+    private void manageRicettaDetails(HttpServletRequest request, HttpServletResponse response, Utente u) throws ServletException, IOException {
+        int id_paziente, id_ricetta;
+        String CF_paziente;
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";
+
         if (request.getParameter("id_paziente") == null || request.getParameter("id_ricetta") == null)
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
 
         try {
-            id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
-            if (id_paziente <= 0) throw new NumberFormatException();
+            if (u.getType() == UtenteType.PAZIENTE) {
+                id_paziente = u.getId();
+                CF_paziente = ((Paziente) u).getCf();
+            } else if (u.getType() == UtenteType.MEDICO) {
+                id_paziente = Integer.parseInt(request.getParameter("id_paziente"));
+                if (id_paziente <= 0) throw new NumberFormatException();
+                Paziente paz = (Paziente) userDao.getByPrimaryKey(id_paziente, "paziente");
+                CF_paziente = paz.getCf();
+            } else {
+                throw new ServletException("id_utente_not_valid");
+            }
             id_ricetta = Integer.parseInt(request.getParameter("id_ricetta"));
             if (id_ricetta <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
@@ -111,33 +127,30 @@ public class RicetteServlet extends HttpServlet {
         } catch (Exception e) {
             throw new ServletException();
         }
-        
+
         Ricetta r = null;
         try {
             r = userDao.getRicetta(id_paziente, id_ricetta);
         } catch (DaoException ex) {
             System.out.println(ex.getMessage());
             throw new ServletException(ex.getMessage());
+        } finally {
+            if (r == null) throw new ServletException("ricetta_not_found");
         }
-        finally{
-            if(r == null) throw new ServletException("visita_spec_not_found");
-        }
-        
-        request.setAttribute("i_ricetta", r);
-        request.setAttribute("title", "view_visita_specialistica"); 
-        request.setAttribute("page", "compila_visita_spec");
-        request.setAttribute("id_visita", request.getParameter("id_visita"));
-        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
 
-        Paziente paz = null;
-        try {
-            paz = (Paziente) userDao.getByPrimaryKey(id_paziente, "paziente");
-        } catch (DaoException ex) {
-            throw new ServletException(ex.getMessage());
-        }
-        request.setAttribute("paziente", paz);
+        // Generazione QRcode in base64
+        byte[] qrcodeRaw = QRCode.from(request.getRequestURL().toString() + "?" + request.getQueryString()).withSize(250, 250).to(ImageType.PNG).stream().toByteArray();
+        String qrcode = "data:image/png;base64, ".concat(Base64.getEncoder().encodeToString(qrcodeRaw));
+
+        request.setAttribute("qrcode", qrcode);
+        request.setAttribute("ricetta", r);
+        request.setAttribute("CF_paziente", CF_paziente);
+        request.setAttribute("title", "view_ricetta");
+        request.setAttribute("page", "dettagli_ricetta");
+
+        RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
         rd.forward(request, response);
-    }*/
+    }
 
 
     /**
@@ -205,23 +218,32 @@ public class RicetteServlet extends HttpServlet {
             try {
                 SendEmail.Invia(userDao.getUsername(r.getId_paziente()), "Una nuova ricetta e' stata inserita",
                         "Gentile utente.<br/>"
-                        + "Una nuova ricetta è stata aggiunta nella tua scheda dal tuo medico di base."
-                        + "<br/>"
-                        + "Controlla le tue ricette per visualizzare i dettagli."
-                        + "<br/>" + "<br/>"
-                        + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
+                                + "Una nuova ricetta è stata aggiunta nella tua scheda dal tuo medico di base."
+                                + "<br/>"
+                                + "Controlla le tue ricette per visualizzare i dettagli."
+                                + "<br/>" + "<br/>"
+                                + "<div style=\"position: absolute; bottom: 5px; font-size: 11px\">Questa è una mail di test ed è generata in modo automatico dal progetto SanityManager</div>");
             } catch (Exception ex) {
                 // Ricky; nascondo all'utente se non viene inviata alla mail
                 Logger.getLogger(VisiteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/ricette?id_paziente=" + r.getId_paziente() + "&r"));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/ricette?id_paziente=" + r.getId_paziente()));
             return;
         }
-
-        request.setAttribute("i_ricetta", r);
-        request.setAttribute("errore", "errore");  //setto parametro per mostrare popup-errore
-
-        manageNewRicetta(request, response, u);  //uso il metodo già definire per gestire il redirect a new_ricetta settando dei parametri aggiuntivi
+        else{
+            try {
+                r.setNomeFarmaco(userDao.getNomeFarmacoById(r.getId_farmaco()));
+            } catch (DaoException ex) {
+                System.out.println(ex.getMessage());
+                throw new ServletException("famraco_not_found");
+            }
+            request.setAttribute("i_ricetta", r);
+            request.setAttribute("errore", "errore");  //setto parametro per mostrare popup-errore
+            
+            if(request.getRequestURI().indexOf("new_ricette") > 0)
+                manageNewRicetta(request, response, u);  //uso il metodo già definire per gestire il redirect a new_ricetta settando dei parametri aggiuntivi
+            else throw new ServletException("error_message_other");
+        }
     }
 
 

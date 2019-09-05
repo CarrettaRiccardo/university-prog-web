@@ -8,13 +8,13 @@
     <thead class="bg-gradient-1 shadow-sm text-white">
     <tr>
         <th scope="col"></th>
-        <th scope="col">Cognome</th>
-        <th scope="col">Nome</th>
+        <th scope="col"><fmt:message key="cognome"/></th>
+        <th scope="col"><fmt:message key="nome"/></th>
     </tr>
     </thead>
     <tbody>
     <c:forEach items="${medici}" var="medico">
-        <tr class='clickable-row' data-href='app/${u_url}/dettagli_utente/stats?id_medico=${medico.getId()}'>
+        <tr data-href='app/${u_url}/dettagli_utente/stats?id_medico=${medico.getId()}'>
             <th scope="row"><img width="45" height="40" class="rounded-circle"
                                  onerror="this.onerror=null; this.src='assets/default.jpg'"
                                  src="${PHOTOS_DIR}${medico.getFoto()}"/></th>

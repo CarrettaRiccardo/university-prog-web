@@ -11,18 +11,22 @@
 <form action="app/${u_url}/new_visite_specialistiche" method="POST">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="paziente">Paziente</label>
+            <label for="paziente"><fmt:message key="paziente"/></label>
             <input type="email" class="form-control" id="paziente"
                    placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
         </div>
     </div>
     <div class="form-group">
-        <label for="autocomplete">Visita specialistica</label>
-        <select id="autocomplete" name="id_visita" class="form-control select2-allow-clear" required></select>
-        <small class="form-text text-muted">Click the input text or space to start to digit.</small>
+        <label for="autocomplete"><fmt:message key="visita_spec"/></label>
+        <select  <c:if test="${empty i_visita}"> id="autocomplete" </c:if> name="id_visita" class="form-control select2-allow-clear" required>
+            <c:if test="${not empty i_visita}">
+                <option selected value="${i_visita.getId_visita_spec()}"> ${i_visita.getNome_visita()} </option>
+            </c:if>
+        </select>
+        <small class="form-text text-muted"><fmt:message key="suggest_select2"/></small>
     </div>
     <input type="hidden" name="id_paziente" value="${paziente.getId()}">
-    <button type="submit" class="btn btn-primary">Conferma</button>
+    <button type="submit" class="btn btn-primary"><fmt:message key="conferma"/></button>
 </form>
 
 <c:if test="${errore ne null}">
