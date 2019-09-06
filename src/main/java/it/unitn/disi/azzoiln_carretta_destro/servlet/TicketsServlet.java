@@ -41,6 +41,7 @@ public class TicketsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
 
         if (request.getRequestURI().indexOf("dettagli_ticket") > 0) {
@@ -58,9 +59,6 @@ public class TicketsServlet extends HttpServlet {
             if (u.getType() == UtenteType.PAZIENTE) {
                 request.setAttribute("title", "Tickets_paziente"); //per personalizzare il titolo che viene mostrato
                 tickets = userDao.getTickets(u.getId());
-                for (Ticket t : tickets) {
-                    System.out.println("Time: " + t.getTime().toString());
-                }
             } else { // Solo paziente può accedere ai propri tickets
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;

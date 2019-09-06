@@ -43,6 +43,7 @@ public class RicetteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
 
         if (request.getRequestURI().indexOf("new_ricette") > 0) {  //voglio accedere alla pagina per creare una nuova Ricetta
@@ -200,6 +201,7 @@ public class RicetteServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";

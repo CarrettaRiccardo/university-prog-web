@@ -34,6 +34,7 @@ public class PrenotazioniServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         request.setAttribute("title", "Prenotazioni");
         request.setAttribute("page", "prenotazioni");
 

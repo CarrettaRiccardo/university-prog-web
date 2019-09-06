@@ -41,6 +41,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         if (request.getRequestURI().indexOf("new_visite_specialistiche") > 0) {  //voglio accedere alla pagina per creare una nuova Visita
             manageNewVisita(request, response);
             return;
@@ -203,6 +204,7 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         String contextPath = getServletContext().getContextPath();
         if (!contextPath.endsWith("/"))
             contextPath += "/";

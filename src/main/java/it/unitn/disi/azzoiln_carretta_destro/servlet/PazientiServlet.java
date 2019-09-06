@@ -34,6 +34,7 @@ public class PazientiServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         Utente u = (Utente) request.getSession(false).getAttribute("utente");
         List<Paziente> pazienti = null;
 
