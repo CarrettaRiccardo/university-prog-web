@@ -349,8 +349,8 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
         try (PreparedStatement stm = CON.prepareStatement(  "SELECT CAST(time as DATE) as time, COUNT(*) as tot\n" +
                                                             "FROM prenotazione\n" +
                                                             "WHERE id_medico = ? AND YEAR(time) = YEAR(NOW()) \n" +
-                                                            "GROUP BY time\n" +
-                                                            "ORDER BY time")) {
+                                                            "GROUP BY CAST(time as DATE)\n" +
+                                                            "ORDER BY CAST(time as DATE)")) {
             stm.setInt(1, id_medico);
             ResultSet rs = stm.executeQuery();
                         
