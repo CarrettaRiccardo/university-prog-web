@@ -265,8 +265,10 @@ public class VisiteSpecialisticheServlet extends HttpServlet {
             }
             if (updateData)// paziente
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/visite_specialistiche"));
-            else // medico_spec
+            else{ // medico_spec
+                request.getSession(false).setAttribute("success", "1");
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/visite_specialistiche?id_paziente=" + vs.getId_paziente()));
+            }
             return;
         }
         else{

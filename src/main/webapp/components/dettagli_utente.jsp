@@ -96,7 +96,8 @@
     </div>
 </div>
 
-<c:if test="${param.r ne null}">
+<c:if test="${sessionScope.success ne null}">
+    <c:remove var="success" scope="session" />
     <div class="alert alert-success alert-dismissible fade show position-fixed"
          style="right: 20px; bottom: 0; z-index: 2" role="alert">
         <fmt:message key="op_successo"/>

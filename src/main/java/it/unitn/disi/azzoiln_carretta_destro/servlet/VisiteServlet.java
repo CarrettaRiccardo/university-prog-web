@@ -78,6 +78,7 @@ public class VisiteServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             throw new ServletException("id_utente_not_valid");
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new ServletException();
         }
     }
@@ -197,6 +198,7 @@ public class VisiteServlet extends HttpServlet {
                 // Ricky; nascondo all'utente se non viene inviata alla mail
                 System.out.println(ex.getMessage());
             }
+            request.getSession(false).setAttribute("success", "1");
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/visite?id_paziente=" + v.getId_paziente()));
             return;
         }

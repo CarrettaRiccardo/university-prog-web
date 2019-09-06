@@ -63,7 +63,12 @@ public class VisitaSpecialistica extends Prescrizione{
     }
     
     public String getAnamnesiShort() {
-        return anamnesi != null ? anamnesi.substring(0, 20) + ".." : "";
+        if(anamnesi == null)
+            return "";
+        if(anamnesi.length() <= 20)
+            return anamnesi;
+        else 
+            return anamnesi.substring(0, 20) + "..";
     }
     
     public String getCura() {
