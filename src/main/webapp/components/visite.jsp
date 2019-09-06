@@ -11,7 +11,7 @@
     <c:forEach items="${visite}" var="visita">
         <tr data-href='app/${u_url}/new_visite?id_paziente=${id_paziente}&id_visita=${visita.getId()}'>
             <td scope="row"><fmt:formatDate value="${visita.getTime()}" pattern="dd/MM/yyyy"/></td>
-            <td><c:out value="${visita.getAnamnesiShort()}"/></td>
+            <td>${visita.getAnamnesiShort()}</td>
         </tr>
     </c:forEach>
     </tbody>

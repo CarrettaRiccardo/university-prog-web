@@ -257,8 +257,10 @@ public class EsamiServlet extends HttpServlet {
             }
             if (updateData)// paziente | ssp
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/esami"));
-            else // medico
+            else{ // medico
+                request.getSession(false).setAttribute("success", "1");
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/dettagli_utente/esami?id_paziente=" + v.getId_paziente()));
+            }
             return;
         }
         else{
