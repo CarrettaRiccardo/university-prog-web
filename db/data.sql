@@ -47,7 +47,7 @@ VALUES (1, 1, 3, '2019-08-19 20:05:27'),
 /*************** VISITE SPECIALISTICHE ***********************/
 TRUNCATE table visita_specialistica;
 INSERT INTO visita_specialistica
-VALUES (3, 2, 1, 1, 'Allora mi è sembrato di capire che ', 'Mangiare sano', '2019-08-20 22:00:00'),
+VALUES (3, 2, 1, 1, 'Allora mi è ò ù sembrato di capire che ', 'Mangiare sano', '2019-08-20 22:00:00'),
        (1, 2, 1, 1,
         'Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...Il paziente presenta ...',
         'Si', '2019-08-25 20:09:27');

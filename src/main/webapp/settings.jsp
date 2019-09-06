@@ -147,11 +147,11 @@
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
                             <input type="text" class="form-control" disabled
-                                   value="<c:out value="${utente.getLaurea()}"></c:out>" placeholder="Laurea"/>
+                                   value="<c:out value="${utente.getLaurea()}"/>" placeholder="Laurea"/>
                         </div>
                         <div class="col col-12 col-lg-6 py-1">
                             <input type="text" class="form-control" disabled
-                                   value="<c:out value="${utente.getInizioCarriera()}"></c:out>"
+                                   value="<fmt:formatDate value="${utente.getInizioCarriera()}" pattern="dd/MM/yyyy"/>"
                                    placeholder="Inizio Carriera"/>
                         </div>
                     </div>

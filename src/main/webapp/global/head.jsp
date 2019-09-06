@@ -160,7 +160,6 @@
                         e.stopPropagation();
                     } else {
                         // Altrimenti ho premuto sulla riga della tabella, chiudo eventuali dettagli aperti
-                        console.log(e.target.parentNode);
                         $('tr.child').hide();
                         $('tr.parent').removeClass('parent');
                     }
