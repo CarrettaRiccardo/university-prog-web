@@ -51,7 +51,7 @@ public class MediciSpecialistiServlet extends HttpServlet {
             request.setAttribute("page", "medici_specialisti");
             request.setAttribute("mediciSpecialsti", mediciSpecialsti);
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
-            rd.forward(request, response);
+            rd.include(request, response);
         } catch (IdNotFoundException e) {
             throw new ServletException(e.getMessage());
         } catch (DaoException e) {

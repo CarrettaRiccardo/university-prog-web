@@ -82,7 +82,7 @@ public class DettagliUtenteServlet extends HttpServlet {
         if (((String) request.getAttribute("sezioni_dettagli")).contains(subpage)) {
             request.setAttribute("subpage", subpage);
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
-            rd.forward(request, response);
+            rd.include(request, response);
         } else {
             throw new ServletException("error_code_404");
         }
