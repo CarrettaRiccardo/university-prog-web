@@ -4,6 +4,13 @@
 
 <%@ include file="../global/common.jsp" %>
 
+<c:if test="${not empty sessionScope.choose}">
+    <c:remove var="choose" scope="session"/>
+    <script type="text/javascript">
+        alert('<fmt:message key="alert_cambio_modalita"/>');
+    </script>
+</c:if>
+
 <table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-1 shadow-sm text-white">
     <tr>

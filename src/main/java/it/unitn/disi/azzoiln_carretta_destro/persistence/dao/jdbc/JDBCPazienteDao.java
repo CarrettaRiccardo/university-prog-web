@@ -362,18 +362,7 @@ class JDBCPazienteDao extends JDBCDao<Paziente,Integer> implements PazienteDao{
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             throw new DaoException("db_error", ex);
-        }  
-        
-        /*System.out.println("STAMPO STATS_ESAMI");
-        int i = 0;
-        for(ArrayList<Integer> m : ret2){
-            System.out.print("Mese:" + i);
-            for(Integer m2 : m){
-                System.out.print(" -> " + m2);
-            }
-            System.out.println("");
-            i++;
-        }*/
+        }
         return ret2;
     }
 }

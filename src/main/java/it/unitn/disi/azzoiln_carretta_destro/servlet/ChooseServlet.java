@@ -48,7 +48,8 @@ public class ChooseServlet extends HttpServlet {
 
         Utente u = (Utente) session.getAttribute("utente");
 
-        if (u instanceof Medico || u instanceof MedicoSpecialista || u instanceof Ssp || u instanceof Paziente) {
+        if (u instanceof Medico || u instanceof MedicoSpecialista || u instanceof Ssp || u instanceof Paziente){ //per cambiare modalità deve fare il logout
+            request.getSession(false).setAttribute("choose", "1");
             response.sendRedirect(response.encodeRedirectURL(contextPath + "app/home"));
             return;
         }
@@ -102,12 +103,6 @@ public class ChooseServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    }
-
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
     }
 
 }
