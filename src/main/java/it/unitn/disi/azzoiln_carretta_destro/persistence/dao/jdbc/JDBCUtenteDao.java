@@ -711,6 +711,38 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         return ret;
     }
 
+
+    /**
+     * Ritorna il nome della  visita_spec/esame collegato al ticket
+     *
+     * @param id_ticket
+     * @return testo con tipo esame/visita_spec
+     * @throws DaoException
+     */
+    @Override
+    public String getTipoTicket(int id_ticket) throws DaoException {
+        if (id_ticket <= 0) throw new IdNotFoundException("ids_error");
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM esame e INNER JOIN esami_prescrivibili ep on e.id_esame = ep.id WHERE e.id_ticket = ?")) {
+            stm.setInt(1, id_ticket);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nome");
+            }
+            // Se non trovo il ticket tra gli esami, provo con visite_spec
+            PreparedStatement stm2 = CON.prepareStatement("SELECT nome as nome_visita FROM visita_specialistica v INNER JOIN visite_specialistiche vs on v.id_visita_spec = vs.id WHERE v.id_ticket = ?");
+            stm.setInt(1, id_ticket);
+            rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nome");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return null;
+    }
+
     @Override
     public Double getImportoTicket(int id_ticket) throws DaoException {
         if (id_ticket <= 0) return null; //non ancora creato
@@ -728,11 +760,11 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         }
         return ret;
     }
-    
-    
+
+
     @Override
-    public String getNomeFarmacoById(Integer id_farmaco) throws DaoException{
-        if (id_farmaco <= 0) return null; 
+    public String getNomeFarmacoById(Integer id_farmaco) throws DaoException {
+        if (id_farmaco <= 0) return null;
         String ret = "";
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM farmaci WHERE id = ?")) {
@@ -747,10 +779,10 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         }
         return ret;
     }
-    
+
     @Override
-    public String getNomeEsameById(Integer id_esame) throws DaoException{
-        if (id_esame <= 0) return null; 
+    public String getNomeEsameById(Integer id_esame) throws DaoException {
+        if (id_esame <= 0) return null;
         String ret = "";
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM esami_prescrivibili WHERE id = ?")) {
@@ -765,10 +797,10 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
         }
         return ret;
     }
-    
+
     @Override
-    public String getNomeVisitaSpecById(Integer id_visita_spec) throws DaoException{
-        if (id_visita_spec <= 0) return null; 
+    public String getNomeVisitaSpecById(Integer id_visita_spec) throws DaoException {
+        if (id_visita_spec <= 0) return null;
         String ret = "";
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM visite_specialistiche WHERE id = ?")) {

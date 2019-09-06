@@ -18,17 +18,18 @@
                     onclick="printClick()"><fmt:message key="stampa_ticket"/></button>
         </div>
 
+        <c:choose>
+            <c:when test="${ ticket.getTipo() == 'v'.charAt(0) }"><fmt:message key="visita_spec" var="tipo"/></c:when>
+            <c:when test="${ ticket.getTipo() == 'e'.charAt(0) }"><fmt:message key="esame" var="tipo"/></c:when>
+        </c:choose>
+
         <div class="col col-12 col-lg pl-lg-4 mt-3 mt-lg-0">
             <h5 class="text-primary"><fmt:message key="dati_ticket"/></h5>
             <div class="pb-1"><fmt:message key="codice_id"/>: <b>#${ticket.getId()}</b></div>
             <div class="pb-1"><fmt:message key="data_pagamento"/>: <b><fmt:formatDate value="${ticket.getTime()}" pattern="dd/MM/yyyy"/></b></div>
             <div class="pb-1"><fmt:message key="costo"/>: <b><fmt:formatNumber value="${ticket.getCosto()}" type="currency"/></b></div>
-            <div class="pb-1"><fmt:message key="tipo_prestazione"/>: <b>
-                <c:choose>
-                    <c:when test="${ ticket.getTipo() == 'v'.charAt(0) }"><fmt:message key="visita_spec"/></c:when>
-                    <c:when test="${ ticket.getTipo() == 'e'.charAt(0) }"><fmt:message key="esame"/></c:when>
-                </c:choose>
-            </b></div>
+            <div class="pb-1"><fmt:message key="tipo_prestazione"/>: <b>${tipo}</b></div>
+            <div class="pb-1"><fmt:message key="tipologia"/> ${fn:toLowerCase(tipo)}: <b>${dettagli_tipo}</b></div>
         </div>
     </div>
 </div>

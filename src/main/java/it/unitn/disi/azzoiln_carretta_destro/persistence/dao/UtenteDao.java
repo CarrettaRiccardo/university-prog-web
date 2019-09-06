@@ -153,7 +153,6 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      */
     public List<Esame> getEsami(Integer id_paziente) throws DaoException;
 
-    
 
     /**
      * @return Elenco di tutti i farmaci disponibili
@@ -231,6 +230,15 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      */
     public Ticket getTicket(int id_paziente, int id_ticket) throws DaoException;
 
+    /**
+     * Ritorna il nome della  visita_spec/esame collegato al ticket
+     *
+     * @param id_ticket
+     * @return testo con tipo esame/visita_spec
+     * @throws DaoException
+     */
+    public String getTipoTicket(int id_ticket) throws DaoException;
+
 
     /**
      * Non è sufficiente prendere il vallre dalla classe Ticket perchè il valore potrebbe cambiare nel tempo
@@ -240,11 +248,11 @@ public interface UtenteDao extends Dao<Utente, Integer> {
      * @throws DaoException
      */
     public Double getImportoTicket(int id_ticket) throws DaoException;
-    
-    
+
+
     public String getNomeFarmacoById(Integer id_farmaco) throws DaoException;
 
     public String getNomeEsameById(Integer id_esame) throws DaoException;
-    
+
     public String getNomeVisitaSpecById(Integer id_visita_spec) throws DaoException;
 }

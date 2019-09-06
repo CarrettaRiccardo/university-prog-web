@@ -112,8 +112,10 @@ public class TicketsServlet extends HttpServlet {
         }
 
         Ticket t = null;
+        String dettagliTipo = null;
         try {
             t = userDao.getTicket(id_paziente, id_ticket);
+            dettagliTipo = userDao.getTipoTicket(id_ticket);
         } catch (DaoException ex) {
             System.out.println(ex.getMessage());
             throw new ServletException(ex.getMessage());
@@ -127,6 +129,7 @@ public class TicketsServlet extends HttpServlet {
 
         request.setAttribute("qrcode", qrcode);
         request.setAttribute("ticket", t);
+        request.setAttribute("dettagli_tipo", dettagliTipo);
         request.setAttribute("title", "view_ticket");
         request.setAttribute("page", "dettagli_ticket");
         RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
