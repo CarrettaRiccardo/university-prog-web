@@ -58,6 +58,9 @@ public class TicketsServlet extends HttpServlet {
             if (u.getType() == UtenteType.PAZIENTE) {
                 request.setAttribute("title", "Tickets_paziente"); //per personalizzare il titolo che viene mostrato
                 tickets = userDao.getTickets(u.getId());
+                for (Ticket t : tickets) {
+                    System.out.println("Time: " + t.getTime().toString());
+                }
             } else { // Solo paziente può accedere ai propri tickets
                 response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/home"));
                 return;
@@ -66,7 +69,7 @@ public class TicketsServlet extends HttpServlet {
             request.setAttribute("tickets", tickets);
             request.setAttribute("page", "tickets");
             RequestDispatcher rd = request.getRequestDispatcher("/base.jsp");
-            rd.forward(request, response);
+            rd.include(request, response);
         } catch (IdNotFoundException e) {
             throw new ServletException("utente_not_found");
         } catch (DaoException e) {
@@ -114,6 +117,7 @@ public class TicketsServlet extends HttpServlet {
         try {
             t = userDao.getTicket(id_paziente, id_ticket);
         } catch (DaoException ex) {
+            System.out.println(ex.getMessage());
             throw new ServletException(ex.getMessage());
         } finally {
             if (t == null) throw new ServletException("ticket_not_found");

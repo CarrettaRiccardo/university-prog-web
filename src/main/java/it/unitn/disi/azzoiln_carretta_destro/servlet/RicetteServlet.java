@@ -77,7 +77,7 @@ public class RicetteServlet extends HttpServlet {
             request.setAttribute("page", "ricette");
             request.setAttribute("id_paziente", request.getParameter("id_paziente"));
             RequestDispatcher rd = request.getRequestDispatcher(request.getRequestURI().contains("dettagli_utente") ? "/components/ricette.jsp" : "/base.jsp");
-            rd.forward(request, response);
+            rd.include(request, response);
         } catch (IdNotFoundException e) {
             throw new ServletException("utente_not_found");
         } catch (DaoException e) {
