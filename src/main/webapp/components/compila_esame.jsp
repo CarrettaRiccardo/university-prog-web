@@ -18,61 +18,65 @@
       <c:if test="${sessionScope.utente.getType() == UtenteType.SSP and (empty i_esame or not empty errore)}">
           enctype="multipart/form-data"
       </c:if>>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="paziente"><fmt:message key="paziente"/></label>
-      <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
-    </div>
-    <div class="form-group col-md-6">
-      <label for="data" class="col-md-12"><fmt:message key="data"/></label>
-      <c:if test="${not empty id_esame}">
-        <c:if test="${not empty data || not utente.isPaziente()}">
-            <input type="text" class="form-control" width="150px" id="data" placeholder="${data}" readonly>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="paziente"><fmt:message key="paziente"/></label>
+        <input type="email" class="form-control" id="paziente" placeholder="${paziente.getNome()} ${paziente.getCognome()}" readonly>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="data" class="col-md-12"><fmt:message key="data"/></label>
+        <c:if test="${not empty id_esame}">
+          <c:if test="${not empty data || not utente.isPaziente()}">
+              <input type="text" class="form-control" width="150px" id="data" placeholder="${data}" readonly>
+          </c:if>
+          <c:if test="${empty data && utente.isPaziente()}">
+              <div class="col-md-8 float-left">
+                  <input id="datepicker" name="datepicker" class="text-center my-2" autocomplete="off"  />
+              </div>
+              <div class="col-md-4 float-left">
+                  <button class="btn btn-gradient btn-block rounded-pill"><fmt:message key="pren_esame"/></button>
+              </div>
+          </c:if>
         </c:if>
-        <c:if test="${empty data && utente.isPaziente()}">
-            <div class="col-md-8 float-left">
-                <input id="datepicker" name="datepicker" class="text-center my-2" autocomplete="off"  />
-            </div>
-            <div class="col-md-4 float-left">
-                <button class="btn btn-gradient btn-block rounded-pill"><fmt:message key="pren_esame"/></button>
-            </div>
-        </c:if>
-      </c:if>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label for="esito"><fmt:message key="esito"/></label>
-    <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
-    <input type="hidden" class="form-control" name="id_esame" value="${id_esame}"> 
-    <textarea class="form-control" id="esito" name="esito" style="height: 150px"
-              <c:if test="${not empty i_esame and empty errore}">
-                  readonly
-              </c:if>><c:choose><c:when test="${empty i_esame}">Il paziente presenta ...</c:when><c:when test="${! empty i_visita}">${i_visita.getRisultato()}</c:when></c:choose></textarea>
-  </div>
-  <c:if test="${sessionScope.utente.getType() == UtenteType.SSP and (empty i_esame or not empty errore)}">
-    <div class="custom-file d-block my-3" style="width: 250px">
-        <input type="hidden" name="isFile" value="true"/>
-        <input id="photo_upload" type="file" name="file" class="custom-file-input"/>
-        <label id="file_name" class="custom-file-label text-left" for="photo_upload">(NON VA! NON SELEZ) Aggiungi file</label>
-    </div>
-    </c:if><c:choose><c:when test="${empty i_esame}">I risultati per l'esame sono i seguenti :</c:when><c:when test="${! empty i_esame}">${i_esame.getRisultato()}</c:when></c:choose></textarea>
-  </div>
-  
-  
-  <!-- TICKET -->
-    <div class="form-group my-2 mx-3">
-        <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${! empty i_esame}">checked onclick="return false;"</c:if> /><fmt:message key="ticket_di"/>  <!--Se � gi� settato le rendo readonly tramite il return false-->
-        <c:choose>
-            <c:when test="${empty i_esame}">  <fmt:formatNumber value = "${Ticket.costo_esami}" type = "currency" />  </c:when>
-            <c:when test="${not empty importo_ticket}"> <fmt:formatNumber value = "${importo_ticket}" type = "currency" /> </c:when>
-        </c:choose>
-        <fmt:message key="pagato"/>
+        
+    <div class="form-group">
+        <label for="esito"><fmt:message key="esito"/></label>
+        <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
+        <input type="hidden" class="form-control" name="id_esame" value="${id_esame}"> 
+        <textarea class="form-control" id="esito" name="esito" style="height: 150px"
+                  <c:if test="${not empty i_esame and empty errore}">
+                      readonly
+                  </c:if>><c:choose><c:when test="${empty i_esame}">I risultati per l'esame sono i seguenti :</c:when><c:when test="${not empty i_esame}">${i_esame.getRisultato()}</c:when></c:choose></textarea>
     </div>
   
-    <hr>
-  <c:if test="${sessionScope.utente.getType() == UtenteType.SSP and (empty i_esame or not empty errore)}"> <!-- Se sono SSP e sto creando un rapporto visita oppure quello di prima ha fatto errore -->
-    <button type="submit" class="btn btn-primary float-left"><fmt:message key="conferma"/></button>
-  </c:if>
+    <c:if test="${sessionScope.utente.isSsp() and (empty i_esame or not empty errore)}">
+        <div class="custom-file d-block my-3" style="width: 250px">
+            <input type="hidden" name="isFile" value="true"/>
+            <input id="photo_upload" type="file" name="file" class="custom-file-input"/>
+            <label id="file_name" class="custom-file-label text-left" for="photo_upload">(NON VA! NON SELEZ) Aggiungi file</label>
+        </div>
+    </c:if>
+  
+  
+    <!-- TICKET -->
+    <c:if test="${not i_esame.isDaFissare()}">  <!-- Non mostro il Ticket se deve solo selezionare la data -->
+        <div class="form-group my-2 mx-3">
+            <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${not empty i_esame}">checked onclick="return false;"</c:if> /><fmt:message key="ticket_di"/>  <!--Se � gi� settato le rendo readonly tramite il return false-->
+            <c:choose>
+                <c:when test="${empty i_esame}">  <fmt:formatNumber value = "${Ticket.costo_esami}" type = "currency" />  </c:when>
+                <c:when test="${not empty importo_ticket}"> <fmt:formatNumber value = "${importo_ticket}" type = "currency" /> </c:when>
+            </c:choose>
+            <fmt:message key="pagato"/>
+        </div>
+    </c:if>
+  
+    
+    <c:if test="${sessionScope.utente.isSsp() and (empty i_esame or not empty errore)}"> <!-- Se sono SSP e sto creando un rapporto visita oppure quello di prima ha fatto errore -->
+        <hr>
+        <button type="submit" class="btn btn-primary float-left"><fmt:message key="conferma"/></button>
+    </c:if>
 </form>
   
 <c:if test="${errore ne null}">
