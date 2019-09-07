@@ -73,16 +73,15 @@ id_ssp_end = id_ssp_start + len(vals)
 ############# Medici specialisti
 id_medici_spec_start = id_ssp_end + 1
 vals = [(id_medici_spec_start, 'Matteo', 'Destro', '1965-12-12', 'matteo.est@gmail.com', PSWD, 'm', 'DSTMTT65RK154L',
-         'medico_spec', None, 22, 2840, 1, 0, 'Radiologia', 'Radiologia, Unitn', '1989-01-21')]
+         'medico_spec', id_medici_spec_start + N_MEDICI_SPEC + 1, 22, 2840, 1, 0, 'Radiologia', 'Radiologia, Unitn', '1989-01-21')]
 
 for i in range(id_medici_spec_start + 1, id_medici_spec_start + N_MEDICI_SPEC):
     vals.append(gen_utente(i, fake.pybool(), 'medico_spec', i + N_MEDICI_SPEC, True, True))
 
 c.executemany(UTENTI_SQL, vals)
-id_medici_spec_end = id_medici_spec_start + len(vals)
+id_medici_spec_end = id_medici_spec_start + len(vals) - 1
 
 ############# Medici
-# TODO id medico
 id_medici_start = id_medici_spec_end + 1
 vals = [(id_medici_start, 'Riccardo', 'Carretta', '1998-06-23', 'riccardo.carretta@gmail.com', PSWD,
          'm', 'CRTRCR99SK121M', 'medico', id_medici_start + 1, 22, 2840, 1, 1, None, 'Medicina, Unitn', '2000-05-13')]
@@ -91,19 +90,18 @@ for i in range(id_medici_start + 1, id_medici_start + N_MEDICI):
     vals.append(gen_utente(i, fake.pybool(), 'medico', i - 1, False, True))
 
 c.executemany(UTENTI_SQL, vals)
-id_medici_end = id_medici_start + len(vals)
+id_medici_end = id_medici_start + len(vals) - 1
 
 ############# Pazienti
-# TODO id medico
 id_pazienti_start = id_medici_end + 1
 vals = [(id_pazienti_start, 'Steve', 'Azzolin', '1998-06-23', 'steve.azzolin1@gmail.com', PSWD,
-         'm', 'AZZSTV98WO121E', 'paziente', None, 22, 2941, 1, 1, None, None, None)]
+         'm', 'AZZSTV98WO121E', 'paziente', id_medici_start, 22, 2941, 1, 1, None, None, None)]
 
 for i in range(id_pazienti_start + 1, id_pazienti_start + N_PAZIENTI):
     vals.append(gen_utente(i, fake.pybool(), 'paziente', random.randint(id_medici_start, id_medici_end), False, False))
 
 c.executemany(UTENTI_SQL, vals)
-id_pazienti_end = id_pazienti_start + len(vals)
+id_pazienti_end = id_pazienti_start + len(vals) - 1
 
 c.execute("SET foreign_key_checks = 1")
 db.commit()
