@@ -2,8 +2,9 @@
   Dati necessari per il DB. Devno essere importati dopo ogni reset per
   avere il sito funzionante.
 **/
-
+set foreign_key_checks = 0;
 /*****************************  PROVINCE *****************************************/
+TRUNCATE TABLE `province`;
 INSERT INTO `province`
 VALUES (1, 'Torino'),
        (2, 'Vercelli'),
@@ -39,7 +40,7 @@ VALUES (1, 'Torino'),
        (32, 'Trieste'),
        (33, 'Piacenza'),
        (34, 'Parma'),
-       (35, 'Reggio'),
+       (35, 'Reggio Calabria'),
        (36, 'Modena'),
        (37, 'Bologna'),
        (38, 'Ferrara'),
@@ -84,7 +85,7 @@ VALUES (1, 'Torino'),
        (77, 'Matera'),
        (78, 'Cosenza'),
        (79, 'Catanzaro'),
-       (80, 'Reggio'),
+       (80, 'Reggio Emilia'),
        (81, 'Trapani'),
        (82, 'Palermo'),
        (83, 'Messina'),
@@ -117,6 +118,7 @@ VALUES (1, 'Torino'),
        (110, 'Barletta-Andria-Trani');
 
 /******************++ COMUNI ****************************************************/
+TRUNCATE TABLE `comuni`;
 INSERT INTO `comuni`
 VALUES (1, 'Agliè', 1),
        (2, 'Airasca', 1),
@@ -8119,6 +8121,7 @@ VALUES (1, 'Agliè', 1),
        (7999, 'Trinitapoli', 110);
 
 /******************* CATEGORIE ESAMI *********************************************/
+TRUNCATE TABLE `esami_prescrivibili`;
 INSERT INTO `esami_prescrivibili` VALUES
 (1, 'Radiologia diagnostica'),
 (2, 'Tomografia computerizzata del rachide'),
@@ -8280,6 +8283,7 @@ INSERT INTO `esami_prescrivibili` VALUES
 
 
 /****************************** GATEGORIE VISITE SPECIALISTICHE *******************************************/
+TRUNCATE TABLE `visite_specialistiche`;
 INSERT INTO `visite_specialistiche`
 VALUES (1, 'Ambulatorio infermieristico'),
        (2, 'Colloquio psicologico clinico'),
@@ -8417,6 +8421,7 @@ VALUES (1, 'Ambulatorio infermieristico'),
        (133, 'Visita vulnologica di controllo');
 
 /**************************** FARMACI *************************************/
+TRUNCATE TABLE `farmaci`;
 INSERT INTO `farmaci` (nome, costo)
 VALUES ("Abacavir E Lamivudina Accord", 10.0),
        ("Abacavir E Lamivudina Aristo", 6.00),
@@ -16278,6 +16283,6 @@ VALUES ("Abacavir E Lamivudina Accord", 10.0),
        ("Zyvoxid - Granulato", 5.50),
        ("Zyvoxid - Soluzione (uso Interno)", 18.00);
 
-
+set foreign_key_checks = 1;
 
 

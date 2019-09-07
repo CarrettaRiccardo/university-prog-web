@@ -19,5 +19,8 @@
         </descriptors>
       </configuration>
     </facet>
+    <facet type="Python" name="Python">
+      <configuration sdkName="Python 3.7" />
+    </facet>
   </component>
 </module>
