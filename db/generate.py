@@ -19,7 +19,6 @@ db = mysql.connector.connect(
 c = db.cursor()
 c.execute("SET foreign_key_checks = 0")
 
-# Utenti
 PSWD = '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d'
 SPECIALITA = ['Radiologia', 'Medicina interna', 'Ematologia', 'Neurologia', 'Psichiatria', 'Pediatria']
 UNI = ['Unitn', 'Unipd', 'Unito', 'Unimi', 'Unirm']
@@ -29,6 +28,7 @@ N_MEDICI = 20
 N_PAZIENTI = 200
 
 
+# Utenti
 def gen_prov_com():
     prov = random.choice([22, 24])  # 22 = Trento, 24 = Vicenza
     return (prov, 3155 if prov == 24 else
@@ -59,12 +59,12 @@ c.execute("truncate table utenti")
 c.execute("select id, nome from province")
 res = c.fetchall()
 vals = []
-id = id_ssp_start = 0
+id_ssp = id_ssp_start = 0
 
 for x in res:
     id_prov, nome = x
-    id += 1
-    vals.append((id, 'Provincia di ' + nome, nome.lower() + '@gov.it', PSWD, 'ssp', id_prov))
+    id_ssp += 1
+    vals.append((id_ssp, 'Provincia di ' + nome, nome.lower() + '@gov.it', PSWD, 'ssp', id_prov))
 
 c.executemany(
     "insert into utenti (id, nome, username, password, ruolo, provincia) values (%s, %s, %s, %s, %s, %s)", vals)
@@ -73,7 +73,8 @@ id_ssp_end = id_ssp_start + len(vals)
 ############# Medici specialisti
 id_medici_spec_start = id_ssp_end + 1
 vals = [(id_medici_spec_start, 'Matteo', 'Destro', '1965-12-12', 'matteo.est@gmail.com', PSWD, 'm', 'DSTMTT65RK154L',
-         'medico_spec', id_medici_spec_start + N_MEDICI_SPEC + 1, 22, 2840, 1, 0, 'Radiologia', 'Radiologia, Unitn', '1989-01-21')]
+         'medico_spec', id_medici_spec_start + N_MEDICI_SPEC + 1, 22, 2840, 1, 0, 'Radiologia', 'Radiologia, Unitn',
+         '1989-01-21')]
 
 for i in range(id_medici_spec_start + 1, id_medici_spec_start + N_MEDICI_SPEC):
     vals.append(gen_utente(i, fake.pybool(), 'medico_spec', i + N_MEDICI_SPEC, True, True))
@@ -103,5 +104,14 @@ for i in range(id_pazienti_start + 1, id_pazienti_start + N_PAZIENTI):
 c.executemany(UTENTI_SQL, vals)
 id_pazienti_end = id_pazienti_start + len(vals) - 1
 
+################ Competenze medici specialisti
+vals = []
+for id in range(id_medici_spec_start, id_medici_end + 1):
+    for j in range(0, random.randint(5, 10)):
+        vals.append((id, random.randint(1, 133)))
+c.execute("truncate table competenze_medico_spec")
+c.executemany("insert ignore into competenze_medico_spec values (%s, %s)", vals)  # ignoro eventuali duplicati
+
+################ Commit query
 c.execute("SET foreign_key_checks = 1")
 db.commit()
