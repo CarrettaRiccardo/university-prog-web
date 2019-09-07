@@ -43,7 +43,7 @@
         </div>
 </div>
         
-<div class="text-center" style="margin-top: 150px">
+<div class="text-center mt-5">
     <c:if test="${not empty date && not (empty medico || medico.getId() == 0)}">
         <%-- BEGIN E END INDICANO GLI ORARI POSSIBILI, c'e' anche un check sulla servlet --%>
         <c:forEach begin="8" end="17" step="1" var="i">

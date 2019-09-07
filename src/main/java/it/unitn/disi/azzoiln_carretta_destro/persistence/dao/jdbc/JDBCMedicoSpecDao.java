@@ -77,7 +77,7 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
     @Override
     public boolean compileVisitaSpecialistica(VisitaSpecialistica visita, Integer id_medico_spec) throws DaoException {
         if (visita == null || id_medico_spec <= 0 || visita.getId_paziente() <= 0 || visita.getId() <= 0) return false;
-        
+
         try {
             Integer id_ticket = null;
             PreparedStatement ps = CON.prepareStatement("insert into ticket (costo,tipo, id_paziente) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -138,7 +138,7 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
     /**
      * Ottiene la data di ultima ricetta per essere mostrata nell' elenco completo dei pazienti
      *
-     * @param id
+     * @param id_paziente
      * @return
      */
     private Date getLastDataRicetta(int id_paziente) throws IdNotFoundException, DaoException {
@@ -263,6 +263,24 @@ public class JDBCMedicoSpecDao extends JDBCDao<MedicoSpecialista, Integer> imple
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 ret = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage() + "\n\n");
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
+    }
+
+    @Override
+    public List<String> getCompetenze(Integer id_medico) throws DaoException {
+        if (id_medico <= 0) throw new IdNotFoundException("id_medico");
+        List<String> ret = new ArrayList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT nome FROM competenze_medico_spec c INNER JOIN visite_specialistiche v on c.id_visita_spec = v.id WHERE id_medico_spec = ?")) {
+            stm.setInt(1, id_medico);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                ret.add(rs.getString("nome"));
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage() + "\n\n");

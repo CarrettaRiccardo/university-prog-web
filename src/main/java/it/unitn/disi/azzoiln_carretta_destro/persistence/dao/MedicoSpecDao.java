@@ -49,7 +49,7 @@ public interface MedicoSpecDao {
     
     /**
      * Ottiene l'elenco di tutti i pazienti tranne se stesso
-     * @param id Id medico loggato
+     * @param id_medico Id medico loggato
      * @return 
      */
     public List<Paziente> getPazienti(Integer id_medico) throws DaoException;
@@ -82,11 +82,20 @@ public interface MedicoSpecDao {
     /**
      * Verifica che abbia id_visita tra le competenze
      * @param id_visita
-     * @param id
+     * @param id_medico
      * @return
      * @throws DaoException 
      */
     public boolean inCompetenza(Integer id_visita, int id_medico) throws DaoException;
+
+
+    /**
+     * Ottiene la lista di competenze del medico_spec
+     * @param id_medico id del medico
+     * @return lista di competenze in forma testuale
+     * @throws DaoException
+     */
+    public List<String> getCompetenze(Integer id_medico) throws DaoException;
 
     /**
      * Usato per controllo accesso alle foto in ProfilePhotoFilter

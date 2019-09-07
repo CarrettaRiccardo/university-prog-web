@@ -26,20 +26,64 @@ VALUES (1, 'Provincia autonoma di Trento', NULL, NULL, 'trento@gov.it',
 INSERT INTO utenti
 VALUES (5, 'Matteo', 'Destro', '1965-12-12', 'matteo.est@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'm', 'DSTMTT96RK154L', 'medico_spec', NULL, 22, 20, 1, 0, 'Radiologo', 'Medicina interna, Unitn',
-        '1989-01-01');
+        'm', 'DSTMTT65RK154L', 'medico_spec', NULL, 22, 2840, 1, 0, 'Radiologo', 'Medicina interna, Unitn',
+        '1989-01-21'),
+       (6, 'Giovanni', 'Rossi', '1980-01-30', 'giovanni.rossi@sanitymanager.it',
+        '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
+        'm', 'RSSGVN84JK251U', 'medico_spec', NULL, 24, 3155, 1, 0, 'Radiologo', 'Medicina interna, Unipd',
+        '1999-04-23'),
+       (7, 'Francesco', 'Verdi', '1970-05-21', 'francesco.verdi@sanitymanager.it',
+        '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
+        'm', 'VRDFRC70DO119K', 'medico_spec', NULL, 21, 2778, 1, 0, 'Radiologo', 'Medicina interna, Unito',
+        '1981-06-12');
+
+TRUNCATE table competenze_medico_spec;
+INSERT INTO competenze_medico_spec /* id da 1 a 133 per visite_spec */
+VALUES (5, 1),
+       (5, 2),
+       (5, 3),
+       (5, 4),
+       (5, 5),
+       (5, 6),
+       (5, 7),
+       (5, 8),
+       (5, 9),
+       (5, 10),
+       (6, 11),
+       (6, 12),
+       (6, 13),
+       (6, 14),
+       (6, 15),
+       (6, 16),
+       (6, 17),
+       (6, 18),
+       (6, 19),
+       (6, 20),
+       (7, 21),
+       (7, 22),
+       (7, 23),
+       (7, 24),
+       (7, 25),
+       (7, 26),
+       (7, 27),
+       (7, 28),
+       (7, 29),
+       (7, 30);
 
 /* Medici */
 INSERT INTO utenti
-VALUES (3, 'Riccardo', 'Carretta', '1998-06-23', 'riccardo.carretta@gmail.com',
+VALUES (8, 'Riccardo', 'Carretta', '1998-06-23', 'riccardo.carretta@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'm', 'ABCDE2FGHIL', 'medico', 3, 22, 15, 1, 1, NULL, 'Medicina, UNITN', '2000-05-13');
+        'm', 'CRTRCR99SK121M', 'medico', 9, 22, 15, 1, 1, NULL, 'Medicina, Unitn', '2000-05-13'),
+       (9, 'Giuseppe', 'Bartolini', '1978-06-23', 'giusepe.bartolini@gmail.com',
+        '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
+        'm', 'BRTGSP78SE127M', 'medico', 8, 22, 15, 1, 1, NULL, 'Medicina, Unipd', '1994-05-26');
 
 /* Pazienti */
 INSERT INTO utenti
-VALUES (1, 'Steve', 'Azzolin', '1998-06-23', 'steve.azzolin1@gmail.com',
+VALUES (10, 'Steve', 'Azzolin', '1998-06-23', 'steve.azzolin1@gmail.com',
         '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d',
-        'm', 'ABCDEFGHIL', 'paziente', 3, 22, 15, 1, 1, NULL, 'Medicina, UNIRM', '2007-07-01');
+        'm', 'ABCDEFGHIL', 'paziente', 8, 22, 15, 1, 1, NULL, 'Medicina, UNIRM', '2007-07-01');
 
 /*************** TICKETS **************************/
 TRUNCATE table ticket;

@@ -1,7 +1,6 @@
 package it.unitn.disi.azzoiln_carretta_destro.servlet;
 
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.UtenteDao;
-import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.exceptions.DaoFactoryException;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.dao.external.factories.DaoFactory;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
@@ -20,8 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Steve
@@ -61,9 +58,9 @@ public class SettingsServlet extends HttpServlet {
             if (u.getType() == UtenteType.PAZIENTE) {
                 Paziente newPaz = (Paziente) u;
                 List<String> pr;
-                    pr = new LinkedList<>(userDao.Ssp().getListProvince());
+                pr = new LinkedList<>(userDao.Ssp().getListProvince());
                 session.setAttribute("province", pr);
-                if (newPaz.getProvincia() != null){
+                if (newPaz.getProvincia() != null) {
                     List<String> cm = new LinkedList<>(userDao.Ssp().getListComuni(newPaz.getProvincia()));
                     session.setAttribute("comuni", cm);
                 }
@@ -85,11 +82,15 @@ public class SettingsServlet extends HttpServlet {
                 } else {
                     session.removeAttribute("medico");
                 }
+            } else if (u.getType() == UtenteType.MEDICO_SPEC) {
+                // Caricamento lista competenze medico spec
+                List<String> competenze = userDao.MedicoSpecialista().getCompetenze(u.getId());
+                session.setAttribute("competenze_medico_spec", competenze);
             }
         } catch (Exception ex) {
             throw new ServletException("update_error");
         }
-        
+
         response.sendRedirect(response.encodeRedirectURL(contextPath + "app/" + request.getAttribute("u_url") + "/settings"));
     }
 
@@ -171,18 +172,18 @@ public class SettingsServlet extends HttpServlet {
 
                 // creo l'oggetto Utente con i nuovi valori
                 Paziente p = (Paziente) u;
-                
+
                 Integer a = nomeProv != null ? (!nomeProv.equals(u.getProvinciaNome()) ? null : idMed) : null;
                 Integer b = nomeProv != null ? userDao.Ssp().getIdProvincia(nomeProv) : null;
                 Integer c = nomeProv != null ? (!nomeProv.equals(u.getProvinciaNome()) ? null : (nomeCom != null ? userDao.Ssp().getIdComune(nomeCom) : null)) : null;
                 String d = nomeProv != null ? (!nomeProv.equals(u.getProvinciaNome()) ? null : nomeCom) : null;
-                
+
                 newUtente = new Paziente(p.getId(), p.getUsername(),
                         p.getNome(), p.getCognome(), p.getData_nascita(), p.getCf(),
                         a,// controllo che se cambia provincia annulla il medico e comune
                         b,
                         c,
-                        true, nomeProv, 
+                        true, nomeProv,
                         d, updateFoto ? updateFotoPath : p.getFoto(), p.getSesso());
 
                 // aggiorno l'utente
@@ -192,7 +193,7 @@ public class SettingsServlet extends HttpServlet {
                 Paziente newPaz = (Paziente) newUtente;
                 List<String> pr = new LinkedList<>(userDao.Ssp().getListProvince());
                 request.setAttribute("province", pr);
-                if (nomeProv != null){
+                if (nomeProv != null) {
                     List<String> cm = new LinkedList<>(userDao.Ssp().getListComuni(userDao.Ssp().getIdProvincia(nomeProv)));
                     request.setAttribute("comuni", cm);
                 }

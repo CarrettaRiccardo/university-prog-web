@@ -49,7 +49,7 @@
             <c:forTokens items="${requestScope.sezioni}" var="sezione" varStatus="s" delims=",">
                 <li class="nav-item">
                     <a href="app/${u_url}/${sezione}"
-                       class="nav-link font-weight-bold ${(sezione == page ? 'text-gradient-'.concat(s.index + 1) : '') }">
+                       class="nav-link font-weight-bold text-nowrap overflow-hidden  ${(sezione == page ? 'text-gradient-'.concat(s.index + 1) : '') }">
                         <span class="text-capitalize px-2">${sezioni_titles[s.index]}</span>
                     </a>
                 </li>

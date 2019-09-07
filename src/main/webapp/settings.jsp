@@ -48,7 +48,7 @@
                          onerror="this.onerror=null; this.src='assets/default.jpg'"
                          src="<c:out value="${PHOTOS_DIR}${utente.getFoto()}" /> ">
 
-                    <div class="custom-file d-block">
+                    <div class="custom-file d-block mb-3">
                         <input id="photo_upload" type="file" name="file" class="custom-file-input" accept=".jpg"/>
                         <label id="file_name" class="custom-file-label text-left" for="photo_upload">Scegli file</label>
                     </div>
@@ -143,7 +143,7 @@
                     </div>
                     </c:if>
                     <c:if test="${utente.isMedico() || utente.isMedicoSpecialista()}">
-                    <h5 class="text-primary mt-3">Altro</h5>
+                    <h5 class="text-primary mt-3">Informazioni carriera</h5>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
                             <input type="text" class="form-control" disabled
@@ -155,6 +155,16 @@
                                    placeholder="Inizio Carriera"/>
                         </div>
                     </div>
+                    <c:if test="${utente.isMedicoSpecialista()}">
+                    <h5 class="text-primary mt-3">Abilitato per:</h5>
+                    <c:forEach items="${competenze_medico_spec}" var="c">
+                    <div class="row">
+                        <div class="col col-12 py-1">
+                            <input type="text" class="form-control" disabled value="${c}" placeholder="Competenza"/>
+                        </div>
+                    </div>
+                    </c:forEach>
+                    </c:if>
                     </c:if>
                     <div id="warningProvinciaChanged"
                          class="alert alert-warning alert-dismissible fade show position-fixed"
