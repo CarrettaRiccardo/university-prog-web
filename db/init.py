@@ -1,6 +1,7 @@
 import os
 import random
 import string
+import subprocess
 
 import mysql.connector
 import requests
@@ -21,6 +22,16 @@ db = mysql.connector.connect(
     database="prog_web"
 )
 c = db.cursor()
+
+# Caricamento schema e required_data
+print("Importazione schema.sql...")
+proc = subprocess.Popen("mysql -u root --password="" prog_web < schema.sql", shell=True)
+proc.wait()
+print("Importazione required_data.sql...")
+proc = subprocess.Popen("mysql -u root --password="" prog_web < required_data.sql", shell=True)
+proc.wait()
+
+# Caicamento dati
 c.execute("SET foreign_key_checks = 0")
 
 PROFILE_IMG_URL = "https://randomuser.me/api/?inc=picture&noinfo&gender="  # female / male
@@ -38,6 +49,7 @@ N_VISITE_SPEC = 1000
 N_PRESCRIZIONI = N_RICETTE + N_ESAMI + N_VISITE + N_VISITE_SPEC
 
 # Caricamento immagini profilo
+print("Caricamento elenco immagini profilo...")
 resp = requests.get(url=PROFILE_IMG_URL + "male&results=" + str(N_PAZIENTI + N_MEDICI_SPEC + N_MEDICI))
 img_pazienti_male = list(map(lambda el: el['picture']['large'], resp.json()['results']))
 last_img_male = 0
@@ -97,6 +109,7 @@ def gen_utente(id, male, ruolo, id_medico, has_specialita, has_laurea):
         None if data_laurea is None else data_laurea.strftime("%Y-%m-%d"))
 
 
+print("Generazione e inserimento dati casuali...")
 c.execute("truncate table utenti")
 
 ############# SSP, 1 per provincia
@@ -212,5 +225,10 @@ c.execute("truncate table visita_specialistica")
 c.executemany("insert ignore into visita_specialistica values (%s, %s, %s, %s, %s, %s, %s)", vals)
 
 ################ Commit query
+print("Commit modifiche...")
 c.execute("SET foreign_key_checks = 1")
 db.commit()
+
+################ Salvataggio DUMP
+print("Esportazione dump.sql...")
+os.popen('mysqldump -u root --password="" prog_web > dump.sql')
