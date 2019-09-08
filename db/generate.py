@@ -26,6 +26,11 @@ UTENTI_SQL = "insert into utenti(id, nome, cognome, data_nascita, username, pass
 N_MEDICI_SPEC = 10
 N_MEDICI = 20
 N_PAZIENTI = 200
+N_RICETTE = 1000
+N_ESAMI = 1000
+N_VISITE = 1000
+N_VISITE_SPEC = 1000
+N_PRESCRIZIONI = N_RICETTE + N_ESAMI + N_VISITE + N_VISITE_SPEC
 
 
 # Utenti
@@ -108,9 +113,61 @@ id_pazienti_end = id_pazienti_start + len(vals) - 1
 vals = []
 for id in range(id_medici_spec_start, id_medici_end + 1):
     for j in range(0, random.randint(5, 10)):
-        vals.append((id, random.randint(1, 133)))
+        vals.append((id, random.randint(1, 134)))
 c.execute("truncate table competenze_medico_spec")
 c.executemany("insert ignore into competenze_medico_spec values (%s, %s)", vals)  # ignoro eventuali duplicati
+
+############### Tickets TODO: stesso paziente per prestazione e ticket
+vals = []
+for id in range(1, N_ESAMI + 1):
+    vals.append((id, 11, 'e', fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d"),
+                 random.randint(id_pazienti_start, id_pazienti_end)))
+for id in range(N_ESAMI + 1, N_ESAMI + N_VISITE_SPEC + 1):
+    vals.append((id, 50, 'v', fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d"),
+                 random.randint(id_pazienti_start, id_pazienti_end)))
+c.execute("truncate table ticket")
+c.executemany("insert ignore into ticket values (%s, %s,%s, %s, %s)", vals)
+
+############### Prescrizioni
+vals = []
+for id in range(1, N_PRESCRIZIONI + 1):
+    vals.append((id, random.randint(id_pazienti_start, id_pazienti_end), random.randint(id_medici_start, id_medici_end),
+                 fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d")))
+c.execute("truncate table prescrizione")
+c.executemany("insert into prescrizione values (%s, %s, %s, %s)", vals)
+
+############### Ricette
+vals = []
+for id in range(1, N_RICETTE + 1):
+    vals.append((id, random.randint(1, 7860), random.randint(100, 1000) / 10, random.randint(1, 10),
+                 fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d")))
+c.execute("truncate table farmaco")
+c.executemany("insert into farmaco values (%s, %s, %s, %s, %s)", vals)
+
+############### Esami TODO: FK id_ssp come provincia paziente + risultato esame
+vals = []
+for id in range(N_RICETTE + 1, N_RICETTE + N_ESAMI + 1):
+    vals.append((id, random.randint(1, 158), random.randint(1, N_ESAMI + 1), 22,
+                 "Risultato esame ", fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d")))
+c.execute("truncate table esame")
+c.executemany("insert into esame values (%s, %s, %s, %s, %s, %s)", vals)
+
+############### Visite TODO: risultato visita
+vals = []
+for id in range(N_RICETTE + N_ESAMI + 1, N_RICETTE + N_ESAMI + N_VISITE + 1):
+    vals.append((id, "Risultato visita "))
+c.execute("truncate table visita")
+c.executemany("insert into visita values (%s, %s)", vals)
+
+############### Visite specialistiche TODO: risultato visita_specialistica + cura
+vals = []
+for id in range(N_RICETTE + N_ESAMI + N_VISITE + 1, N_RICETTE + N_ESAMI + N_VISITE + N_VISITE_SPEC + 1):
+    vals.append((id, random.randint(id_medici_spec_start, id_medici_spec_end),
+                 random.randint(N_ESAMI + 1, N_ESAMI + N_VISITE_SPEC + 1), random.randint(1, 134),
+                 "Risultato visita specialistica", "Cura",
+                 fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d")))
+c.execute("truncate table visita_specialistica")
+c.executemany("insert ignore into visita_specialistica values (%s, %s, %s, %s, %s, %s, %s)", vals)
 
 ################ Commit query
 c.execute("SET foreign_key_checks = 1")
