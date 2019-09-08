@@ -1,14 +1,18 @@
+import os
 import random
 import string
 
 import mysql.connector
+import requests
 from codicefiscale import build as cf
 from faker import Faker
 from faker.providers import date_time
 
+SEED = 3482
+
 fake = Faker('it_IT')
 fake.add_provider(date_time)
-fake.seed(3482)
+fake.seed(SEED)
 
 db = mysql.connector.connect(
     host="localhost",
@@ -19,6 +23,7 @@ db = mysql.connector.connect(
 c = db.cursor()
 c.execute("SET foreign_key_checks = 0")
 
+PROFILE_IMG_URL = "https://randomuser.me/api/?inc=picture&noinfo&gender="  # female / male
 PSWD = '1000:e1cbefc13d8c5931dafe6f1c92af1abe:d894e4657999033774b7432696e409d3fc26e46622ecbd4739070896561aa76dc6071f640b36fa0c417d308cc1cee62b38623beaf837a6fdee52c1085a830e6d'
 SPECIALITA = ['Radiologia', 'Medicina interna', 'Ematologia', 'Neurologia', 'Psichiatria', 'Pediatria']
 UNI = ['Unitn', 'Unipd', 'Unito', 'Unimi', 'Unirm']
@@ -31,6 +36,39 @@ N_ESAMI = 1000
 N_VISITE = 1000
 N_VISITE_SPEC = 1000
 N_PRESCRIZIONI = N_RICETTE + N_ESAMI + N_VISITE + N_VISITE_SPEC
+
+# Caricamento immagini profilo
+resp = requests.get(url=PROFILE_IMG_URL + "male&results=" + str(N_PAZIENTI + N_MEDICI_SPEC + N_MEDICI))
+img_pazienti_male = list(map(lambda el: el['picture']['large'], resp.json()['results']))
+last_img_male = 0
+resp = requests.get(url=PROFILE_IMG_URL + "female&results=" + str(N_PAZIENTI + N_MEDICI_SPEC + N_MEDICI))
+img_pazienti_female = list(map(lambda el: el['picture']['large'], resp.json()['results']))
+last_img_female = 0
+
+
+def next_img_url(male):
+    global last_img_male, last_img_female
+    img = None
+    if male:
+        img = img_pazienti_male[last_img_male]
+        last_img_male += 1
+    else:
+        img = img_pazienti_female[last_img_female]
+        last_img_female += 1
+    return img
+
+
+def save_profile_img(male, username):
+    img_dir = "profile_photos/" + username
+    if not os.path.exists(img_dir):  # Carico la foto solo se non esiste già
+        img_url = next_img_url(male)
+        img_req = requests.get(img_url)
+        if img_req.status_code == 200:
+            os.makedirs(img_dir)
+            with open(img_dir + "/foto.jpg", 'wb') as f:
+                f.write(img_req.content)
+            with open(img_dir + "/foto_small.jpg", 'wb') as f:
+                f.write(img_req.content)
 
 
 # Utenti
@@ -52,6 +90,7 @@ def gen_utente(id, male, ruolo, id_medico, has_specialita, has_laurea):
     laurea = specialita + ', ' + random.choice(UNI) if specialita is not None else \
         'Medicina, ' + random.choice(UNI) if has_laurea else None
     data_laurea = fake.date_time_between(start_date="-10y") if has_laurea else None
+    save_profile_img(male, username)
     return (
         id, nome, cognome, data_nascita.strftime("%Y-%m-%d"), username, PSWD, 'm' if male else 'f', CF, ruolo,
         id_medico, id_prov, id_com, 1, 1, specialita, laurea,
@@ -77,9 +116,10 @@ id_ssp_end = id_ssp_start + len(vals)
 
 ############# Medici specialisti
 id_medici_spec_start = id_ssp_end + 1
-vals = [(id_medici_spec_start, 'Matteo', 'Destro', '1965-12-12', 'matteo.est@gmail.com', PSWD, 'm', 'DSTMTT65RK154L',
+vals = [(id_medici_spec_start, 'Matteo', 'Destro', '1965-12-12', 'matteo.est@gmail.com', PSWD, 'm', 'DSTMTT65T12K154L',
          'medico_spec', id_medici_spec_start + N_MEDICI_SPEC + 1, 22, 2840, 1, 0, 'Radiologia', 'Radiologia, Unitn',
          '1989-01-21')]
+save_profile_img(True, 'matteo.est@gmail.com')
 
 for i in range(id_medici_spec_start + 1, id_medici_spec_start + N_MEDICI_SPEC):
     vals.append(gen_utente(i, fake.pybool(), 'medico_spec', i + N_MEDICI_SPEC, True, True))
@@ -89,8 +129,9 @@ id_medici_spec_end = id_medici_spec_start + len(vals) - 1
 
 ############# Medici
 id_medici_start = id_medici_spec_end + 1
-vals = [(id_medici_start, 'Riccardo', 'Carretta', '1998-06-23', 'riccardo.carretta@gmail.com', PSWD,
-         'm', 'CRTRCR99SK121M', 'medico', id_medici_start + 1, 22, 2840, 1, 1, None, 'Medicina, Unitn', '2000-05-13')]
+vals = [(id_medici_start, 'Riccardo', 'Carretta', '1982-04-13', 'riccardo.carretta@gmail.com', PSWD,
+         'm', 'CRTRCR82S13K121M', 'medico', id_medici_start + 1, 22, 2840, 1, 1, None, 'Medicina, Unitn', '2000-05-13')]
+save_profile_img(True, 'riccardo.carretta@gmail.com')
 
 for i in range(id_medici_start + 1, id_medici_start + N_MEDICI):
     vals.append(gen_utente(i, fake.pybool(), 'medico', i - 1, False, True))
@@ -100,8 +141,9 @@ id_medici_end = id_medici_start + len(vals) - 1
 
 ############# Pazienti
 id_pazienti_start = id_medici_end + 1
-vals = [(id_pazienti_start, 'Steve', 'Azzolin', '1998-06-23', 'steve.azzolin1@gmail.com', PSWD,
-         'm', 'AZZSTV98WO121E', 'paziente', id_medici_start, 22, 2941, 1, 1, None, None, None)]
+vals = [(id_pazienti_start, 'Steve', 'Azzolin', '1975-01-23', 'steve.azzolin1@gmail.com', PSWD,
+         'm', 'AZZSTV75W23O121E', 'paziente', id_medici_start, 22, 2941, 1, 1, None, None, None)]
+save_profile_img(True, 'steve.azzolin1@gmail.com')
 
 for i in range(id_pazienti_start + 1, id_pazienti_start + N_PAZIENTI):
     vals.append(gen_utente(i, fake.pybool(), 'paziente', random.randint(id_medici_start, id_medici_end), False, False))
@@ -144,7 +186,7 @@ for id in range(1, N_RICETTE + 1):
 c.execute("truncate table farmaco")
 c.executemany("insert into farmaco values (%s, %s, %s, %s, %s)", vals)
 
-############### Esami TODO: FK id_ssp come provincia paziente + risultato esame
+############### Esami TODO: FK id_ssp = provincia paziente + risultato esame
 vals = []
 for id in range(N_RICETTE + 1, N_RICETTE + N_ESAMI + 1):
     vals.append((id, random.randint(1, 158), random.randint(1, N_ESAMI + 1), 22,
