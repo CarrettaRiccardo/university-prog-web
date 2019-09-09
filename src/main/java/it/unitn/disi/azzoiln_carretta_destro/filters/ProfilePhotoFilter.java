@@ -53,8 +53,8 @@ public class ProfilePhotoFilter implements Filter {
                 
                 switch(u.getType()){
                     case PAZIENTE:    if( !(u.getUsername().equals(foto_utente)) ) throw new ServletException("not_authorized_photo"); break;
-                    case MEDICO:      if( !userDao.Medico().isMyPatient(foto_utente, u.getId()) ) throw new ServletException("not_authorized_photo");   break;
-                    case MEDICO_SPEC: if( !userDao.MedicoSpecialista().isMyPatient(foto_utente, u.getId()) ) throw new ServletException("not_authorized_photo"); break;
+                    case MEDICO:      if( !u.getUsername().equals(foto_utente) && !userDao.Medico().isMyPatient(foto_utente, u.getId()) ) throw new ServletException("not_authorized_photo");   break;
+                    case MEDICO_SPEC: if( !u.getUsername().equals(foto_utente) && !userDao.MedicoSpecialista().isMyPatient(foto_utente, u.getId()) ) throw new ServletException("not_authorized_photo"); break;
                     case SSP: throw new ServletException("not_authorized_photo");
                 }
                 
