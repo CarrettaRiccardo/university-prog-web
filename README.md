@@ -24,7 +24,7 @@ Per la persistenza dei dati abbiamo usato MySQL.
 
 
 
-####Feature implementate:
+#### Feature implementate:
 
 1.	**Utilizzo tag fmt per i testi:** Per supportare eventuali espansioni dell' Applicazione abbiamo deciso di utilizzare fin dall'inizio il supporto all' internazionalizzazione offerta dai tag JSTL fmt. E' però comunque disponibile 1 sola lingua.
 
