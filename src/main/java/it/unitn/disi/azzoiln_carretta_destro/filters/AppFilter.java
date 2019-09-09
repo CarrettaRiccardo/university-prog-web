@@ -89,6 +89,8 @@ public class AppFilter implements Filter {
             request.setAttribute("sezioni_titles", sezioniTitles);
             request.setAttribute("sezioni_dettagli", sezioniDettagli);
             request.setAttribute("sezioni_dettagli_titles", sezioniDettagliTitles);
+            
+            request.setCharacterEncoding("UTF-8");
 
         } else {
             throw new ServletException("Richiesta non riconusciuta valida");
