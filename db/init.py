@@ -14,6 +14,7 @@ SEED = 3482
 fake = Faker('it_IT')
 fake.add_provider(date_time)
 fake.seed(SEED)
+random.seed(SEED)
 
 db = mysql.connector.connect(
     host="localhost",
@@ -91,11 +92,11 @@ def gen_prov_com():
 
 
 def gen_utente(id, male, ruolo, id_medico, has_specialita, has_laurea):
-    nome = fake.first_name_male() if male else fake.first_name_female()
+    nome2 = fake.first_name_male() if male else fake.first_name_female()
     cognome = fake.last_name_male() if male else fake.last_name_female()
     data_nascita = fake.date_time_between(start_date="-45y")
-    username = nome.lower() + "." + cognome.lower() + "@gmail.com"
-    CF = cf(nome, cognome, data_nascita, 'M' if male else 'F',
+    username = nome2.lower().replace(" ", "") + "." + cognome.lower().replace(" ", "") + "@gmail.com"
+    CF = cf(nome2, cognome, data_nascita, 'M' if male else 'F',
             random.choice(string.ascii_letters).upper() + str(random.randint(100, 999)))
     id_prov, id_com = gen_prov_com()
     specialita = None if not has_specialita else random.choice(SPECIALITA)
@@ -104,7 +105,7 @@ def gen_utente(id, male, ruolo, id_medico, has_specialita, has_laurea):
     data_laurea = fake.date_time_between(start_date="-10y") if has_laurea else None
     save_profile_img(male, username)
     return (
-        id, nome, cognome, data_nascita.strftime("%Y-%m-%d"), username, PSWD, 'm' if male else 'f', CF, ruolo,
+        id, nome2, cognome, data_nascita.strftime("%Y-%m-%d"), username, PSWD, 'm' if male else 'f', CF, ruolo,
         id_medico, id_prov, id_com, 1, 1, specialita, laurea,
         None if data_laurea is None else data_laurea.strftime("%Y-%m-%d"))
 

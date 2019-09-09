@@ -92,6 +92,7 @@ public class AppFilter implements Filter {
             
             request.setCharacterEncoding("UTF-8");
 
+            request.setCharacterEncoding("UTF-8");
         } else {
             throw new ServletException("Richiesta non riconusciuta valida");
         }
