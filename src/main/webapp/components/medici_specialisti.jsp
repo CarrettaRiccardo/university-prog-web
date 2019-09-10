@@ -18,7 +18,7 @@
         <tr data-href='app/${u_url}/dettagli_utente/stats?id_medico_spec=${medico.getId()}'>
             <th scope="row"><img width="45" height="40" class="rounded-circle"
                                  onerror="this.onerror=null; this.src='assets/default.jpg'"
-                                 src="${PHOTOS_DIR}${medico.getFoto()}"/></th>
+                                 src="${USERS_DIR}${medico.getFoto()}"/></th>
             <td><c:out value="${medico.getCognome()}"/></td>
             <td><c:out value="${medico.getNome()}"/></td>
             <td><c:out value="${medico.getSpecialita()}"/></td>

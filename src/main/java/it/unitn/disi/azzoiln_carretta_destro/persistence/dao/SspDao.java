@@ -5,8 +5,10 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,4 +52,7 @@ public interface SspDao{
     public List<String> getListComuni(Integer id_prov) throws DaoException;
 
     public ArrayList<ArrayList<Integer>> getStatsEsami(int id) throws DaoException;
+
+    public List<Ricetta> getRicette(Date data) throws DaoException;
+
 }

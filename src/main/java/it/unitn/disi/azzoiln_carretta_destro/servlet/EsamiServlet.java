@@ -230,6 +230,7 @@ public class EsamiServlet extends HttpServlet {
                 System.out.println("addEsame by MEDICO = " + inserito);
             }
             else if (request.getRequestURI().indexOf("compila_esame") > 0){ //SSP compila i dati dell' esame appena fatto oppire l'utente seleziona una data_esame
+                
                 v = Esame.loadFromHttpRequestCompila(request, u);
                 
                 if (u.getType() == UtenteType.PAZIENTE && request.getParameter("datepicker") != null) {
@@ -253,7 +254,7 @@ public class EsamiServlet extends HttpServlet {
                         Integer id_paziente = Integer.valueOf(request.getParameter("id_paziente"));
                         // gets absolute path of the web application
                         String applicationPath = request.getServletContext().getRealPath("");
-                        String relativePath = getServletContext().getAttribute("PHOTOS_DIR").toString();//getServletContext().getAttribute("PHOTOS_DIR").toString();
+                        String relativePath = getServletContext().getAttribute("USERS_DIR").toString();//getServletContext().getAttribute("USERS_DIR").toString();
                         String userPath = userDao.getUsername(id_paziente);
                         // constructs path of the directory to save uploaded file
                         String uploadFilePath = applicationPath + relativePath + File.separator + userPath;

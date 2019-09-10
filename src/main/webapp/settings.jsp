@@ -46,7 +46,7 @@
                 <div class="col col-12 col-md-auto text-center">
                     <img id="profile_photo" width="256" height="256" class="rounded-circle shadow mb-2"
                          onerror="this.onerror=null; this.src='assets/default.jpg'"
-                         src="<c:out value="${PHOTOS_DIR}${utente.getFoto()}" /> ">
+                         src="<c:out value="${USERS_DIR}${utente.getFoto()}" /> ">
 
                     <div class="custom-file d-block mb-3">
                         <input id="photo_upload" type="file" name="file" class="custom-file-input" accept=".jpg"/>

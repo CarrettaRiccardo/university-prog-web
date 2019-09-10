@@ -30,6 +30,14 @@
         <url-pattern>/logout.handler</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>Download</servlet-name>
+        <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.DownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Download</servlet-name>
+        <url-pattern>/app/download</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>it.unitn.disi.azzoiln_carretta_destro.servlet.HomeServlet</servlet-class>
     </servlet>
@@ -328,8 +336,8 @@
         <param-value>app/services/esami/</param-value>
     </context-param>
     <context-param>
-        <param-name>photo_dir_name</param-name>
-        <param-value>profile_photos</param-value>
+        <param-name>user_dir_name</param-name>
+        <param-value>users_folder</param-value>
     </context-param>
     <!-- ERROR PAGES -->
     <error-page>

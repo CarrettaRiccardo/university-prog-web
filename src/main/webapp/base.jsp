@@ -13,7 +13,11 @@
 <div class="container pt-2 min-vh-100">
     <div class="row">
         <div class="col-12">
-            <h2 class="mt-2 mb-4 d-print-none"><fmt:message key="${title}"/> ${nome}</h2>
+            <form action="app/download" method="POST">
+                <h2 class="mt-2 mb-4 d-print-none"><fmt:message key="${title}"/> ${nome}
+                    <c:if test="${utente.isSsp()}"><button name="download" class="float-right btn btn-gradient"><fmt:message key="download_odierno"/></button></c:if>
+                </h2>
+            </form>
             <jsp:include page="/components/${page}.jsp"/>
         </div>
     </div>

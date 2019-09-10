@@ -28,7 +28,7 @@
             <td>
                 <img width="45" height="40"
                      onerror="this.onerror=null; this.src='assets/default.jpg'" class="rounded-circle"
-                     src="${PHOTOS_DIR}${paz.getFoto()}"/>
+                     src="${USERS_DIR}${paz.getFoto()}"/>
             </td>
             <td><c:out value="${paz.getCognome()}"/></td>
             <td><c:out value="${paz.getNome()}"/></td>

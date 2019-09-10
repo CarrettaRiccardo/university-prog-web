@@ -13,6 +13,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Esame;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Medico;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.MedicoSpecialista;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Paziente;
+import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ricetta;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ssp;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Statistiche;
@@ -22,7 +23,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -154,6 +157,33 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
     @Override
     public List<Paziente> getPazienti(Integer id_provincia) throws DaoException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    /**
+     * Ottiene l' elenco delle ricette di quel giorno
+     *
+     * @param data
+     * @return Elenco delle ricette ordinate in ordine cronologico
+     */
+    @Override
+    public List<Ricetta> getRicette(Date data) throws DaoException {
+        List<Ricetta> ret = new LinkedList<>();
+        
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+        String dat = formatter.format(data);
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,f.costo as truecost,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione "
+                + "WHERE time >= (\"" + dat + " 00:00:00\")"
+                + " AND time <= (\"" + dat + " 23:59:59\") ORDER BY time")) {
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Ricetta r = new Ricetta(rs.getInt("id_prescrizione"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getInt("id_farmaco"), rs.getString("nome"), rs.getFloat("truecost"), rs.getShort("quantita"), rs.getDate("time_vendita"), rs.getDate("time"));
+                ret.add(r);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException("db_error", ex);
+        }
+        return ret;
     }
 
     @Override

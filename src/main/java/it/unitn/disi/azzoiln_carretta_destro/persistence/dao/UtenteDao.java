@@ -8,6 +8,7 @@ import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.Farmaci;
 import it.unitn.disi.azzoiln_carretta_destro.persistence.wrappers.VisiteSpecialistiche;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.List;
 
 /**

@@ -134,7 +134,7 @@ public class Esame extends Prescrizione {
         Integer id_esame = -1;
         String esito;
 
-        if (request.getParameter("id_paziente") == null || request.getParameter("id_esame") == null || request.getParameter("esito") == null || request.getParameter("ticket") == null)
+        if (request.getParameter("id_paziente") == null || request.getParameter("id_esame") == null || request.getParameter("esito") == null)// || request.getParameter("ticket") == null)
             throw new ServletException("bad_request");
         try {
             esito = request.getParameter("esito");

@@ -143,7 +143,7 @@ public class SettingsServlet extends HttpServlet {
             if (updateFoto) {
                 // gets absolute path of the web application
                 String applicationPath = request.getServletContext().getRealPath("");
-                String relativePath = getServletContext().getAttribute("PHOTOS_DIR").toString();//getServletContext().getAttribute("PHOTOS_DIR").toString();
+                String relativePath = getServletContext().getAttribute("USERS_DIR").toString();//getServletContext().getAttribute("USERS_DIR").toString();
                 String userPath = u.getUsername();
                 // constructs path of the directory to save uploaded file
                 String uploadFilePath = applicationPath + relativePath + File.separator + userPath;
@@ -154,6 +154,8 @@ public class SettingsServlet extends HttpServlet {
                 //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix. (to get only filename)
                 updateFotoPath = uploadFilePath + File.separator + "foto.jpg";
 
+                System.out.println("relativePath = " + updateFotoPath);
+            
                 filePart.write(updateFotoPath);
 
                 // per creare una copia più piccola da mostrare nella barra di navigazione

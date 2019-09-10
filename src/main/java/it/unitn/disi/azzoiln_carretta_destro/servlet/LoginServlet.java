@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import javax.servlet.ServletContext;
 
 /**
  * @author Steve
@@ -122,9 +123,9 @@ public class LoginServlet extends HttpServlet {
 
             if (u.getRes() >= 0) {
                 // caricamento del percorso della foto profilo
-                String relativePath = getServletContext().getAttribute("PHOTOS_DIR").toString();
+                String relativePath = getServletContext().getAttribute("USERS_DIR").toString();
                 HttpSession session = request.getSession(false);
-                session.setAttribute("PHOTOS_DIR", relativePath + File.separator);
+                session.setAttribute("USERS_DIR", relativePath + File.separator);
                 String userPath = u.getUsername();
                 // constructs path of the directory to save uploaded file
                 String uploadFilePath = relativePath + File.separator + userPath + File.separator;

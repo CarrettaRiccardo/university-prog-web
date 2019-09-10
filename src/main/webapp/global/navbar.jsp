@@ -28,7 +28,7 @@
                 <c:if test="${ !utente.isSsp() }">
                     <img width="30" height="28" class="rounded-circle d-inline-block align-top mr-1 "
                          onerror="this.onerror=null; this.src='assets/default.jpg'"
-                         src="<c:out value="${PHOTOS_DIR}${utente.getFotoSmall()}" />">
+                         src="<c:out value="${USERS_DIR}${utente.getFotoSmall()}" />">
                 </c:if>
                 <span class="d-none d-lg-inline-block">
                     <jsp:getProperty name="utente" property="username"/>

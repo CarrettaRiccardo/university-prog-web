@@ -148,7 +148,7 @@ public class VisitaSpecialistica extends Prescrizione{
         Integer id_visita = -1;
         String anamnesi = "", cura = "";
 
-        if (request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null || request.getParameter("anamnesi") == null || request.getParameter("cura") == null || request.getParameter("ticket") == null)
+        if (request.getParameter("id_paziente") == null || request.getParameter("id_visita") == null || request.getParameter("anamnesi") == null || request.getParameter("cura") == null)// || request.getParameter("ticket") == null)
             throw new ServletException("bad_request");
         try {
             id_visita = Integer.parseInt(request.getParameter("id_visita"));

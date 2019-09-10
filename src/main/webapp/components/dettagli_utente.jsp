@@ -7,7 +7,7 @@
         <div class="col col-12 col-md-auto text-center">
             <img width="180" height="180" class="rounded-circle shadow mb-2"
                  onerror="this.onerror=null; this.src='assets/default.jpg'"
-                 src="${PHOTOS_DIR}${dettagli_utente.getFoto()}">
+                 src="${USERS_DIR}${dettagli_utente.getFoto()}">
         </div>
 
         <div class="col col-12 col-md pl-md-4">

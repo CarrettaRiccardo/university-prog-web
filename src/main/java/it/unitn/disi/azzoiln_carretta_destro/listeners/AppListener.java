@@ -27,8 +27,8 @@ public class AppListener implements ServletContextListener{
      */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-    	String relativePath = sce.getServletContext().getInitParameter("photo_dir_name");
-    	sce.getServletContext().setAttribute("PHOTOS_DIR", relativePath);
+    	String relativePath = sce.getServletContext().getInitParameter("user_dir_name");
+    	sce.getServletContext().setAttribute("USERS_DIR", relativePath);
         
         
         String dburl = sce.getServletContext().getInitParameter("dburl");
