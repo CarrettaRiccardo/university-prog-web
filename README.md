@@ -1,14 +1,10 @@
-<p align="center">
-<img src="logo.svg" />
-<h1 align="center">SanityManager</h1>
-<h2 align="center">Documentazione progetto</h2>
+<div align="center"><img src="logo.svg" /></div>
+<div align="center"><h1>SanityManager</h1></div>
+<div align="center"><h2>Documentazione progetto</h2></div>
+<div align="center"><b>Azzolin Steve – Carretta Riccardo – Destro Matteo</b></div>
 <div align="center">a.a 2018/19</div>
 <br/>
-</p>
 
-
-
-**Azzolin Steve – Carretta Riccardo – Destro Matteo**
 
 
 In questo testo saranno elencate particolari assunzioni adottate per lo svolgimento del progetto e saranno descritte feature non espressamente richieste ma che per varie ragioni, solitamente elencate assieme alla descrizione della stessa, sono state implementate.
