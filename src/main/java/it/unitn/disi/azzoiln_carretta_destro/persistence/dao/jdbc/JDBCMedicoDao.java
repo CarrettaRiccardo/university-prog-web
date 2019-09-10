@@ -187,7 +187,6 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             stm.setInt(2, id_medico);
             ResultSet rs = stm.executeQuery();
             if (rs.next()){
-                 System.out.println("Si, " + id_paziente + " è mio " + id_medico);
                  ret = true;
             }
         } catch (SQLException ex) {
@@ -206,7 +205,6 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             stm.setString(2, username);
             ResultSet rs = stm.executeQuery();
             if (rs.next()){
-                 System.out.println("Si, " + username + " è mio " + id_medico);
                  ret = true;
             }
         } catch (SQLException ex) {
@@ -308,17 +306,6 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
                 ret2.get(i).add(0);
             }
         }
-        
-        int i = 0;
-        System.out.println("STAMPO STATS_RICETTE");
-        for(ArrayList<Integer> m : ret2){
-            System.out.print("Mese:" + i);
-            for(Integer m2 : m){
-                System.out.print(" -> " + m2);
-            }
-            System.out.println("");
-            i++;
-        }
         return ret2;
     }
 
@@ -410,18 +397,6 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
                 ret2.get(i).add(0);
             }
         }
-        
-        
-        System.out.println("STAMPO STATS_VS");
-        int i = 0;
-        for(ArrayList<Integer> m : ret2){
-            System.out.print("Mese:" + i);
-            for(Integer m2 : m){
-                System.out.print(" -> " + m2);
-            }
-            System.out.println("");
-            i++;
-        }
         return ret2;
     }
 
@@ -466,18 +441,6 @@ class JDBCMedicoDao extends JDBCDao<Medico,Integer> implements MedicoDao{
             for (int i = 0; i < 12; i++) {
                 ret2.get(i).add(0);
             }
-        }
-        
-        
-        System.out.println("STAMPO STATS_ESAMI");
-        int i = 0;
-        for(ArrayList<Integer> m : ret2){
-            System.out.print("Mese:" + i);
-            for(Integer m2 : m){
-                System.out.print(" -> " + m2);
-            }
-            System.out.println("");
-            i++;
         }
         return ret2;
     }

@@ -65,7 +65,6 @@ public class MedicoFilter implements Filter {
                 Utente u = (Utente) ((HttpServletRequest) request).getSession(false).getAttribute("utente");
                 if( ! (u instanceof Medico) )  //se non sono un medico non posso accedere all' URL Medico
                     throw new ServletException("not_authorized");
-                System.out.println(userDao.Medico().isMyPatient(id_paziente,u.getId()));
                 if(! userDao.Medico().isMyPatient(id_paziente,u.getId()))
                     throw new ServletException("not_my_patient");  //Il Paziente è riferito ad un altro dottore
             }
