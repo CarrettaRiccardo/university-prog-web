@@ -1,11 +1,9 @@
-<p align="center">
-<img src="logo.svg" />
-<h1 align="center">SanityManager</h1>
-<h2 align="center">Documentazione progetto</h2>
-<div align="center">**Azzolin Steve – Carretta Riccardo – Destro Matteo**</div>
+<div align="center"><img src="logo.svg" /></div>
+<div align="center"><h1>SanityManager</h1></div>
+<div align="center"><h2>Documentazione progetto</h2></div>
+<div align="center"><b>Azzolin Steve – Carretta Riccardo – Destro Matteo</b></div>
 <div align="center">a.a 2018/19</div>
 <br/>
-</p>
 
 
 
