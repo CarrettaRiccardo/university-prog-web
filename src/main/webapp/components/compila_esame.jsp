@@ -45,7 +45,7 @@
         <label for="esito"><fmt:message key="esito"/></label>
         <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
         <input type="hidden" class="form-control" name="id_esame" value="${id_esame}"> 
-        <textarea class="form-control" id="esito" name="esito" style="height: 150px"
+        <textarea class="form-control" id="esito" name="esito" style="height: 250px"
                   <c:if test="${not empty i_esame and empty errore}">
                       readonly
                   </c:if>><c:choose><c:when test="${empty i_esame}">I risultati per l'esame sono i seguenti :</c:when><c:when test="${not empty i_esame}">${i_esame.getRisultato()}</c:when></c:choose></textarea>

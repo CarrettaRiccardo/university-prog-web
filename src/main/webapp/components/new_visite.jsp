@@ -24,7 +24,7 @@
     <div class="form-group">
         <label for="anamnesi"><fmt:message key="anamnesi"/></label>
         <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}">
-        <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px"
+        <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 250px"
                   <c:if test="${not empty i_visita and empty errore}">readonly</c:if>><c:choose><c:when
                 test="${empty i_visita}">Il paziente presenta ...</c:when><c:when
                 test="${! empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea>

@@ -43,16 +43,16 @@
     <label for="anamnesi"><fmt:message key="anamnesi"/></label>
     <input type="hidden" class="form-control" name="id_paziente" value="${paziente.getId()}"> 
     <input type="hidden" class="form-control" name="id_visita" value="${id_visita}"> 
-    <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 150px" 
+    <textarea class="form-control" id="anamnesi" name="anamnesi" style="height: 250px"
               <c:if test="${not empty i_visita and empty errore}">
                   readonly
               </c:if>
-                  ><c:choose><c:when test="${empty i_visita}">Il paziente presenta ...</c:when><c:when test="${not empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea> <!-- Identazione così brutta per evitare brutti spazi dentro la TextArea -->
+                  ><c:choose><c:when test="${empty i_visita}">Il paziente presenta ...</c:when><c:when test="${not empty i_visita}">${i_visita.getAnamnesi()}</c:when></c:choose></textarea> <!-- Identazione cosï¿½ brutta per evitare brutti spazi dentro la TextArea -->
   </div>
   
   <div class="form-group">
     <label for="cura"><fmt:message key="cura"/></label>
-    <textarea class="form-control" id="cura" name="cura" style="height: 150px" 
+    <textarea class="form-control" id="cura" name="cura" style="height: 100px"
               <c:if test="${not empty i_visita and empty errore}">
                   readonly
               </c:if>   
@@ -61,7 +61,7 @@
 
 <!-- TICKET -->
                 
-<c:if test="${not i_visita.isDaFissare() or not empty errore}">  <!-- Mostro nel caso stia compilando la visita o c'è stato un errore nel doPost precedente -->
+<c:if test="${not i_visita.isDaFissare() or not empty errore}">  <!-- Mostro nel caso stia compilando la visita o c'ï¿½ stato un errore nel doPost precedente -->
     <div class="form-group">
           <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${not empty i_visita and empty errore}">checked onclick="return false;"</c:if> /><fmt:message key="ticket_di"/>  <!--Se ï¿½ giï¿½ settato le rendo readonly tramite il return false-->
           <c:choose>
