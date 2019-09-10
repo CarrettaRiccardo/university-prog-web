@@ -1,8 +1,12 @@
-# DOCUMENTO DI PROGETTO PER INTRODUZIONE ALLA PROGRAMMAZIONE PER IL WEB
+<p align="center">
+<img src="logo.svg" />
+<h1 align="center">SanityManager</h1>
+<h2 align="center">Documentazione progetto</h2>
+<div align="center">a.a 2018/19</div>
+<br/>
+</p>
 
-## SanityManager
 
-a.a 2018/19
 
 **Azzolin Steve – Carretta Riccardo – Destro Matteo**
 

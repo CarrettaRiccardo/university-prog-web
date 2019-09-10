@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" version="1.1" viewBox="0 0 33.867 33.867" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient4499" x1="7.7728" x2="26.102" y1="289.24" y2="270.91" gradientTransform="translate(-.0002604 -.0078084)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#007bff" offset="0"/>
+   <stop stop-color="#001f87" offset="1"/>
+  </linearGradient>
+ </defs>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="translate(0 -263.13)">
+  <circle cx="16.933" cy="280.07" r="16.801" fill="#fff" stroke="#ced4da" stroke-linecap="round" stroke-linejoin="round" stroke-width=".26458"/>
+  <path d="m9.5056 269.74a1.323 1.323 0 0 0-0.81055 0.3125c-2.6446 2.1767-4.2283 5.3155-4.5781 8.6875h-1.3301a1.323 1.323 0 1 0 0 2.6445h1.3301c0.34967 3.3713 1.9326 6.5088 4.5762 8.6856a1.323 1.323 0 1 0 1.6816-2.041c-2.0344-1.6751-3.277-4.0645-3.6133-6.6445h20.344c-0.33617 2.5811-1.5797 4.9711-3.6152 6.6465a1.323 1.323 0 1 0 1.6816 2.043c2.6449-2.1769 4.2285-5.3171 4.5781-8.6894h1.3301a1.323 1.323 0 1 0 0-2.6445h-1.3301c-0.34967-3.3713-1.9326-6.5088-4.5762-8.6856a1.323 1.323 0 1 0-1.6816 2.043c2.0344 1.6751 3.277 4.0625 3.6133 6.6426h-20.344c0.33617-2.5811 1.5778-4.9692 3.6133-6.6445a1.323 1.323 0 0 0-0.86914-2.3555z" color="#000000" color-rendering="auto" dominant-baseline="auto" fill="url(#linearGradient4499)" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;isolation:auto;mix-blend-mode:normal;shape-padding:0;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+ </g>
+</svg>
