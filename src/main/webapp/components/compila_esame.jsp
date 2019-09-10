@@ -7,6 +7,7 @@
 
 <%@ include file="../global/common.jsp" %>
 <jsp:useBean id="now" class="java.util.Date" />
+<%@ page import="it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket" %>
 
 
 <c:choose>

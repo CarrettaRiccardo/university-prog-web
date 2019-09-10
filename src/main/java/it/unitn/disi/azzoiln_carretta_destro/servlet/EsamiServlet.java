@@ -143,6 +143,7 @@ public class EsamiServlet extends HttpServlet {
 
             if (!e.isNew() || u.getType() != UtenteType.SSP) { 
                 request.setAttribute("i_esame", e);
+                request.setAttribute("importo_ticket", importo_ticket);
                 request.setAttribute("title", "view_esame");
             } else {
                 request.setAttribute("title", "compila_esame");//se l'esame è nuovo e io sono SSP
