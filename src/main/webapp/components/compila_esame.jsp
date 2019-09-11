@@ -55,8 +55,8 @@
     <c:if test="${sessionScope.utente.isSsp() and (empty i_esame or not empty errore)}">
         <div class="custom-file d-block my-3" style="width: 250px">
             <input type="hidden" name="isFile" value="true"/>
-            <input id="photo_upload" type="file" name="file" class="custom-file-input"/>
-            <label id="file_name" class="custom-file-label text-left" for="photo_upload">(NON VA! NON SELEZ) Aggiungi file</label>
+            <input id="photo_upload" type="file" name="file" class="custom-file-input" accept=".pdf"/>
+            <label id="file_name" class="custom-file-label text-left" for="photo_upload">Aggiungi file</label>
         </div>
     </c:if>
   
@@ -79,6 +79,14 @@
         <button type="submit" class="btn btn-primary float-left"><fmt:message key="conferma"/></button>
     </c:if>
 </form>
+    
+<c:if test="${(sessionScope.utente.isMedico() or sessionScope.utente.isMedicoSpecialista()) and (not empty hasFile)}">
+    <form action="app/download" method="POST">
+        <input type="hidden" name="filePath" value="${filePath}"/>
+        <input type="hidden" name="isDownload" value="true"/>
+        <input type="submit" class="btn btn-gradient my-2" style="width: 150px" value="Download file"></input>
+    </form>
+</c:if>
   
 <c:if test="${errore ne null}">
     <div class="alert alert-danger alert-dismissible fade show position-fixed" style="right: 20px; bottom: 0; z-index: 2" role="alert">
