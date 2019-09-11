@@ -87,7 +87,7 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
                                                             "FROM esame r inner join \n" +
                                                             "	 esami_prescrivibili f on f.id = r.id_esame inner join \n" +
                                                             "	 prescrizione p on p.id = r.id_prescrizione inner join \n" +
-                                                            "     utenti u on p.id_medico = u.id \n" +
+                                                            "     utenti u on p.id_paziente = u.id \n" +
                                                             "WHERE u.provincia = (SELECT provincia FROM utenti WHERE id = ?) AND DATE(time_esame) = DATE(NOW()) AND id_ssp IS NULL\n" +
                                                             "ORDER BY time_esame DESC")) {
             stm.setInt(1, id_ssp);

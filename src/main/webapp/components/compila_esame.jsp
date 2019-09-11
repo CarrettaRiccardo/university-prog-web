@@ -62,11 +62,11 @@
   
   
     <!-- TICKET -->
-    <c:if test="${not i_esame.isDaFissare()}">  <!-- Non mostro il Ticket se deve solo selezionare la data -->
+    <c:if test="${not i_esame.isDaFissare() or not empty errore}">  <!-- Non mostro il Ticket se deve solo selezionare la data -->
         <div class="form-group my-2 mx-3">
-            <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${not empty i_esame}">checked onclick="return false;"</c:if> /><fmt:message key="ticket_di"/>  <!--Se � gi� settato le rendo readonly tramite il return false-->
+            <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${not empty i_esame and empty errore}">checked onclick="return false;"</c:if> /><fmt:message key="ticket_di"/>  <!--Se � gi� settato le rendo readonly tramite il return false-->
             <c:choose>
-                <c:when test="${empty i_esame}">  <fmt:formatNumber value = "${Ticket.costo_esami}" type = "currency" />  </c:when>
+                <c:when test="${empty i_esame or not empty errore}">  <fmt:formatNumber value = "${Ticket.costo_esami}" type = "currency" />  </c:when>
                 <c:when test="${not empty importo_ticket}"> <fmt:formatNumber value = "${importo_ticket}" type = "currency" /> </c:when>
             </c:choose>
             <fmt:message key="pagato"/>
