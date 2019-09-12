@@ -108,9 +108,9 @@ def next_img_url(male):
 
 
 def save_profile_img(male, username):
-    if not os.path.exists("profile_photos"):
-        os.makedirs("profile_photos")
-    img_dir = "profile_photos/" + username
+    if not os.path.exists("users_folder"):
+        os.makedirs("users_folder")
+    img_dir = "users_folder/" + username
     if not os.path.exists(img_dir):  # Carico la foto solo se non esiste già
         img_url, img_url_small = next_img_url(male)
         img_req = requests.get(img_url)
@@ -225,7 +225,7 @@ for id in range(id_medici_spec_start, id_medici_spec_end + 1):
 c.execute("truncate table competenze_medico_spec")
 c.executemany("insert ignore into competenze_medico_spec values (%s, %s)", vals)  # ignoro eventuali duplicati
 
-############### Tickets TODO: stesso paziente per prestazione e ticket
+############### Tickets
 tickets_esami = {}
 vals = []
 for id in range(1, N_ESAMI + 1):

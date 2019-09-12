@@ -1,5 +1,9 @@
 <%@ include file="../global/common.jsp" %>
 
+<c:if test="${utente.isPaziente()}">
+    <div class="mb-5">Paz</div>
+</c:if>
+
 <table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-4 shadow-sm text-white">
     <tr>
@@ -9,8 +13,8 @@
         </c:if>
         <td>
             <c:choose>
-                    <c:when test="${utente.isSsp()}"><fmt:message key="data_nascita"/></c:when>
-                    <c:otherwise><fmt:message key="data_esame"/></c:otherwise>
+                <c:when test="${utente.isSsp()}"><fmt:message key="data_nascita"/></c:when>
+                <c:otherwise><fmt:message key="data_esame"/></c:otherwise>
             </c:choose>
         </td>
     </tr>
