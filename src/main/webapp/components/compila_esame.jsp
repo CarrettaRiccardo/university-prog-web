@@ -62,7 +62,7 @@
   
   
     <!-- TICKET -->
-    <c:if test="${not i_esame.isDaFissare() or not empty errore}">  <!-- Non mostro il Ticket se deve solo selezionare la data -->
+    <c:if test="${not i_esame.isNew() or not empty errore}">  <!-- Non mostro il Ticket se deve solo selezionare la data -->
         <div class="form-group my-2 mx-3">
             <input required type="checkbox" name="ticket" id="ticket" value="si" <c:if test="${not empty i_esame and empty errore}">checked onclick="return false;"</c:if> /><fmt:message key="ticket_di"/>  <!--Se � gi� settato le rendo readonly tramite il return false-->
             <c:choose>
