@@ -13,8 +13,8 @@ Per la persistenza dei dati abbiamo usato **MySQL**.
 
 #### Setup e avvio:
 1. Importare il file `db/dump.sql` all'interno di MySQL. Il database deve chiamarsi `prog_web`.
-2. Avviare il progetto su Tomcat
-3. Copiare la cartella `db/profile_images` all'interno della root del progetto compilato (ossia in `target/project-1.0.0`)
+2. Avviare il progetto su Tomcat.
+3. Copiare la cartella `db/profile_photos` all'interno della root del progetto compilato (ossia in `target/project-1.0.0`).
 
 
 #### Assunzioni particolari:
