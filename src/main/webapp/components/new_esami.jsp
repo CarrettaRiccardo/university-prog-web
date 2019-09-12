@@ -23,7 +23,7 @@
                 <option selected value="${i_esame.getId_esame()}"> ${i_esame.getNome_esame()} </option>
             </c:if>
         </select>
-        <small class="form-text text-muted">Click the input text or space to start to digit.</small>
+        <small class="form-text text-muted">Premi sul campo per iniziare a scrivere.</small>
     </div>
     <input type="hidden" name="id_paziente" value="${paziente.getId()}">
     <button type="submit" class="btn btn-primary"><fmt:message key="conferma"/></button>

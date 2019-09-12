@@ -1,7 +1,13 @@
 <%@ include file="../global/common.jsp" %>
 
 <c:if test="${utente.isPaziente()}">
-    <div class="mb-5">Paz</div>
+    <div class="mb-5">
+        <div class="form-group">
+            <label for="autocomplete">Consulta la lista degli esami supportati: </label>
+            <select id="autocomplete" class="form-control select2-allow-clear"></select>
+            <small class="form-text text-muted">Premi sul campo per iniziare a scrivere.</small>
+        </div>
+    </div>
 </c:if>
 
 <table id="table" class="table table-striped table-borderless table-hover">
