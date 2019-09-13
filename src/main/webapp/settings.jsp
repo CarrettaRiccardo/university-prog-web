@@ -1,5 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ include file="./global/common.jsp" %>
 <html>
 
 <head>
@@ -38,7 +37,7 @@
 </script>
 
 <div class="container pt-3">
-    <h2 class="mb-4">Impostazioni</h2>
+    <h2 class="mb-4"><fmt:message key="impostazioni"/></h2>
     <form action="app/${u_url}/settings.handler" method="POST" enctype="multipart/form-data">
         <div class="row">
 
@@ -50,7 +49,7 @@
 
                     <div class="custom-file d-block mb-3">
                         <input id="photo_upload" type="file" name="file" class="custom-file-input" accept=".jpg"/>
-                        <label id="file_name" class="custom-file-label text-left" for="photo_upload">Scegli file</label>
+                        <label id="file_name" class="custom-file-label text-left" for="photo_upload"><fmt:message key="choose_file"/></label>
                     </div>
 
                 </div>
@@ -60,10 +59,10 @@
                 <form action="app/${u_url}/settings.handler" method="POST">
 
                     <c:if test="${ !utente.isSsp() }">
-                    <h5 class="text-primary">Dati personali</h5>
+                    <h5 class="text-primary"><fmt:message key="dati_personali"/></h5>
                     </c:if>
                     <c:if test="${ utente.isSsp() }">
-                    <h5 class="text-primary">Dati servizio sanitario</h5>
+                    <h5 class="text-primary"><fmt:message key="dati_servizio_sanitario"/></h5>
                     </c:if>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
@@ -98,7 +97,7 @@
                     </c:if>
 
                     <c:if test="${utente.isPaziente()}">
-                    <h5 class="text-primary mt-3">Altro</h5>
+                    <h5 class="text-primary mt-3"><fmt:message key="altro"/></h5>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
                             <select id="selectProvincia" class="form-control" name="provincia"
@@ -143,7 +142,7 @@
                     </div>
                     </c:if>
                     <c:if test="${utente.isMedico() || utente.isMedicoSpecialista()}">
-                    <h5 class="text-primary mt-3">Info carriera</h5>
+                    <h5 class="text-primary mt-3"><fmt:message key="info_carriera"/></h5>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
                             <input type="text" class="form-control" disabled
@@ -156,7 +155,7 @@
                         </div>
                     </div>
                     <c:if test="${utente.isMedicoSpecialista()}">
-                    <h5 class="text-primary mt-3">Abilitato per:</h5>
+                    <h5 class="text-primary mt-3"><fmt:message key="abilitato_per"/></h5>
                     <c:forEach items="${competenze_medico_spec}" var="c">
                     <div class="row">
                         <div class="col col-12 py-1">
@@ -169,7 +168,7 @@
                     <div id="warningProvinciaChanged"
                          class="alert alert-warning alert-dismissible fade show position-fixed"
                          style="right: 20px; bottom: 0; z-index: 2; visibility: hidden" role="alert">
-                        Salva per selezionare un medico e comune della nuova provincia
+                        <fmt:message key="save_to_update"/>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -185,7 +184,7 @@
                     </c:if>
                     <c:if test="${not utente.isSsp()}">
                     <button type="submit" class="btn btn-primary float-right my-3">
-                        Salva
+                        <fmt:message key="salva"/>
                     </button>
                     </c:if>
             </div>
