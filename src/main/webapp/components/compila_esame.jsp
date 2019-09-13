@@ -56,7 +56,7 @@
         <div class="custom-file d-block my-3" style="width: 250px">
             <input type="hidden" name="isFile" value="true"/>
             <input id="photo_upload" type="file" name="file" class="custom-file-input" accept=".pdf"/>
-            <label id="file_name" class="custom-file-label text-left" for="photo_upload">Aggiungi file</label>
+            <label id="file_name" class="custom-file-label text-left" for="photo_upload"><fmt:message key="add_file"/></label>
         </div>
     </c:if>
   

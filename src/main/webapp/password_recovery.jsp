@@ -39,25 +39,24 @@
             </div>
         </c:if>
         <c:if test="${empty param.hasToken}">
-            <div class="my-3">Inserisci l'email dell'account da recuperare</div>
+            <div class="my-3"><fmt:message key="email_recupero"/></div>
             <input type="email" class="form-control mb-3" id="email" name="email" placeholder="Username" required
                    autofocus>
-            <button type="submit" class="btn btn-gradient btn-block rounded-pill mb-2">Prosegui</button>
-            <a href="password_recovery?hasToken=true" class="btn btn-secondary btn-block text-light rounded-pill mb-2">Ho
-                gi� un token</a>
+            <button type="submit" class="btn btn-gradient btn-block rounded-pill mb-2"><fmt:message key="prosegui"/></button>
+            <a href="password_recovery?hasToken=true" class="btn btn-secondary btn-block text-light rounded-pill mb-2"><fmt:message key="ho_token"/></a>
         </c:if>
         <c:if test="${not empty param.hasToken}">
-            <div class="my-3">Inserisci il token ricevuto via email</div>
+            <div class="my-3"><fmt:message key="insert_token"/></div>
             <input type="text" class="form-control mb-3" id="token" name="token" placeholder="Token" required autofocus>
             <input type="password" class="form-control mb-3" id="token" minlength="6" name="newpassword"
                    placeholder="Nuova Password" required>
             <input type="password" class="form-control mb-3" id="token" minlength="6" name="newpasswordconfirm"
                    placeholder="Conferma Nuova Password" required>
-            <button type="submit" class="btn btn-gradient btn-block rounded-pill mb-2">Conferma</button>
+            <button type="submit" class="btn btn-gradient btn-block rounded-pill mb-2"><fmt:message key="conferma"/></button>
         </c:if>
     </c:if>
 
-    <a href="login">Torna al login</a>
+    <a href="login"><fmt:message key="torna_login"/></a>
 </form>
 </body>
 </html>

@@ -69,8 +69,8 @@
                                 </c:when>
                                 <c:otherwise>
                                     <div class="alert alert-danger text-center my-3" style="max-width: 550px">
-                                        <p class="font-italic position-absolute"><c:out value="${day}"></c:out></p>
-                                        <p class="font-weight-bold position-absolute"><c:out value="${i}:00"></c:out></p>
+                                        <p class="font-italic"><c:out value="${day}"></c:out></p>
+                                        <p class="font-weight-bold"><c:out value="${i}:00"></c:out></p>
                                         <p><fmt:message key="prenotazione_non_disp"/></p>
                                     </div>
                                 </c:otherwise>

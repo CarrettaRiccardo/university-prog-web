@@ -38,7 +38,7 @@
 </script>
 
 <div class="container pt-3">
-    <h2 class="mb-4">Impostazioni account</h2>
+    <h2 class="mb-4">Impostazioni</h2>
     <form action="app/${u_url}/settings.handler" method="POST" enctype="multipart/form-data">
         <div class="row">
 
@@ -143,7 +143,7 @@
                     </div>
                     </c:if>
                     <c:if test="${utente.isMedico() || utente.isMedicoSpecialista()}">
-                    <h5 class="text-primary mt-3">Informazioni carriera</h5>
+                    <h5 class="text-primary mt-3">Info carriera</h5>
                     <div class="row">
                         <div class="col col-12 col-lg-6 py-1">
                             <input type="text" class="form-control" disabled
