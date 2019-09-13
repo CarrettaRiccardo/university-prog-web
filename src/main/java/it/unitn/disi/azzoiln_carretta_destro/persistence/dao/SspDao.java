@@ -53,6 +53,5 @@ public interface SspDao{
 
     public ArrayList<ArrayList<Integer>> getStatsEsami(int id) throws DaoException;
 
-    public List<Ricetta> getRicette(Date data) throws DaoException;
-
+    public List<Ricetta> getRicette(Date data, Integer id_provincia) throws DaoException;
 }

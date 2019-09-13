@@ -12,7 +12,7 @@
 
 <c:choose>
     <c:when test="${empty i_esame}">  <fmt:formatDate var="data" pattern="dd/MM/yyyy" value="${now}"/>  </c:when>
-    <c:when test="${! empty i_esame}"> <fmt:formatDate var="data" pattern="dd/MM/yyyy" value="${i_visita.getTime_esame()}"/> </c:when>
+    <c:when test="${! empty i_esame}"> <fmt:formatDate var="data" pattern="dd/MM/yyyy" value="${i_esame.getTime_esame()}"/> </c:when>
 </c:choose>
 
 <form action="app/${u_url}/compila_esame" method="POST" 

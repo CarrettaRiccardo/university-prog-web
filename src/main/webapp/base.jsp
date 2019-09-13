@@ -14,8 +14,8 @@
     <div class="row">
         <div class="col-12">
             <form action="app/download" method="POST">
-                <h2 class="mt-2 mb-4 d-print-none"><fmt:message key="${title}"/> ${nome}
-                    <c:if test="${utente.isSsp() && page=='esami'}"><button name="download" class="float-right btn btn-gradient"><fmt:message key="download_odierno"/></button></c:if>
+                <h2 class="mt-2 mb-5 d-print-none"><fmt:message key="${title}"/> ${nome}
+                    <c:if test="${utente.isSsp() && page=='esami'}"><button name="download" class="my-2 float-right btn btn-gradient"><fmt:message key="download_odierno"/></button></c:if>
                 </h2>
             </form>
             <jsp:include page="/components/${page}.jsp"/>
