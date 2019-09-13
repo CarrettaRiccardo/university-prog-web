@@ -730,9 +730,9 @@ public class JDBCUtenteDao extends JDBCDao<Utente, Integer> implements UtenteDao
                 return rs.getString("nome");
             }
             // Se non trovo il ticket tra gli esami, provo con visite_spec
-            PreparedStatement stm2 = CON.prepareStatement("SELECT nome as nome_visita FROM visita_specialistica v INNER JOIN visite_specialistiche vs on v.id_visita_spec = vs.id WHERE v.id_ticket = ?");
-            stm.setInt(1, id_ticket);
-            rs = stm.executeQuery();
+            PreparedStatement stm2 = CON.prepareStatement("SELECT nome FROM visita_specialistica v INNER JOIN visite_specialistiche vs on v.id_visita_spec = vs.id WHERE v.id_ticket = ?");
+            stm2.setInt(1, id_ticket);
+            rs = stm2.executeQuery();
             if (rs.next()) {
                 return rs.getString("nome");
             }

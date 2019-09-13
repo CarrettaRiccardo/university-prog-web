@@ -28,7 +28,7 @@
     <tbody>
     <c:forEach items="${esami}" var="esame">
         <tr
-                <c:if test="${not esame.isDaFissare() or utente.isPaziente()}"> data-href='app/${u_url}/compila_esame?id_paziente=${esame.getId_paziente()}&id_esame=${esame.getId()}' </c:if>
+                <c:if test="${(esame.isDaFissare() and utente.isPaziente()) or (not esame.isNew()) or (utente.isSsp())}"> data-href='app/${u_url}/compila_esame?id_paziente=${esame.getId_paziente()}&id_esame=${esame.getId()}' </c:if>
                 <c:if test="${esame.isDaFissare() and not utente.isPaziente()}">style="color: #b1b3b5"</c:if>
                 <c:if test="${esame.isDaFissare() and utente.isPaziente()}">style="font-weight:bold"</c:if>
         >

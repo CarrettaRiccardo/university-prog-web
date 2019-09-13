@@ -43,17 +43,23 @@ FEMALE_NAMES = ['Francesca', 'Barbara', 'Camilla', 'Daniela', 'Chiara', 'Laura',
 def ANAMNESI():
     return [
         'Il soggetto, sulla base della visita medica da me effettuata dei valori di pressione arteriosa rilevati, nonchè del referto del tracciato ECG, non presenta controindicazioi in atto alla pratica di attività sportiva non agonistica.',
-        'Il soggetto risulta affetto da febbre reumatica.\nPrognosi di gg: ' + str(random.randint(1, 14)) + '.\nSi rilascia su richiesta dell\'interessato per gli usi consentiti dalla legge.',
-        'Il soggetto presenta una contrattura alla muscolatura latero cervicale sinistra.\nProvvediment: evitare sforzi, dormire senza cuscino.\nPrognosi di gg: ' + str(random.randint(1, 14)) + '.\nSi rilascia su richiesta dell\'interessato per gli usi consentiti dalla legge.',
+        'Il soggetto risulta affetto da febbre reumatica.\nPrognosi di gg: ' + str(random.randint(1,
+                                                                                                  14)) + '.\nSi rilascia su richiesta dell\'interessato per gli usi consentiti dalla legge.',
+        'Il soggetto presenta una contrattura alla muscolatura latero cervicale sinistra.\nProvvediment: evitare sforzi, dormire senza cuscino.\nPrognosi di gg: ' + str(
+            random.randint(1,
+                           14)) + '.\nSi rilascia su richiesta dell\'interessato per gli usi consentiti dalla legge.',
         'Il soggetto risulta clinicamento guarito senza postumi invalidanti dalle lesioni riportate nel riferito inforunio.\nSi rilascia su richiesta dell\'interessato per gli usi consentiti dalla legge.',
         'Il soggetto presenta una forta sensibilità alla luce che gli impedisce di stare in ambienti luminosi per un periodo prolungato.\nViene prescritta visita specialistica di controllo.',
         'Il soggetto presenta un forte dolore alla spalla in seguito a una prolungata attività lavorativa. Probabile frattura composta.\nPrescritta visita specialistica di controllo.',
         'Il soggetto presenta un forte dolore al ginocchio in seguito ad attività sportiva. Probabile frattura.\nPrescritta visita specialistica di controllo.',
-        'Il soggetto risulta affetto da febbre reumatica.\nPrognosi di gg: ' + str(random.randint(1, 14)) + '.\nSi rilascia su richiesta dell\'interessato per gli usi consentiti dalla legge.',
+        'Il soggetto risulta affetto da febbre reumatica.\nPrognosi di gg: ' + str(random.randint(1,
+                                                                                                  14)) + '.\nSi rilascia su richiesta dell\'interessato per gli usi consentiti dalla legge.',
         'Il soggetto presenta un forte dolore in regione latero cervicale sinistra e all\'emitorace sinistra.\nPrescritta visita specialistica di controllo.',
-        'Il soggetto presenta disturbi intestinali da circa' + str(random.randint(1, 10)) +'gg.\nViene prescritta visita specialistica di controllo e RAST test per possibili allergie e/o intolleranze.'
-        'Il soggetto presenta una sensazione di compressione alla bocca, possibilmente causata da dente del giudizio in crescita.\nViene prescritta visita di accertamento.'
+        'Il soggetto presenta disturbi intestinali da circa' + str(random.randint(1,
+                                                                                  10)) + 'gg.\nViene prescritta visita specialistica di controllo e RAST test per possibili allergie e/o intolleranze.'
+                                                                                         'Il soggetto presenta una sensazione di compressione alla bocca, possibilmente causata da dente del giudizio in crescita.\nViene prescritta visita di accertamento.'
     ]
+
 
 UTENTI_SQL = "insert into utenti(id, nome, cognome, data_nascita, username, password, sesso, cf, ruolo, id_medico, provincia, comune, paziente_attivo, medico_attivo, specialita, laurea, inizio_carriera) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 N_MEDICI_SPEC = 10
@@ -225,29 +231,34 @@ for id in range(id_medici_spec_start, id_medici_spec_end + 1):
 c.execute("truncate table competenze_medico_spec")
 c.executemany("insert ignore into competenze_medico_spec values (%s, %s)", vals)  # ignoro eventuali duplicati
 
-############### Tickets
-tickets_esami = {}
-vals = []
-for id in range(1, N_ESAMI + 1):
-    ticket = (id, 11, 'e', fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d"),
-              random.randint(id_pazienti_start, id_pazienti_end))
-    vals.append(ticket)
-    tickets_esami[id] = ticket
-for id in range(N_ESAMI + 1, N_ESAMI + N_VISITE_SPEC + 1):
-    vals.append((id, 50, 'v', fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d"),
-                 random.randint(id_pazienti_start, id_pazienti_end)))
-c.execute("truncate table ticket")
-c.executemany("insert ignore into ticket values (%s, %s,%s, %s, %s)", vals)
-
 ############### Prescrizioni
+prescrizioni = {}
 vals = []
 for id in range(1, N_PRESCRIZIONI + 1):
     id_paziente = random.randint(id_pazienti_start, id_pazienti_end)
     id_medico = pazienti[id_paziente][9]  # id_medico come medico del paziente
-    vals.append((id, id_paziente, id_medico,
-                 fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d")))
+    prescr = (id, id_paziente, id_medico,
+              fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d"))
+    vals.append(prescr)
+    prescrizioni[id] = prescr
 c.execute("truncate table prescrizione")
 c.executemany("insert into prescrizione values (%s, %s, %s, %s)", vals)
+
+############### Tickets
+tickets_esami = {}
+vals = []
+for id in range(1, N_ESAMI + 1):
+    id_paziente = prescrizioni[N_RICETTE + id][1]
+    ticket = (id, 11, 'e', fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d"),
+              id_paziente)
+    vals.append(ticket)
+    tickets_esami[id] = ticket
+for id in range(N_ESAMI + 1, N_ESAMI + N_VISITE_SPEC + 1):
+    id_paziente = prescrizioni[N_RICETTE + N_VISITE + id][1]
+    vals.append((id, 50, 'v', fake.date_time_between(start_date="-1y").strftime("%Y-%m-%d"),
+                 id_paziente))
+c.execute("truncate table ticket")
+c.executemany("insert ignore into ticket values (%s, %s,%s, %s, %s)", vals)
 
 ############### Ricette
 vals = []
@@ -260,7 +271,7 @@ c.executemany("insert into farmaco values (%s, %s, %s, %s, %s)", vals)
 ############### Esami
 vals = []
 for id in range(N_RICETTE + 1, N_RICETTE + N_ESAMI + 1):
-    id_ticket = random.randint(1, N_ESAMI)
+    id_ticket = id - N_RICETTE
     id_ssp = pazienti[tickets_esami[id_ticket][4]][10]  # id provincia del paziente collegato al ticket scelto
     id_esame = random.randint(1, 157)
     data = fake.date_time_between(start_date="-1y")
@@ -283,10 +294,11 @@ c.executemany("insert into visita values (%s, %s)", vals)
 ############### Visite specialistiche
 vals = []
 for id in range(N_RICETTE + N_ESAMI + N_VISITE + 1, N_RICETTE + N_ESAMI + N_VISITE + N_VISITE_SPEC + 1):
+    id_ticket = id - (N_RICETTE + N_VISITE)
     id_visita_spec = random.randint(1, 133)
     data = fake.date_time_between(start_date="-1y")
     vals.append((id, random.randint(id_medici_spec_start, id_medici_spec_end),
-                 random.randint(N_ESAMI + 1, N_ESAMI + N_VISITE_SPEC + 1), id_visita_spec,
+                 id_ticket, id_visita_spec,
                  data.strftime("%d/%m/%Y %H:%M") + "\nVisita specialistica: " + visite_specialistiche[id_visita_spec] +
                  "\nRisultato:\n - " +
                  str(random.randint(100, 10000) / 100) + "\n - " +
