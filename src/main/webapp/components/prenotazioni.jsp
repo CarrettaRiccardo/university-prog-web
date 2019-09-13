@@ -125,11 +125,9 @@
     });
     
     var dateToday = new Date();
-    var yesterday = new Date(dateToday);
-    yesterday.setDate(dateToday.getDate() - 1);
     $('#datepicker').datepicker({
         format: 'yyyy-mm-dd',
-        minDate: yesterday
+        minDate: dateToday
     });
     
     var x = findGetParameter("date");

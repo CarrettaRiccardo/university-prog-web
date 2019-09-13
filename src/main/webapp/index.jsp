@@ -10,9 +10,6 @@
 
     <script>
         $(document).ready(function () {
-            $('#btnLogin').click(function () {
-                window.location.href = "login"
-            });
 
             $('#show_more_btn').click(function () {
                 $([document.documentElement, document.body]).animate({
@@ -60,7 +57,7 @@
             <span class="text-gradient">Sanity</span><span class="font-weight-light">Manager</span>
         </span>
     </a>
-    <button id="btnLogin" class="btn btn-light rounded-pill font-weight-bold px-5 shadow">Accedi</button>
+    <a href="login" class="btn btn-light rounded-pill font-weight-bold px-5 shadow">Accedi</a>
 </nav>
 
 <div class="container-fluid mt-5 mb-5 pb-5">
@@ -105,7 +102,7 @@
         </div>
     </div>
 
-    <div id="show_more_btn" class="row pt-3 mb-5 text-center d-none d-lg-flex" style="cursor: pointer">
+    <div id="show_more_btn" class="row pt-3 mb-5 text-center d-none d-lg-flex" style="cursor: pointer; margin-top: 100px;">
         <div class="col-12">
             <div>Scopri tutte le funzionalità</div>
             <div class="display-3" style="line-height: 1rem">&#8964;</div>
