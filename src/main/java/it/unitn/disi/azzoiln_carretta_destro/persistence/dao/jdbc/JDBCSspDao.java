@@ -163,18 +163,21 @@ public class JDBCSspDao extends JDBCDao<Ssp, Integer> implements SspDao {
      * Ottiene l' elenco delle ricette di quel giorno
      *
      * @param data
+     * @param id_provincia
      * @return Elenco delle ricette ordinate in ordine cronologico
      */
     @Override
-    public List<Ricetta> getRicette(Date data) throws DaoException {
+    public List<Ricetta> getRicette(Date data, Integer id_provincia) throws DaoException {
         List<Ricetta> ret = new LinkedList<>();
         
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
         String dat = formatter.format(data);
         
         try (PreparedStatement stm = CON.prepareStatement("SELECT r.*,f.nome,f.costo as truecost,p.* FROM farmaco r inner join farmaci f on f.id = r.id_farmaco inner join prescrizione p on p.id = r.id_prescrizione "
-                + "WHERE time >= (\"" + dat + " 00:00:00\")"
+                + " left join utenti u on u.id = p.id_paziente WHERE u.provincia = ?"
+                + " AND time >= (\"" + dat + " 00:00:00\")"
                 + " AND time <= (\"" + dat + " 23:59:59\") ORDER BY time")) {
+            stm.setInt(1, id_provincia);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 Ricetta r = new Ricetta(rs.getInt("id_prescrizione"), rs.getInt("id_paziente"), rs.getInt("id_medico"), rs.getInt("id_farmaco"), rs.getString("nome"), rs.getFloat("truecost"), rs.getShort("quantita"), rs.getDate("time_vendita"), rs.getDate("time"));

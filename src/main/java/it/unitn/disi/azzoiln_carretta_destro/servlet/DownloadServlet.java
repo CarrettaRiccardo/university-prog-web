@@ -29,7 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 public class DownloadServlet extends HttpServlet {
-    private static String[] columns = { "Data e ora", "Farmaco", /*"Farmacia",*/ "Medico di base", "Paziente", "Prezzo" };
+    private static String[] columns = { "Data", "Farmaco", /*"Farmacia",*/ "Medico di base", "Paziente", "Prezzo" };
     
     private UtenteDao userDao;
 
@@ -60,7 +60,7 @@ public class DownloadServlet extends HttpServlet {
             try {
                 // GET LIST RICETTE
 
-                List<Ricetta> ricette = userDao.Ssp().getRicette(new Date());
+                List<Ricetta> ricette = userDao.Ssp().getRicette(new Date(), u.getProvincia());
 
 
                 // CREATE FILE
