@@ -192,7 +192,7 @@ create table esame
     id_ticket       int  DEFAULT NULL,
     id_ssp          int  DEFAULT NULL COMMENT 'NULL se non ancora fatto',
     risultato       text DEFAULT NULL,
-    time_esame      timestamp,
+    time_esame      timestamp NULL DEFAULT NULL,
     PRIMARY KEY (id_prescrizione),
     FOREIGN KEY fk_esame_to_prescrizione (id_prescrizione) REFERENCES prescrizione (id)
         ON UPDATE RESTRICT

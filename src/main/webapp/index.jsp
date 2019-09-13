@@ -172,6 +172,21 @@
         </div>
     </div>
 
+    <hr class="mt-3"/>
+
+    <div class="row px-md-5 mt-5 mt-lg-0">
+        <div class="col-12 pa-4 text-center">
+            <div class="display-4 pb-1 text-gradient">Come attivarla</div>
+            <p class="lead">
+                Per attivare il tuo account <b class="text-gradient">SanityManager</b> scrivi a
+                <a href="mailto:support@sanitymanager.it">support@sanitymanager.it</a>
+                riportando nome, cognome, data di nascita, codice fiscale e indirizzo.<br/>
+                Riceverai sulla tua casella di posta ulteriori informazioni.
+            </p>
+        </div>
+    </div>
+
+
 </div>
 <jsp:include page="/global/footer.jsp"/>
 </body>

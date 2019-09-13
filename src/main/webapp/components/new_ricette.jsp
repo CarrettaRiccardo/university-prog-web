@@ -40,7 +40,7 @@
         </div>
 
         <div class="form-group col-md-4">
-            <label for="quantita"><fmt:message key="visita_spec_da_fissare"/><!--Quantit�--></label>
+            <label for="quantita"><fmt:message key="quantita"/><!--Quantità--></label>
             <input type="number" class="form-control" id="quantita" name="qta"
                    value="<c:choose><c:when test="${not empty i_ricetta}">${i_ricetta.getQuantita()}</c:when><c:when test="${empty i_ricetta}">1</c:when></c:choose>"
                    placeholder="1" required min='1' max='300'>

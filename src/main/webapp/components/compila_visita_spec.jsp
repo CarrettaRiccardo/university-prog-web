@@ -9,10 +9,9 @@
 <%@ page import="it.unitn.disi.azzoiln_carretta_destro.persistence.entities.Ticket" %>
 <jsp:useBean id="now" class="java.util.Date" />
 
-
 <c:choose>
-    <c:when test="${empty i_visita}">  <fmt:formatDate value="${now}" pattern="dd/MM/yyyy"/></c:when>
-    <c:when test="${! empty i_visita}"> <fmt:formatDate value="${i_visita.getTime_visita()}" pattern="dd/MM/yyyy"/></c:when>
+    <c:when test="${empty i_visita}">  <fmt:formatDate var="data" value="${now}" pattern="dd/MM/yyyy"/></c:when>
+    <c:when test="${! empty i_visita}"> <fmt:formatDate var="data" value="${i_visita.getTime_visita()}" pattern="dd/MM/yyyy"/></c:when>
 </c:choose>
 
 <form action="app/${u_url}/compila_visita_spec" method="POST">
