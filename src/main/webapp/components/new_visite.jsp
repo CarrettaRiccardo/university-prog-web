@@ -7,7 +7,11 @@
 
 <%@ include file="../global/common.jsp" %>
 <jsp:useBean id="now" class="java.util.Date"/>
-<fmt:formatDate var="data" value="${now}"/>
+<c:choose>
+    <c:when test="${empty i_visita}"><fmt:formatDate var="data" value="${now}" pattern="dd/MM/yyyy"/></c:when>
+    <c:when test="${not empty i_visita}"><fmt:formatDate var="data" value="${i_visita.getTime()}" pattern="dd/MM/yyyy"/></c:when>
+</c:choose>
+
 
 <form action="app/${u_url}/new_visite" method="POST">
     <div class="form-row">

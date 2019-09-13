@@ -107,7 +107,7 @@ CREATE TABLE `esame` (
   `id_ticket` int(11) DEFAULT NULL,
   `id_ssp` int(11) DEFAULT NULL COMMENT 'NULL se non ancora fatto',
   `risultato` text DEFAULT NULL,
-  `time_esame` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `time_esame` timestamp NULL  DEFAULT NULL,
   PRIMARY KEY (`id_prescrizione`),
   KEY `fk_esame_to_esami_prescrivibili` (`id_esame`),
   KEY `fk_esame_to_ticket` (`id_ticket`),
