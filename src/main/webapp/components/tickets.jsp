@@ -1,7 +1,5 @@
 <%@ include file="../global/common.jsp" %>
 
-<fmt:formatNumber value="${10}" type="currency"/>
-
 <table id="table" class="table table-striped table-borderless table-hover">
     <thead class="bg-gradient-6 shadow-sm text-white">
     <tr>

@@ -12,6 +12,5 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page pageEncoding="UTF-8" %>
-<fmt:requestEncoding value="UTF-8"/>
 <fmt:setBundle basename="messages"/>
 <fmt:setLocale value="it_IT"/>

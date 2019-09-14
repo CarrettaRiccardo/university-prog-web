@@ -175,7 +175,6 @@
     <servlet-mapping>
         <servlet-name>TicketsServlet</servlet-name>
         <url-pattern>/app/paziente/tickets</url-pattern>
-        <url-pattern>/app/paziente/dettagli_ticket</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EsamiServlet</servlet-name>
@@ -213,6 +212,10 @@
         <url-pattern>/app/medico/dettagli_ricetta</url-pattern>
         <url-pattern>/app/medico_spec/dettagli_ricetta</url-pattern>
         <url-pattern>/app/paziente/dettagli_ricetta</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TicketsServlet</servlet-name>
+        <url-pattern>/app/paziente/dettagli_ticket</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VisiteSpecialisticheServlet</servlet-name>

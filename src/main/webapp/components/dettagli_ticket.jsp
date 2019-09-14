@@ -1,7 +1,5 @@
 <%@ include file="../global/common.jsp" %>
 
-<fmt:formatNumber value="${10}" type="currency"/>
-
 <script>
     function printClick() {
         window.print();
